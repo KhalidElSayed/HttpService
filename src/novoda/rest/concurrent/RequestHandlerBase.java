@@ -13,27 +13,13 @@ import java.io.InputStream;
 
 public abstract class RequestHandlerBase<T> implements RequestHandler<T> {
 
-    private final HttpClient client;
 
-    private final HttpUriRequest request;
-
-    public RequestHandlerBase(HttpUriRequest request, HttpClient client) {
-        this.request = request;
-        if (client.getConnectionManager() instanceof ThreadSafeClientConnManager) {
-            this.client = client;
-        } else {
-            throw new IllegalStateException(
-                    "Can only use ThreadSafeClientConnManager as HttpClient");
-        }
-    }
-
-    public HttpUriRequest getRequest() {
-        return request;
+    public RequestHandlerBase() {
     }
     
     @Override
     public T call() throws Exception {
-        final HttpResponse response = client.execute(request);
+        //final HttpResponse response = client.execute(request);
         return null;
     }
     
