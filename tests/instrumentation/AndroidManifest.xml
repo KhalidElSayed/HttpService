@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	android:versionCode="1" android:versionName="1.0"
+	package="novoda.lib.httpservice.tests">
+	<application>
+		<uses-library android:name="android.test.runner" />
+	</application>
+	<instrumentation android:name="android.test.InstrumentationTestRunner"
+		android:targetPackage="novoda.lib.httpservice.tests" android:label="Tests for http service" />
+</manifest>
