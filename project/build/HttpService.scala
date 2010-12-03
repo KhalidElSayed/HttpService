@@ -15,7 +15,7 @@ class HttpService(info: ProjectInfo) extends ParentProject(info) {
   lazy val tests = project("tests" / "instrumentation",  "HttpServiceTest", new TestProject(_), main)
   
   class MainProject(info: ProjectInfo) extends AndroidProject(info) with Defaults with Robolectric {        
-    def googleMapLocation =  androidSdkPath  / "add-ons" / "addon_google_apis_google_inc_8" / "libs" / "maps.jar"
+    def googleMapLocation =  androidSdkPath  / "add-ons" / "addon_google_apis_google_inc_8" / "libs" / "maps.jar" absolutePath
   }
       
   class TestProject(info: ProjectInfo) extends AndroidTestProject(info) with Defaults {
