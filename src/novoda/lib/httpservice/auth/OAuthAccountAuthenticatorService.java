@@ -36,7 +36,9 @@ public class OAuthAccountAuthenticatorService extends Service {
                             + serviceInfo.metaData
                                     .getInt("novoda.lib.httpservice.OAuthInformation"));
 
-            Log.i("TEST", " " + OAuthMetaData.fromXml(xml));
+            OAuthMetaData m = OAuthMetaData.fromXml(xml);
+            sAccountAuthenticator = new OAuthAuthenticator(this, m);
+
         } catch (NameNotFoundException e) {
             Log.e(TAG,
                     "You need to have a metadata tag attached to this service which contains oauth information");
@@ -45,7 +47,6 @@ public class OAuthAccountAuthenticatorService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        sAccountAuthenticator = new OAuthAuthenticator(this);
     }
 
     public IBinder onBind(Intent intent) {

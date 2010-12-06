@@ -59,6 +59,8 @@ public class OAuthAccountAuthenticatorActivity extends AccountAuthenticatorActiv
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         Log.i("TEST", icicle + " ");
+        
+        Log.i("TEST", " intent " + getIntent());
         HandlerThread thread = new HandlerThread("OAuthAccountAuthenticatorActivity[" + mName + "]");
         thread.start();
 

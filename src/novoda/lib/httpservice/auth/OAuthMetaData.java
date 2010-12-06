@@ -21,7 +21,7 @@ public class OAuthMetaData implements Parcelable {
 
     public static String REQUEST_TOKEN_URL = "requestTokenURL";
 
-    public static String ACCESS_TOKEN_URL= "accessTokenURL";
+    public static String ACCESS_TOKEN_URL = "accessTokenURL";
 
     public static String AUTHORIZE_URL = "authorizeURL";
 
@@ -39,6 +39,7 @@ public class OAuthMetaData implements Parcelable {
             IOException {
 
         OAuthMetaData metaData = new OAuthMetaData();
+        
         while (xrp.getEventType() != XmlResourceParser.END_DOCUMENT) {
             if (xrp.getEventType() == XmlResourceParser.START_TAG) {
                 String s = xrp.getName();
@@ -54,6 +55,7 @@ public class OAuthMetaData implements Parcelable {
             xrp.next();
         }
         xrp.close();
+        
         return metaData;
     }
 
@@ -64,5 +66,30 @@ public class OAuthMetaData implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(consumerKey);
+        dest.writeString(consumerSecret);
+    }
+
+    public static final Parcelable.Creator<OAuthMetaData> CREATOR = new Parcelable.Creator<OAuthMetaData>() {
+
+        @Override
+        public OAuthMetaData createFromParcel(Parcel source) {
+            OAuthMetaData metadata = new OAuthMetaData();
+            metadata.consumerKey = source.readString();
+            metadata.consumerSecret = source.readString();
+            return metadata;
+        }
+
+        @Override
+        public OAuthMetaData[] newArray(int size) {
+            return new OAuthMetaData[size];
+        }
+    };
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder("consumerKey:");
+        builder.append(consumerKey).append(" ,consumerSecret:").append(consumerSecret);
+        return builder.toString();
     }
 }

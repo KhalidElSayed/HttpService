@@ -15,11 +15,12 @@ public class OAuthAuthenticator extends AbstractAccountAuthenticator {
 
     private final Context mContext;
 
-    public OAuthAuthenticator(Context context) {
+    private OAuthMetaData metaData;
+
+    public OAuthAuthenticator(Context context, OAuthMetaData metaData) {
         super(context);
         this.mContext = context;
-        Log.i("TEST", "Om constructor");
-
+        this.metaData = metaData;
     }
 
     @Override
@@ -30,6 +31,7 @@ public class OAuthAuthenticator extends AbstractAccountAuthenticator {
         Intent i = new Intent(mContext, OAuthAccountAuthenticatorActivity.class);
         i.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         result.putParcelable(AccountManager.KEY_INTENT, i);
+        result.putParcelable("oauthMetaData", metaData);
         return result;
     }
 
