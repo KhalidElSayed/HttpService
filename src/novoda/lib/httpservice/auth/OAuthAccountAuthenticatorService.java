@@ -1,15 +1,10 @@
 
 package novoda.lib.httpservice.auth;
 
-import java.io.IOException;
-
-import org.xmlpull.v1.XmlPullParserException;
-
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ServiceInfo;
 import android.content.res.XmlResourceParser;
 import android.os.IBinder;
@@ -23,29 +18,19 @@ public class OAuthAccountAuthenticatorService extends Service {
 
     public void onCreate() {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
-            Log.v(TAG, "OAuthAccountAuthenticatorService Authentication Service started.");
+            Log.v(TAG, "OAuthAccountAuthenticatorService Service started.");
         }
+        
         final ComponentName name = new ComponentName(getPackageName(), getClass().getName());
         try {
             ServiceInfo serviceInfo = getPackageManager().getServiceInfo(name,
                     PackageManager.GET_META_DATA);
             XmlResourceParser xml = getResources().getXml(
                     serviceInfo.metaData.getInt("novoda.lib.httpservice.OAuthInformation"));
-            Log.i(TAG,
-                    " met "
-                            + serviceInfo.metaData
-                                    .getInt("novoda.lib.httpservice.OAuthInformation"));
-
             OAuthMetaData m = OAuthMetaData.fromXml(xml);
             sAccountAuthenticator = new OAuthAuthenticator(this, m);
-
-        } catch (NameNotFoundException e) {
-            Log.e(TAG,
-                    "You need to have a metadata tag attached to this service which contains oauth information");
-        } catch (XmlPullParserException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new IllegalStateException(e.getCause());
         }
     }
 
