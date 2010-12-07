@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<oauth-data xmlns:novoda="http://schemas.novoda.com/lib/httpservice"
+	novoda:consumerKey=""
+	novoda:consumerSecret=""
+	novoda:requestTokenEndpointUrl=""
+	novoda:accessTokenEndpointUrl=""
+	novoda:callback=""
+	novoda:authorizationWebsiteUrl="" />

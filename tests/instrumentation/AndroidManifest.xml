@@ -39,13 +39,16 @@
 
 		<service android:exported="true" android:process=":auth"
 			android:name=".auth.OAuthAccountAuthenticatorService">
+			
 			<intent-filter>
 				<action android:name="android.accounts.AccountAuthenticator" />
 			</intent-filter>
+			
 			<meta-data android:name="android.accounts.AccountAuthenticator"
 				android:resource="@xml/authenticator" />
+				
 			<meta-data android:name="novoda.lib.httpservice.OAuthInformation"
-				android:resource="@xml/oauth" />
+				android:resource="@xml/oauth_example" />
 		</service>
 
 
