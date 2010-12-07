@@ -39,7 +39,7 @@ public class OAuthAccountAuthenticatorActivity extends AccountAuthenticatorActiv
 
     private volatile ServiceHandler mServiceHandler;
 
-    private static AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
+    private AndroidHttpClient client = AndroidHttpClient.newInstance("Android");
 
     private String mName;
 
@@ -143,6 +143,9 @@ public class OAuthAccountAuthenticatorActivity extends AccountAuthenticatorActiv
         intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, username.getText().toString());
         intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, "novoda.lib.httpservice.oauth");
         intent.putExtra(AccountManager.KEY_AUTHTOKEN, authToken);
+
+        accountManager.setUserData(account, "token", authToken);
+        accountManager.setUserData(account, "tokenSecret", authTokenSecret);
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
