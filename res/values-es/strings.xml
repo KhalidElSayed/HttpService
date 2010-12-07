@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="eula_title">Acuerdo de usuario final</string>
+<string name="notification_downloading">Buscando actualizaciones</string>
+<string name="btn_accept">OK</string>
+<string name="btn_decline">Rechazar</string>
+<string name="btn_cancel">Cancelar</string>
+<string name="oauth_login_failed">Algo ha fallado, comprueba que tienes conexión a Internet.</string>
+<string name="timescape_no_internet">Algo ha fallado, comprueba que tienes conexión a Internet.</string>
+<string name="timescape_settings_about">Acerca de</string>
+<string name="pref_delete_account_message">¿Estás seguro de que quieres borrar tu cuenta?</string>
+<string name="pref_delete">Borrar cuenta</string>
+<string name="pref_login">Conectarse</string>
+<string name="pref_login_title">Introducir información de cuenta</string>
+<string name="pref_login_email">Email</string>
+<string name="pref_login_password">Contraseña</string>
+<string name="pref_login_create_new">Crear nuevo</string>
+<string name="pref_login_sign_in">Registrarse</string>
+<string name="pref_login_cancel">Cancelar</string>
+<string name="toast_account_deleted_success">Se ha borrado la cuenta de este teléfono.</string>
+<string name="dialog_auth_message">Autorizando...</string>
+<string name="use_web_login">No ha sido posible la conexión. Por favor, utiliza la web para conectarte</string>
+<string name="logged_in_as">Conectado como</string>
+<string name="not_logged_in">No conectado</string>
+<string name="register_account">¡Regístrate ahora!</string>
+<string name="timescape_error_generic_retry_later">Algo ha fallado. Por favor, inténtalo más tarde</string>
+<string name="timescape_error_wrong_date">No ha sido posible la conexión. Por favor, verifica la fecha de tu teléfono: %s</string>
+<string name="timescape_uses_software">Uso de software:</string>
+<string name="timescape_version_name">nombre de versión:</string>
+<string name="timescape_version_code">Código de versión:</string>
+<string name="timescape_error_no_connection">No hay ninguna conexión disponible. Por favor, inténtalo más tarde</string>
+<string name="timescape_user_pass_not_empty">El usuario o la contraseña no pueden estar vacíos. Por favor, inténtalo de nuevo</string>
+<string name="timescape_sync_interval">Intervalo de sincronización</string>
+<string name="timescape_error_full_disk">de almacenamiento del teléfono es baja, eliminar algunos datos para continuar.</string>
+
+</resources>

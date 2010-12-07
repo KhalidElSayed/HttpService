@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="eula_title">Acordo de usuário final</string>
+<string name="notification_downloading">Buscando atualizações</string>
+<string name="btn_accept">OK</string>
+<string name="btn_decline">Recusar</string>
+<string name="btn_cancel">Cancelar</string>
+<string name="oauth_login_failed">Erro, verifique-se que está conectado a internet</string>
+<string name="timescape_no_internet">Erro, verifique-se que está conectado a internet</string>
+<string name="timescape_settings_about">Sobre</string>
+<string name="pref_delete_account_message">Tem certeza que quer excluir sua conta?</string>
+<string name="pref_delete">Excluir conta</string>
+<string name="pref_login">Conectar-se</string>
+<string name="pref_login_title">Inserir informações da conta</string>
+<string name="pref_login_email">E-mail</string>
+<string name="pref_login_password">Senha</string>
+<string name="pref_login_create_new">Criar novo</string>
+<string name="pref_login_sign_in">Registrar-se</string>
+<string name="pref_login_cancel">Cancelar</string>
+<string name="toast_account_deleted_success">A conta foi excluída deste telefone.</string>
+<string name="dialog_auth_message">Autorizando…</string>
+<string name="use_web_login">Não pode conectá-lo, utilize a web para conectar-se.</string>
+<string name="logged_in_as">Conectado como</string>
+<string name="not_logged_in">Não conectado</string>
+<string name="register_account">Registrar-se agora!</string>
+<string name="timescape_error_generic_retry_later">Ocorreu um erro, tente novamente mais tarde</string>
+<string name="timescape_error_wrong_date">Não foi possível conectar-se, verifique a data em seu telepfone: %s</string>
+<string name="timescape_uses_software">Utiliza o software:</string>
+<string name="timescape_version_name">Nome da versão:</string>
+<string name="timescape_version_code">Código da versão:</string>
+<string name="timescape_error_no_connection">Nenhuma conexão disponível, tente novamente mais tarde</string>
+<string name="timescape_user_pass_not_empty">Nome do usuário ou senha não podem estar em branco, tente novamente</string>
+<string name="timescape_sync_interval">intervalo de sincronização</string>
+<string name="timescape_error_full_disk">Telefone armazenamento é baixo, apagar alguns dados para continuar.</string>
+</resources>

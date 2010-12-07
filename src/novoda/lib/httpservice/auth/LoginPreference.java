@@ -2,7 +2,6 @@
 package novoda.lib.httpservice.auth;
 
 import novoda.lib.httpservice.util.PackageUtil;
-
 import android.content.Context;
 import android.content.Intent;
 import android.preference.DialogPreference;

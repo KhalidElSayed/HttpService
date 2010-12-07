@@ -28,10 +28,12 @@ public class OAuthAuthenticator extends AbstractAccountAuthenticator {
             String authTokenType, String[] requiredFeatures, Bundle options)
             throws NetworkErrorException {
         Bundle result = new Bundle();
+        
         Intent i = new Intent(mContext, OAuthAccountAuthenticatorActivity.class);
         i.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
+        i.putExtra("oauthMetaData", metaData);
+        
         result.putParcelable(AccountManager.KEY_INTENT, i);
-        result.putParcelable("oauthMetaData", metaData);
         return result;
     }
 

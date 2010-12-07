@@ -1,5 +1,7 @@
 package novoda.rest.net;
 
+import java.io.IOException;
+
 import novoda.lib.httpservice.etag.ETagSQLiteHelper;
 
 import org.apache.http.Header;
@@ -16,8 +18,6 @@ import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
 
 import android.content.Context;
-
-import java.io.IOException;
 
 public class ETagInterceptor implements HttpRequestInterceptor,
 		HttpResponseInterceptor {

@@ -1,15 +1,12 @@
 
 package novoda.rest.concurrent;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 public abstract class RequestHandlerBase<T> implements RequestHandler<T> {
 

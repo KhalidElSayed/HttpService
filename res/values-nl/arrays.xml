@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="sync_interval_values">
+		<item>Handmatig</item>
+		<item>Elke 15 minuten</item>
+		<item>Elke 30 minuten</item>
+		<item>Elke uur</item>
+		<item>Elke 3 uren</item>
+	</string-array>
+</resources>

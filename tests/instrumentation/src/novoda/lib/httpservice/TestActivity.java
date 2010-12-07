@@ -1,6 +1,14 @@
 
 package novoda.lib.httpservice;
 
+import java.io.IOException;
+import java.util.concurrent.Future;
+
+import org.apache.http.client.HttpClient;
+
+import android.app.Activity;
+import android.os.Bundle;
+
 import com.ning.http.client.AsyncHandler;
 import com.ning.http.client.AsyncHttpClient;
 import com.ning.http.client.AsyncHttpClientConfig;
@@ -9,18 +17,7 @@ import com.ning.http.client.AsyncHttpProvider;
 import com.ning.http.client.HttpResponseBodyPart;
 import com.ning.http.client.HttpResponseHeaders;
 import com.ning.http.client.HttpResponseStatus;
-import com.ning.http.client.Response;
 import com.ning.http.client.providers.netty.NettyAsyncHttpProvider;
-
-import org.apache.http.client.HttpClient;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 public class TestActivity extends Activity {
 

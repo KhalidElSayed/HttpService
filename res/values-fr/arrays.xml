@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="sync_interval_values">
+        <item>Jamais</item>
+        <item>Toutes les 15 Minutes</item>
+        <item>Toutes les 30 Minutes</item>
+        <item>Toutes les heures</item>
+        <item>Tous les 3 heures</item>
+	</string-array>
+</resources>

@@ -1,0 +1,9 @@
+<resources>
+	<string-array name="sync_interval_values">
+		<item>Mai</item>
+		<item>Ogni 15 minuti</item>
+		<item>Ogni 30 minuti</item>
+		<item>Ogni ora</item>
+		<item>Ogni 3 ore</item>
+	</string-array>
+</resources>

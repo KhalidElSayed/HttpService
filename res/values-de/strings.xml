@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="eula_title">Endbenutzervereinbarung</string>
+	<string name="notification_downloading">Updates laden</string>
+	<string name="btn_accept">OK</string>
+	<string name="btn_decline">Zurück</string>
+	<string name="btn_cancel">Abbrechen</string>
+	<string name="oauth_login_failed">Etwas ist schief gelaufen, bitte überprüfen Sie Ihre Internetverbindung</string>
+	<string name="timescape_no_internet">Etwas ist schief gelaufen, bitte überprüfen Sie Ihre Internetverbindung</string>
+	<string name="timescape_settings_about">über</string>
+	<string name="pref_delete_account_message">Sind Sie sicher, dass Sie Ihr Konto löschen wollen?</string>
+	<string name="pref_delete">Konto löschen</string>
+	<string name="pref_login">Anmeldung</string>
+	<string name="pref_login_title">Kontoinformationen eingeben</string>
+	<string name="pref_login_email">E-Mail</string>
+	<string name="pref_login_password">Passwort</string>
+	<string name="pref_login_create_new">Neu erstellen</string>
+	<string name="pref_login_sign_in">Anmelden</string>
+	<string name="pref_login_cancel">Abbrechen</string>
+	<string name="toast_account_deleted_success">Das Konto wurde von diesem Telefon gelöscht.</string>
+	<string name="dialog_auth_message">Autorisieren von ...</string>
+	<string name="use_web_login">Anmeldung fehlgeschlagen, bitte nutzen Sie das Web	Log-in</string>
+	<string name="logged_in_as">Angemeldet als:</string>
+	<string name="not_logged_in">Nicht eingeloggt</string>
+	<string name="register_account">Registriere dich jetzt!</string>
+	<string name="timescape_error_generic_retry_later">Etwas ist fehlgeschlagen, bitte versuchen Sie es	später noch einmal</string>
+	<string name="timescape_error_wrong_date">Sie konnten nicht eingeloggt werden, bitte überprüfen Sie das Datum Ihres Telefons: %s</string>
+	<string name="timescape_uses_software">Verwendet Software:</string>
+	<string name="timescape_version_name">Version namen:</string>
+	<string name="timescape_version_code">Version code:</string>
+	<string name="timescape_error_no_connection">Keine Verbindung verfügbar, bitte versuchen Sie es	später noch einmal</string>
+	<string name="timescape_user_pass_not_empty">Benutzername oder Passwort dürfen nicht leer sein,	bitte versuchen Sie es noch einmal</string>
+		<string name="timescape_sync_interval">Sync-Intervall</string>
+		
+		<!-- to be translated -->
+	<string name="timescape_error_full_disk">Auf Festplattenspeicher niedrig, löschen Sie einige Daten, um fortzufahren.</string>
+	
+</resources>

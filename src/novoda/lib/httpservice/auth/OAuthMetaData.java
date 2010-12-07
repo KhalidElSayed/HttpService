@@ -25,11 +25,17 @@ public class OAuthMetaData implements Parcelable {
 
     public static String AUTHORIZE_URL = "authorizeURL";
 
-    String consumerKey = "";
+    public String consumerKey = "";
 
-    String consumerSecret = "";
+    public String consumerSecret = "";
 
-    String urls;
+    public String requestTokenEndpointUrl;
+
+    public String accessTokenEndpointUrl;
+
+    public String authorizationWebsiteUrl;
+
+    public String callback;
 
     private OAuthMetaData() {
         // no constructor user fromXML
@@ -39,13 +45,21 @@ public class OAuthMetaData implements Parcelable {
             IOException {
 
         OAuthMetaData metaData = new OAuthMetaData();
-        
+
         while (xrp.getEventType() != XmlResourceParser.END_DOCUMENT) {
             if (xrp.getEventType() == XmlResourceParser.START_TAG) {
                 String s = xrp.getName();
                 if (s.equals(OAUTH_DATA)) {
                     metaData.consumerKey = xrp.getAttributeValue(SCHEMA, "consumerKey");
                     metaData.consumerSecret = xrp.getAttributeValue(SCHEMA, "consumerSecret");
+                    metaData.requestTokenEndpointUrl = xrp.getAttributeValue(SCHEMA,
+                            "requestTokenEndpointUrl");
+                    metaData.accessTokenEndpointUrl = xrp.getAttributeValue(SCHEMA,
+                            "accessTokenEndpointUrl");
+                    metaData.authorizationWebsiteUrl = xrp.getAttributeValue(SCHEMA,
+                            "authorizationWebsiteUrl");
+                    metaData.callback = xrp.getAttributeValue(SCHEMA, "callback");
+
                 }
             } else if (xrp.getEventType() == XmlResourceParser.END_TAG) {
                 ;
@@ -55,7 +69,7 @@ public class OAuthMetaData implements Parcelable {
             xrp.next();
         }
         xrp.close();
-        
+
         return metaData;
     }
 
@@ -68,6 +82,10 @@ public class OAuthMetaData implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(consumerKey);
         dest.writeString(consumerSecret);
+        dest.writeString(requestTokenEndpointUrl);
+        dest.writeString(accessTokenEndpointUrl);
+        dest.writeString(authorizationWebsiteUrl);
+        dest.writeString(callback);
     }
 
     public static final Parcelable.Creator<OAuthMetaData> CREATOR = new Parcelable.Creator<OAuthMetaData>() {
@@ -77,6 +95,10 @@ public class OAuthMetaData implements Parcelable {
             OAuthMetaData metadata = new OAuthMetaData();
             metadata.consumerKey = source.readString();
             metadata.consumerSecret = source.readString();
+            metadata.requestTokenEndpointUrl = source.readString();
+            metadata.accessTokenEndpointUrl = source.readString();
+            metadata.authorizationWebsiteUrl = source.readString();
+            metadata.callback = source.readString();
             return metadata;
         }
 

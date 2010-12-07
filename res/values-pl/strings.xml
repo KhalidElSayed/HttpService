@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="eula_title">Licencja użytkownika</string>
+<string name="notification_downloading">Pobieranie historii</string>
+<string name="btn_accept">OK</string>
+<string name="btn_decline">Odrzuć</string>
+<string name="btn_cancel">Anuluj</string>
+<string name="oauth_login_failed">Coś poszło nie tak, upewnij się że masz połączenie z internetem.</string>
+<string name="timescape_no_internet">Coś poszło nie tak, upewnij się że masz połączenie z internetem.</string>
+<string name="timescape_settings_about">O programie</string>
+<string name="pref_delete_account_message">Jesteś pewny(a) że chcesz usunąć swoje konto?</string>
+<string name="pref_delete">Usuń konto</string>
+<string name="pref_login">Zaloguj się</string>
+<string name="pref_login_title">Wprowadź dane konta</string>
+<string name="pref_login_email">E-mail</string>
+<string name="pref_login_password">Hasło</string>
+<string name="pref_login_create_new">Stwórz nowy</string>
+<string name="pref_login_sign_in">Zaloguj się</string>
+<string name="pref_login_cancel">Anuluj</string>
+<string name="toast_account_deleted_success">Konto zostało usunięte z tego telefonu.</string>
+<string name="dialog_auth_message">Autoryzowanie...</string>
+<string name="use_web_login">Logowanie niemożliwe, zaloguj się przez internet</string>
+<string name="logged_in_as">Zalogowany(a) jako</string>
+<string name="not_logged_in">Nie zalogowany(a)</string>
+<string name="register_account">Zarajestruj się teraz!</string>
+<string name="timescape_error_generic_retry_later">Coś poszło nie tak, spróbuj ponownie</string>
+<string name="timescape_error_wrong_date">Logowanie nie powiodło się, sprawdź date swojego telefonu: %s</string>
+<string name="timescape_uses_software">Używa oprogramowania:</string>
+<string name="timescape_version_name">Wersja:</string>
+<string name="timescape_version_code">Kod wersji:</string>
+<string name="timescape_error_no_connection">Brak połączenia, spróbuj ponownie później</string>
+<string name="timescape_user_pass_not_empty">Użytkownik i hasło nie mogą być puste, spróbuj ponownie</string>
+<string name="timescape_sync_interval">Częstość Aktualizacji</string>
+<string name="timescape_error_full_disk">pamięć telefonu jest niska, usunąć niektóre dane, aby kontynuować.</string>
+
+</resources>

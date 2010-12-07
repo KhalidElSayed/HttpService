@@ -1,13 +1,6 @@
 
 package novoda.lib.httpservice;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.util.Log;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -19,6 +12,13 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import android.app.Service;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.IBinder;
+import android.os.Message;
+import android.util.Log;
 
 public abstract class QueuedService<T> extends Service {
 

@@ -10,7 +10,7 @@
 	<classpathentry kind="lib" path="libs/test/robolectric-0.9.2.jar"/>
 	<classpathentry kind="lib" path="libs/compile/jackson-core-asl-1.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/compile/jackson-mapper-asl-1.6.2.jar"/>
-	<classpathentry kind="lib" path="libs/compile/signpost-commonshttp4-1.2.1.jar"/>
-	<classpathentry kind="lib" path="libs/compile/signpost-core-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/RESTProvider/libs/signpost-commonshttp4-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/RESTProvider/libs/signpost-core-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

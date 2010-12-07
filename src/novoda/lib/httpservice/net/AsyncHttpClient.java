@@ -1,11 +1,6 @@
 
 package novoda.lib.httpservice.net;
 
-import novoda.rest.concurrent.RequestHandler;
-
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpUriRequest;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
@@ -17,6 +12,11 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import novoda.rest.concurrent.RequestHandler;
+
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpUriRequest;
 
 public class AsyncHttpClient {
 

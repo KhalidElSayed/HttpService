@@ -20,15 +20,13 @@ public class OAuthAccountAuthenticatorService extends Service {
         if (Log.isLoggable(TAG, Log.VERBOSE)) {
             Log.v(TAG, "OAuthAccountAuthenticatorService Service started.");
         }
-        
-        final ComponentName name = new ComponentName(getPackageName(), getClass().getName());
         try {
-            ServiceInfo serviceInfo = getPackageManager().getServiceInfo(name,
+            final ComponentName name = new ComponentName(getPackageName(), getClass().getName());
+            final ServiceInfo serviceInfo = getPackageManager().getServiceInfo(name,
                     PackageManager.GET_META_DATA);
-            XmlResourceParser xml = getResources().getXml(
+            final XmlResourceParser xml = getResources().getXml(
                     serviceInfo.metaData.getInt("novoda.lib.httpservice.OAuthInformation"));
-            OAuthMetaData m = OAuthMetaData.fromXml(xml);
-            sAccountAuthenticator = new OAuthAuthenticator(this, m);
+            sAccountAuthenticator = new OAuthAuthenticator(this, OAuthMetaData.fromXml(xml));
         } catch (Exception e) {
             throw new IllegalStateException(e.getCause());
         }

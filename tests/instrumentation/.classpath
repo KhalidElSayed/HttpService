@@ -2,12 +2,15 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="HttpService_src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/httpservice/libs/compile/jcl-over-slf4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="/home/acsia/Downloads/slf4j-android-1.6.1-RC1.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/async-http-client"/>
-	<classpathentry kind="lib" path="/home/acsia/Downloads/netty-4.0.0.Alpha1-SNAPSHOT.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/httpservice"/>
 	<classpathentry kind="src" path="httpservice_src"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/async-http-client-1.4.1.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/jcl-over-slf4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/netty-3.2.3.Final.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="libs/test/robotium-solo-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/home/acsia/.m2/repository/oauth/signpost/signpost-commonshttp4/1.2.1.1/signpost-commonshttp4-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="/home/acsia/.m2/repository/oauth/signpost/signpost-core/1.2.1.1/signpost-core-1.2.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

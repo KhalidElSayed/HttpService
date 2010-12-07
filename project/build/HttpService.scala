@@ -23,12 +23,10 @@ class HttpService(info: ProjectInfo) extends ParentProject(info) {
   	val asyncclient = "com.ning" % "async-http-client" % "1.4.1" % "compile"
     val signpostcore = "oauth.signpost" % "signpost-core" % "1.2.1" % "compile"
     val signpostcommons = "oauth.signpost" % "signpost-commonshttp4" % "1.2.1" % "compile"
-    
-    
-    
     def googleMapLocation =  androidSdkPath  / "add-ons" / "addon_google_apis_google_inc_8" / "libs" / "maps.jar" absolutePath
   }
       
   class TestProject(info: ProjectInfo) extends AndroidTestProject(info) with Defaults {
+    val robotium = "com.jayway.android.robotium" % "robotium-solo" % "1.9.0" % "test"
   }  
 }

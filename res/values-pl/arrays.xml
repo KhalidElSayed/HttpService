@@ -1,0 +1,9 @@
+<resources>
+	<string-array name="sync_interval_values">
+        <item>Nigdy</item>
+        <item>Co 15 minut</item>
+        <item>Co 30 minut</item>
+        <item>Co godzinę</item>
+        <item>Co 3 godziny</item>
+	</string-array>
+</resources>

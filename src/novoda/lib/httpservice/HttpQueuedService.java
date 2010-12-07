@@ -1,6 +1,13 @@
 
 package novoda.lib.httpservice;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import novoda.lib.httpservice.exception.HttpServiceException;
 import novoda.lib.httpservice.net.ParcelableBasicNameValuePair;
 import novoda.lib.httpservice.net.UserAgent;
@@ -23,13 +30,6 @@ import android.net.Uri;
 import android.net.http.AndroidHttpClient;
 import android.os.RemoteException;
 import android.util.Log;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Callable;
 
 public abstract class HttpQueuedService<T> extends QueuedService<T> {
 

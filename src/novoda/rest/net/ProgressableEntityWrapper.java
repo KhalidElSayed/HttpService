@@ -1,11 +1,11 @@
 
 package novoda.rest.net;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.entity.HttpEntityWrapper;
-
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.entity.HttpEntityWrapper;
 
 public class ProgressableEntityWrapper extends HttpEntityWrapper {
 

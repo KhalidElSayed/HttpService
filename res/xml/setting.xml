@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:key="settings">
+
+	<novoda.lib.httpservice.auth.LoginPreference
+		android:title="@string/pref_login"
+		android:key="login_details"
+		android:dialogLayout="@layout/lib_httpservice_login_preference"
+		android:dialogTitle="@string/pref_login_title"
+		android:negativeButtonText="@string/pref_login_cancel"
+		android:positiveButtonText="@string/pref_login_sign_in" />
+
+	<Preference
+		android:key="delete"
+		android:title="@string/pref_delete"
+		android:persistent="false" />
+
+</PreferenceScreen>

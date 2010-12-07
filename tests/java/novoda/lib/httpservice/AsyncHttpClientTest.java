@@ -40,8 +40,6 @@ public class AsyncHttpClientTest {
         MockitoAnnotations.initMocks(this);
     }
         
-        
-    
     @Test
     public void testRequestHandler() throws Exception {
         when(client.execute((HttpUriRequest) anyObject(), (ResponseHandler) anyObject()))
@@ -50,7 +48,7 @@ public class AsyncHttpClientTest {
                     @Override
                     public String answer(InvocationOnMock invocation) throws Throwable {
                         // TODO Auto-generated method stubg
-                        return "testing t";
+                        return "test";
                     }
                 });
         AsyncHttpClient aclient = new AsyncHttpClient(client);
