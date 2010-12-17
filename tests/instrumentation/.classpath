@@ -9,8 +9,8 @@
 	<classpathentry kind="lib" path="/HttpService/libs/compile/jcl-over-slf4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/netty-3.2.3.Final.jar"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="lib" path="libs/test/robotium-solo-1.9.0.jar"/>
-	<classpathentry kind="lib" path="/home/acsia/.m2/repository/oauth/signpost/signpost-commonshttp4/1.2.1.1/signpost-commonshttp4-1.2.1.1.jar"/>
-	<classpathentry kind="lib" path="/home/acsia/.m2/repository/oauth/signpost/signpost-core/1.2.1.1/signpost-core-1.2.1.1.jar"/>
+	<classpathentry kind="src" path="HttpService"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-commonshttp4-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-core-1.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
