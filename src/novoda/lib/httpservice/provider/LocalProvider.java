@@ -2,8 +2,8 @@ package novoda.lib.httpservice.provider;
 
 import java.util.HashMap;
 
-import novoda.lib.httpservice.Request;
 import novoda.lib.httpservice.handler.AsyncHandler;
+import novoda.lib.httpservice.request.Request;
 
 public class LocalProvider<T> implements Provider<T> {
 

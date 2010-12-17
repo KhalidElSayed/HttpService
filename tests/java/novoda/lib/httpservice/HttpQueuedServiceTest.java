@@ -7,6 +7,7 @@ import static novoda.lib.httpservice.util.Time.await;
 import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
 import novoda.lib.httpservice.provider.LocalProvider;
+import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -39,7 +40,7 @@ public class HttpQueuedServiceTest {
 	public void shouldWork() {
 		HttpQueuedService<String> service = new HttpQueuedService<String>(provider) {
 			@Override
-			protected AsyncHandler<String> getHandler(Intent intent) {
+			protected AsyncHandler<String> getHandler() {
 				return new BaseAsyncHandler<String>(String.class) {
 					public void onContentReceived(String content) {
 						calls++;

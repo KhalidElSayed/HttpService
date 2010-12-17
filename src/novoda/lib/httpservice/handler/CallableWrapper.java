@@ -2,8 +2,8 @@ package novoda.lib.httpservice.handler;
 
 import java.util.concurrent.Callable;
 
-import novoda.lib.httpservice.Request;
 import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.request.Request;
 
 public class CallableWrapper<T> implements Callable<T> {
 

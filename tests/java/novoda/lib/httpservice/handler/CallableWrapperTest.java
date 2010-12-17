@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.handler;
 
-import novoda.lib.httpservice.Request;
 import novoda.lib.httpservice.provider.LocalProvider;
+import novoda.lib.httpservice.request.Request;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

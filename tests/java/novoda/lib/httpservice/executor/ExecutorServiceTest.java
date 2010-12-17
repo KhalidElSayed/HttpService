@@ -1,14 +1,11 @@
 package novoda.lib.httpservice.executor;
 
+import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static novoda.lib.httpservice.util.Time.await;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-
-import novoda.lib.httpservice.executor.ExecutorManager;
-import novoda.lib.httpservice.executor.ExecutorService;
 
 import org.junit.Before;
 import org.junit.Ignore;

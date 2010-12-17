@@ -18,6 +18,5 @@
 	<classpathentry kind="lib" path="libs/test/objenesis-1.2.jar"/>
 	<classpathentry kind="lib" path="libs/test/robolectric-0.9.3-SNAPSHOT.jar" sourcepath="/robolectric"/>
 	<classpathentry kind="lib" path="libs/test/javassist-3.12.GA.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/robolectric"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

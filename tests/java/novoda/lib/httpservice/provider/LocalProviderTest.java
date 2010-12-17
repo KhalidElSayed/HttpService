@@ -3,8 +3,8 @@ package novoda.lib.httpservice.provider;
 import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import novoda.lib.httpservice.Request;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
+import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;
 import org.junit.Test;
