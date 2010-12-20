@@ -1,6 +1,6 @@
-package novoda.lib.httpservice;
+package novoda.lib.httpservice.request;
 
-import android.content.Intent;
+import java.net.URI;
 
 
 public class Request {
@@ -10,6 +10,11 @@ public class Request {
 	private static final String DEFAULT_PROTOCOL = "http" + PROTOCOL_INDICATOR;
 	
 	private String url;
+	
+	private URI uri;
+	
+	public Request() {
+	}
 	
 	public Request(String url) {
 		if(url == null) {
@@ -22,13 +27,20 @@ public class Request {
 		}
 	}
 
-	public Request(Intent intent) {
-		// TODO Auto-generated constructor stub
-	}
-
 	public String getUrl() {
 		return url;
 	}
 
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	public void setUri(URI uri) {
+		this.uri = uri;
+	}
+
+	public URI getUri() {
+		return uri;
+	}
 	
 }

@@ -1,14 +1,11 @@
 package novoda.lib.httpservice.executor;
 
+import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static novoda.lib.httpservice.util.Time.await;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-
-import novoda.lib.httpservice.executor.ExecutorManager;
-import novoda.lib.httpservice.executor.ExecutorService;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -16,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
-import android.os.Handler;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -49,7 +45,7 @@ public class ExecutorServiceTest {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
-    	Handler mHandler = mock(Handler.class);
+    	LifecycleHandler mHandler = mock(LifecycleHandler.class);
     	ExecutorManager<String> mExecutorManager = mock(ExecutorManager.class);
     	service = new ExecutorService<String>(mExecutorManager, mHandler) {
 			@Override

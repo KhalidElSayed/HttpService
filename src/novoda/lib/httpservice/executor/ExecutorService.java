@@ -1,56 +1,56 @@
 
 package novoda.lib.httpservice.executor;
 
-import novoda.lib.httpservice.util.LogTag;
+import static novoda.lib.httpservice.util.LogTag.debugES;
+import static novoda.lib.httpservice.util.LogTag.debugIsEnableForES;
+
+import java.util.Map;
+
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
-import android.util.Log;
 
+/**
+ * Main Executor Service.
+ * 
+ * @author luigi
+ *
+ * @param <T>
+ */
 public abstract class ExecutorService<T> extends Service implements CallableExecutor<T> {
-	
-	public static final int MESSAGE_ADD_TO_QUEUE = 0x3;
-
-    private static final int MESSAGE_RECEIVED_REQUEST = 0x1;
-    
-	private static final long SERVICE_LIFESPAN = 1000 * 60 * 3;
-
-    private static final int MESSAGE_TIMEOUT_AFTER_FIRST_CALL = 0x2;
     
     protected ExecutorManager<T> executorManager;
     
-    private Handler lifecycleHandler;
+    private LifecycleHandler lifecycleHandler;
     
     public ExecutorService() {
     	this(null, null);
     }
     
-    public ExecutorService(ExecutorManager<T> executorManager, Handler lifecycleHandler) {
-    	if(executorManager != null) {
-    		this.executorManager = executorManager; 
-    	} else {
-    		this.executorManager = new QueuedExecutorManager<T>(this);
+    public ExecutorService(ExecutorManager<T> executorManager, LifecycleHandler lifecycleHandler) {
+    	this.executorManager = executorManager; 
+    	if(this.executorManager == null) {
+    		this.executorManager = new ThreadManager<T>(this);
     	}
     	
-    	if(lifecycleHandler == null) {
-    		lifecycleHandler = new LifecycleHandler(); 
+    	this.lifecycleHandler = lifecycleHandler; 
+    	if(this.lifecycleHandler == null) {
+    		this.lifecycleHandler = new LifecycleHandler(this); 
     	}
     }
 
-    @Override
+	@Override
     public void onCreate() {
-    	if(Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.VERBOSE)) {
-    		Log.v(LogTag.EXECUTOR_SERVICE, "Creating the Executor Service");
+		if(debugIsEnableForES()) {
+    		debugES("Executor Service on Create");
     	}
         super.onCreate();
     }
 
     @Override
     public void onDestroy() {
-    	if(Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.VERBOSE)) {
-    		Log.v(LogTag.EXECUTOR_SERVICE, "Shutting down the Executor Service");
+    	if(debugIsEnableForES()) {
+    		debugES("Executor Service on Destroy");
     	}
     	executorManager.shutdown();
         super.onDestroy();
@@ -58,11 +58,11 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-    	if(Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.VERBOSE)) {
-    		Log.v(LogTag.EXECUTOR_SERVICE, "Executing intent");
+    	if(debugIsEnableForES()) {
+    		debugES("Executing intent");
     	}
         executorManager.addTask(intent);
-        lifecycleHandler.sendEmptyMessage(MESSAGE_RECEIVED_REQUEST);
+        lifecycleHandler.messageReceived();
         return START_NOT_STICKY;
     }
     
@@ -71,33 +71,16 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
         return null;
     }
     
-    private class LifecycleHandler extends Handler { 
-    	
-    	private long lastCall = 0L;
-
-    	@Override
-		public void handleMessage(Message msg) {
-			switch (msg.what) {
-				case MESSAGE_ADD_TO_QUEUE: {
-					break;
-				}
-				case MESSAGE_RECEIVED_REQUEST: {
-					lastCall = System.currentTimeMillis();
-					sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_FIRST_CALL, SERVICE_LIFESPAN);
-					break;
-				}
-				case MESSAGE_TIMEOUT_AFTER_FIRST_CALL: {
-					if (System.currentTimeMillis() - lastCall > SERVICE_LIFESPAN && !executorManager.isWorking()) {
-						if (Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.VERBOSE)) {
-							Log.v(LogTag.EXECUTOR_SERVICE, "stoping service");
-						}
-						stopSelf();
-					} else {
-						sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_FIRST_CALL, SERVICE_LIFESPAN);
-					}
-					break;
-				}
-			}
-		}
+    /**
+     * The use of this method can be expensive!
+     * @return
+     */
+    public Map<String, String> dump() {
+    	return executorManager.dump();
     }
+
+	public boolean isWorking() {
+		return executorManager.isWorking();
+	}
+	
 }

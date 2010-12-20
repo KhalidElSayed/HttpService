@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-	<string name="app_name">HttpService Tester</string>
-	
 	<!-- 
 	=================================================================
-	Dashboard 
+	Errors
 	=================================================================
 	 -->
-	<string name="dashboard_title">HttpService Tester</string> 
+	<string name="error_1">Problem trying to parse the schema from the json coming from the server : %1$s</string>
 	 
 </resources>

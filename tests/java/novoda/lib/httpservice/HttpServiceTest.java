@@ -6,7 +6,8 @@ import static org.mockito.Mockito.mock;
 import static novoda.lib.httpservice.util.Time.await;
 import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
-import novoda.lib.httpservice.provider.LocalProvider;
+import novoda.lib.httpservice.provider.local.LocalProvider;
+import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -18,7 +19,7 @@ import android.content.Intent;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class HttpQueuedServiceTest {
+public class HttpServiceTest {
 
 	private LocalProvider<String> provider = new LocalProvider<String>(); {
 		provider.add("http://www.google.com", "ok");
@@ -37,9 +38,9 @@ public class HttpQueuedServiceTest {
 	@Ignore
 	@Test
 	public void shouldWork() {
-		HttpQueuedService<String> service = new HttpQueuedService<String>(provider) {
+		HttpService<String> service = new HttpService<String>(provider) {
 			@Override
-			protected AsyncHandler<String> getHandler(Intent intent) {
+			protected AsyncHandler<String> getHandler() {
 				return new BaseAsyncHandler<String>(String.class) {
 					public void onContentReceived(String content) {
 						calls++;
