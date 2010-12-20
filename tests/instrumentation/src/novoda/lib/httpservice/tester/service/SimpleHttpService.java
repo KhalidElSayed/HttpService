@@ -1,5 +1,6 @@
 package novoda.lib.httpservice.tester.service;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -15,9 +16,15 @@ import android.content.IntentFilter;
 
 public class SimpleHttpService extends HttpService<String> {
 	
-	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.actio.STOP_MONITOR";
+	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.STOP_MONITOR";
 	
-	public static final String STOP_MONITOR_ACTION = "novoda.lib.httpservice.tester.actio.START_MONITOR";
+	public static final String STOP_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.START_MONITOR";
+	
+	private static final String DUMP_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.DUMP_MONITOR";
+	
+	public static final String DUMP_MONITOR_EXTRA = "novoda.lib.httpservice.tester.extra.DUMP_MONITOR";
+	
+	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(DUMP_MONITOR_ACTION);
 
 	private AsyncHandler<String> handler = new BaseAsyncHandler<String>(String.class) {
 		@Override
@@ -41,11 +48,20 @@ public class SimpleHttpService extends HttpService<String> {
 		attach(new Monitor() {
 			@Override
 			public void dump(Map<String, String> properties) {
-				StringBuilder builder = new StringBuilder("Monitoring[ | ");
+				ArrayList<String> keys = new ArrayList<String>();
+				
+				Intent intent = new Intent(DUMP_MONITOR_ACTION);
+				
+				//StringBuilder builder = new StringBuilder("Monitoring[ | ");
 				for (Entry<String, String> entry: properties.entrySet()) {
-					builder.append(entry.getKey()).append(":").append(entry.getValue()).append(" | ");
+					keys.add(entry.getKey());
+					intent.putExtra(entry.getKey(), entry.getValue());
+					//builder.append(entry.getKey()).append(":").append(entry.getValue()).append(" | ");
 				}
-				AppLogger.debug(builder.append("]").toString());
+				//AppLogger.debug(builder.append("]").toString());
+				
+				intent.putStringArrayListExtra(DUMP_MONITOR_EXTRA, keys);
+				sendBroadcast(intent);
 			}
 
 			@Override

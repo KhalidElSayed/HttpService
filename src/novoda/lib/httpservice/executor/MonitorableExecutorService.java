@@ -9,7 +9,6 @@ public abstract class MonitorableExecutorService<T> extends ExecutorService<T> i
 
 	private boolean runMonitor = true;
 
-	
 	@Override
 	public void attach(Monitor monitor) {
 		this.monitor = monitor;

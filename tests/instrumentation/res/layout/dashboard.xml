@@ -6,7 +6,11 @@
 	<TextView android:text="@string/dashboard_title" style="@style/TitleHeader" />
 	
 	<LinearLayout style="@style/DashboardRow">
-		<EditText android:id="@+id/requestNumber"  android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		<TextView android:id="@+id/monitorInfo" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+	</LinearLayout>
+	
+	<LinearLayout style="@style/DashboardRow">
+		<EditText android:id="@+id/requestNumber" android:minWidth="100dip" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 		<Button android:id="@+id/start" android:text="Start" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 	</LinearLayout>
 	
