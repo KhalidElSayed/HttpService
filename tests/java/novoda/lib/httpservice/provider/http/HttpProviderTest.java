@@ -1,9 +1,9 @@
-package novoda.lib.httpservice.provider;
+package novoda.lib.httpservice.provider.http;
 
 import static org.junit.Assert.assertNotNull;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
-import novoda.lib.httpservice.provider.HttpProvider;
 import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;

@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.provider;
+package novoda.lib.httpservice.provider.http;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,6 +9,8 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import novoda.lib.httpservice.handler.AsyncHandler;
+import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.provider.ProviderException;
 import novoda.lib.httpservice.request.Request;
 
 import org.apache.http.HttpEntity;

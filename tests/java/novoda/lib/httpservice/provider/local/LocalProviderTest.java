@@ -1,9 +1,10 @@
-package novoda.lib.httpservice.provider;
+package novoda.lib.httpservice.provider.local;
 
 import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
+import novoda.lib.httpservice.provider.local.LocalProvider;
 import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;

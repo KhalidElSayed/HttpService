@@ -13,7 +13,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
-import android.os.Handler;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -46,7 +45,7 @@ public class ExecutorServiceTest {
     @SuppressWarnings("unchecked")
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
-    	Handler mHandler = mock(Handler.class);
+    	LifecycleHandler mHandler = mock(LifecycleHandler.class);
     	ExecutorManager<String> mExecutorManager = mock(ExecutorManager.class);
     	service = new ExecutorService<String>(mExecutorManager, mHandler) {
 			@Override

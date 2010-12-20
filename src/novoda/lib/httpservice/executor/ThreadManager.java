@@ -17,8 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.content.Intent;
 
-public class QueuedExecutorManager<T> implements ExecutorManager<T>,
-		Monitorable {
+public class ThreadManager<T> implements ExecutorManager<T> {
 
 	private static final int CORE_POOL_SIZE = 5;
 
@@ -26,14 +25,13 @@ public class QueuedExecutorManager<T> implements ExecutorManager<T>,
 
 	private static final int KEEP_ALIVE = 5;
 	
-	private Monitor monitor;
+	private static final String PREFIX = "QueuedService #";
 
 	private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
 		private final AtomicInteger mCount = new AtomicInteger(1);
 
 		public Thread newThread(Runnable r) {
-			Thread thread = new Thread(r, "QueuedService #"
-					+ mCount.getAndIncrement());
+			Thread thread = new Thread(r, PREFIX + mCount.getAndIncrement());
 			thread.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
 			return thread;
 		}
@@ -49,11 +47,11 @@ public class QueuedExecutorManager<T> implements ExecutorManager<T>,
 
 	private CallableExecutor<T> callableExecutor;
 
-	public QueuedExecutorManager(CallableExecutor<T> callableExecutor) {
+	public ThreadManager(CallableExecutor<T> callableExecutor) {
 		this(callableExecutor, null, null);
 	}
 
-	public QueuedExecutorManager(CallableExecutor<T> callableExecutor,
+	public ThreadManager(CallableExecutor<T> callableExecutor,
 			ThreadPoolExecutor poolExecutor,
 			ExecutorCompletionService<T> completitionService) {
 		if (debugIsEnableForES()) {
@@ -127,60 +125,16 @@ public class QueuedExecutorManager<T> implements ExecutorManager<T>,
 	}
 
 	@Override
-	public void attach(Monitor monitor) {
-		this.monitor = monitor;
-	}
-
-	private static final String POOL_SIZE = "PoolSize";
-	
-	private static final String ACTIVE_COUNT = "ActiveCount";
-	
-	private static final String TASK_COUNT = "TaskCount";
-	
-	private static final String COMPLETED_TASKS = "CompletedTask";
-	
-	private static final String IS_SHUTDOWN = "isShutdown";
-	private static final String IS_TERMINATED = "isTerminated";
-	private static final String IS_TERMINATING = "isTerminating";
-
-	private boolean runMonitor = true;
-
-	@Override
-	public void startMonitoring() {	
-		if (debugIsEnableForES()) {
-			debugES("Starting monitoring the executor manager");
-		}
-		runMonitor = true;
-		new Thread() {
-			public void run() {
-				while (runMonitor) {
-					try {
-						Map<String, String> map = new HashMap<String, String>();
-						map.put(POOL_SIZE, "" + poolExecutor.getPoolSize());
-						map.put(ACTIVE_COUNT, "" + poolExecutor.getActiveCount());
-						map.put(TASK_COUNT, "" + poolExecutor.getTaskCount());
-						map.put(COMPLETED_TASKS, "" + poolExecutor.getCompletedTaskCount());
-						map.put(IS_SHUTDOWN, "" + poolExecutor.isShutdown());
-						map.put(IS_TERMINATED, "" + poolExecutor.isTerminated());
-						map.put(IS_TERMINATING, "" + poolExecutor.isTerminating());
-						monitor.dump(map);
-						sleep(monitor.getInterval());
-					} catch (InterruptedException e) {
-						if (debugIsEnableForES()) {
-							debugES("Exception during the monitor execution loop");
-						}
-					}
-				}
-			}
-		}.start();
-	}
-
-	@Override
-	public void stopMonitoring() {
-		if (debugIsEnableForES()) {
-			debugES("Starting monitoring the executor manager");
-		}
-		runMonitor = false;
+	public Map<String, String> dump() {
+		Map<String, String> map = new HashMap<String, String>();
+		map.put(Monitorable.POOL_SIZE, Monitorable.EMPTY + poolExecutor.getPoolSize());
+		map.put(Monitorable.ACTIVE_COUNT, Monitorable.EMPTY + poolExecutor.getActiveCount());
+		map.put(Monitorable.TASK_COUNT, Monitorable.EMPTY + poolExecutor.getTaskCount());
+		map.put(Monitorable.COMPLETED_TASKS, Monitorable.EMPTY + poolExecutor.getCompletedTaskCount());
+		map.put(Monitorable.IS_SHUTDOWN, Monitorable.EMPTY + poolExecutor.isShutdown());
+		map.put(Monitorable.IS_TERMINATED, Monitorable.EMPTY + poolExecutor.isTerminated());
+		map.put(Monitorable.IS_TERMINATING, Monitorable.EMPTY + poolExecutor.isTerminating());
+		return map;
 	}
 
 }

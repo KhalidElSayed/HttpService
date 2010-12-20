@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.tester.activity;
 
-import novoda.lib.httpservice.HttpServiceAction;
+import novoda.lib.httpservice.HttpServiceConstant;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
 import novoda.lib.httpservice.tester.util.AppLogger;
@@ -28,8 +28,8 @@ public class DashboardActivity extends BaseActivity {
 				String text = edit.getText().toString();
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new Intent(HttpServiceAction.simple_request);
-					intent.putExtra(HttpServiceAction.Extra.url, "http://facebook-pipes.appspot.com/");
+					Intent intent = new Intent(HttpServiceConstant.simple_request);
+					intent.putExtra(HttpServiceConstant.Extra.url, "http://facebook-pipes.appspot.com/");
 					startService(intent);
 				}
 			}

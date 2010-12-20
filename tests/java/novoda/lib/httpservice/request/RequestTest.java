@@ -1,4 +1,4 @@
-package novoda.lib.httpservice;
+package novoda.lib.httpservice.request;
 
 import static org.junit.Assert.assertEquals;
 

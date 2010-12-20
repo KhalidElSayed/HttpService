@@ -3,18 +3,17 @@ package novoda.lib.httpservice.tester.service;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import novoda.lib.httpservice.HttpService;
+import novoda.lib.httpservice.executor.Monitor;
+import novoda.lib.httpservice.handler.AsyncHandler;
+import novoda.lib.httpservice.handler.BaseAsyncHandler;
+import novoda.lib.httpservice.tester.util.AppLogger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-import novoda.lib.httpservice.HttpQueuedService;
-import novoda.lib.httpservice.executor.Monitor;
-import novoda.lib.httpservice.handler.AsyncHandler;
-import novoda.lib.httpservice.handler.BaseAsyncHandler;
-import novoda.lib.httpservice.tester.util.AppLogger;
-
-public class SimpleHttpService extends HttpQueuedService<String> {
+public class SimpleHttpService extends HttpService<String> {
 	
 	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.actio.STOP_MONITOR";
 	
@@ -37,6 +36,7 @@ public class SimpleHttpService extends HttpQueuedService<String> {
 		return handler;
 	}
 	
+	@Override
 	public void onCreate() {
 		attach(new Monitor() {
 			@Override

@@ -2,7 +2,7 @@ package novoda.lib.httpservice.request;
 
 import java.net.URISyntaxException;
 
-import novoda.lib.httpservice.HttpServiceAction;
+import novoda.lib.httpservice.HttpServiceConstant;
 
 import org.apache.http.client.utils.URIUtils;
 
@@ -20,11 +20,11 @@ public class RequestBuilder {
 			throw new RequestException(
 					"Can't build a request with a null action");
 		}
-		if (HttpServiceAction.simple_request.equals(action)) {
+		if (HttpServiceConstant.simple_request.equals(action)) {
 			return buildRequestFromSimpleRequestIntent(intent);
-		} else if (HttpServiceAction.uri_request.equals(action)) {
+		} else if (HttpServiceConstant.uri_request.equals(action)) {
 			return buildRequestFromUriRequestIntent(intent);
-		} else if (HttpServiceAction.parcable_request.equals(action)) {
+		} else if (HttpServiceConstant.parcable_request.equals(action)) {
 			return buildRequestFromParcableRequestIntent(intent);
 		} else {
 			throw new RequestException("Action : " + action
@@ -34,7 +34,7 @@ public class RequestBuilder {
 
 	private static final Request buildRequestFromSimpleRequestIntent(
 			Intent intent) {
-		String url = intent.getStringExtra(HttpServiceAction.Extra.url);
+		String url = intent.getStringExtra(HttpServiceConstant.Extra.url);
 		return new Request(url);
 	}
 
@@ -67,7 +67,7 @@ public class RequestBuilder {
 	private static final Request buildRequestFromParcableRequestIntent(
 			Intent intent) {
 		RequestParcable parcable = intent
-				.getParcelableExtra(HttpServiceAction.Extra.request_parcable);
+				.getParcelableExtra(HttpServiceConstant.Extra.request_parcable);
 		if (parcable == null) {
 			throw new RequestException(
 					"Parcable is null, can't procede anymore");

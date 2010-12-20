@@ -1,11 +1,11 @@
 package novoda.lib.httpservice.tester.service;
 
-import novoda.lib.httpservice.HttpQueuedService;
+import novoda.lib.httpservice.HttpService;
 import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.handler.BaseAsyncHandler;
 import novoda.lib.httpservice.tester.util.AppLogger;
 
-public class UriHttpService extends HttpQueuedService<String> {
+public class UriHttpService extends HttpService<String> {
 
 	private AsyncHandler<String> handler = new BaseAsyncHandler<String>(String.class) {
 		@Override

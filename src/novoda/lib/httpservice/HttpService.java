@@ -5,12 +5,11 @@ import static novoda.lib.httpservice.util.LogTag.debugNS;
 
 import java.util.concurrent.Callable;
 
-import novoda.lib.httpservice.executor.ExecutorService;
-import novoda.lib.httpservice.executor.Monitorable;
+import novoda.lib.httpservice.executor.MonitorableExecutorService;
 import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.handler.CallableWrapper;
-import novoda.lib.httpservice.provider.HttpProvider;
 import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.RequestBuilder;
 import android.content.Intent;
@@ -22,15 +21,15 @@ import android.content.Intent;
  *
  * @param <T>
  */
-public abstract class HttpQueuedService<T> extends ExecutorService<T> implements Monitorable {
+public abstract class HttpService<T> extends MonitorableExecutorService<T> {
 	
 	private Provider<T> provider;
 	
-	public HttpQueuedService() {
+	public HttpService() {
 		this(null);
 	}
 	
-	public HttpQueuedService(Provider<T> provider) {
+	public HttpService(Provider<T> provider) {
 		if(provider == null) {
 			this.provider = new HttpProvider<T>();
 		} else {

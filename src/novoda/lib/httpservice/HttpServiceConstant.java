@@ -1,6 +1,6 @@
 package novoda.lib.httpservice;
 
-public interface HttpServiceAction {
+public interface HttpServiceConstant {
 
 	String simple_request = "novoda.lib.httpservice.action.SIMPLE_REQUEST";
 	

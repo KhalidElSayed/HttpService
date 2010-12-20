@@ -1,5 +1,7 @@
 package novoda.lib.httpservice.executor;
 
+import java.util.Map;
+
 import android.content.Intent;
 
 public interface ExecutorManager<T> {
@@ -13,5 +15,7 @@ public interface ExecutorManager<T> {
 	void start();
 	
 	void pause();
+	
+	Map<String, String> dump();
 
 }

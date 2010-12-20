@@ -5,10 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import novoda.lib.httpservice.HttpServiceConstant;
 
-import novoda.lib.httpservice.HttpServiceAction;
-
-import org.apache.http.client.utils.URIUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,8 +38,8 @@ public class RequestBuilderTest {
 	@Test(expected = RequestException.class)
 	public void shouldBuildSimpleHttpRequestFaildWithExceptionIfUrlIsNotProvided() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceAction.simple_request);
-		when(intent.getStringExtra(HttpServiceAction.Extra.url)).thenReturn(null);
+		when(intent.getAction()).thenReturn(HttpServiceConstant.simple_request);
+		when(intent.getStringExtra(HttpServiceConstant.Extra.url)).thenReturn(null);
 		
 		RequestBuilder.build(intent);
 	}
@@ -49,8 +47,8 @@ public class RequestBuilderTest {
 	@Test
 	public void shouldBuildRequestFromSimpleIntent() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceAction.simple_request);
-		when(intent.getStringExtra(HttpServiceAction.Extra.url)).thenReturn("http://www.google.com");
+		when(intent.getAction()).thenReturn(HttpServiceConstant.simple_request);
+		when(intent.getStringExtra(HttpServiceConstant.Extra.url)).thenReturn("http://www.google.com");
 		
 		Request request = RequestBuilder.build(intent);
 		
@@ -61,7 +59,7 @@ public class RequestBuilderTest {
 	@Test(expected = RequestException.class)
 	public void shoudBuildForUriThrowRequestExceptionIfUriIsNotSetted() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceAction.uri_request);
+		when(intent.getAction()).thenReturn(HttpServiceConstant.uri_request);
 		when(intent.getData()).thenReturn(null);
 		
 		RequestBuilder.build(intent);
@@ -71,7 +69,7 @@ public class RequestBuilderTest {
 	@Test
 	public void shouldBuildForUri() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceAction.uri_request);
+		when(intent.getAction()).thenReturn(HttpServiceConstant.uri_request);
 
 		Uri data = Uri.parse("http://www.google.com");
 		when(intent.getData()).thenReturn(data);

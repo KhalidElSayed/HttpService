@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.provider;
+package novoda.lib.httpservice.provider.http;
 
 import android.os.Build;
 

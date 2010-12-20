@@ -38,7 +38,7 @@ public class QueuedExecutorManagerTest {
 	
 	@Test
 	public void shouldThrowExceptionOnTheFirstExecutionIfCallableCreatedByTheServiceIsNull() {
-		QueuedExecutorManager<String> manager = new QueuedExecutorManager<String>(new CallableExecutor<String>() {
+		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
 			@Override
 			public Callable<String> getCallable(Intent intent) {
 				return null;
@@ -47,12 +47,14 @@ public class QueuedExecutorManagerTest {
 		manager.start();
 	}
 	
+	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void shouldStartNormalPool() throws Exception {
 		mCallable = mock(Callable.class);
 		when(mCallable.call()).thenReturn("ok");
 		
-		QueuedExecutorManager<String> manager = new QueuedExecutorManager<String>(new CallableExecutor<String>() {
+		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
 			@Override
 			public Callable<String> getCallable(Intent intent) {
 				getCallableCalls++;
@@ -82,7 +84,7 @@ public class QueuedExecutorManagerTest {
 			}
 		});
 		
-		QueuedExecutorManager<String> manager = new QueuedExecutorManager<String>(new CallableExecutor<String>() {
+		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
 			@Override
 			public Callable<String> getCallable(Intent intent) {
 				getCallableCalls++;
