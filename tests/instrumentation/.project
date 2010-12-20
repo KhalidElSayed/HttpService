@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>HttpService_src</name>
+			<type>2</type>
+			<location>/media/work/android/HttpService/src</location>
+		</link>
+		<link>
 			<name>httpservice_src</name>
 			<type>2</type>
 			<locationURI>_android_httpservice_45f9952d/src</locationURI>
