@@ -15,6 +15,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import novoda.lib.httpservice.executor.monitor.Monitorable;
+
 import android.content.Intent;
 
 public class ThreadManager<T> implements ExecutorManager<T> {
@@ -25,7 +27,7 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	private static final int KEEP_ALIVE = 5;
 	
-	private static final String PREFIX = "QueuedService #";
+	private static final String PREFIX = "HttpService #";
 
 	private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
 		private final AtomicInteger mCount = new AtomicInteger(1);
@@ -55,7 +57,7 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 			ThreadPoolExecutor poolExecutor,
 			ExecutorCompletionService<T> completitionService) {
 		if (debugIsEnableForES()) {
-			debugES("starting queued executor manager");
+			debugES("starting thread manager");
 		}
 		if (poolExecutor == null) {
 			poolExecutor = getThreadPoolExecutor();
@@ -72,6 +74,9 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	@Override
 	public void shutdown() {
+		if (debugIsEnableForES()) {
+			debugES("Shutting down thread manager");
+		}
 		looperThread.interrupt();
 		poolExecutor.shutdown();
 	}
@@ -88,7 +93,10 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	@Override
 	public boolean isWorking() {
-		return !(poolExecutor.isTerminated() || poolExecutor.isTerminating());
+		if(poolExecutor.getActiveCount() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override

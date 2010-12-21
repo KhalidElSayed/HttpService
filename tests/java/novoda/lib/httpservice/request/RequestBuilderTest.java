@@ -13,6 +13,8 @@ import org.junit.runner.RunWith;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.ResultReceiver;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -63,6 +65,25 @@ public class RequestBuilderTest {
 		when(intent.getData()).thenReturn(null);
 		
 		RequestBuilder.build(intent);
+	}
+	
+	@Test
+	public void shouldSetTheRequestReceiverIfThere() {
+		Intent intent = mock(Intent.class);
+		when(intent.getAction()).thenReturn(HttpServiceConstant.uri_request);
+		when(intent.getAction()).thenReturn(HttpServiceConstant.simple_request);
+		when(intent.getStringExtra(HttpServiceConstant.Extra.url)).thenReturn("http://www.google.com");
+		
+		RequestReceiver rrSent = mock(RequestReceiver.class); 
+		when(intent.hasExtra(HttpServiceConstant.Extra.request_parcable)).thenReturn(true);
+		when(intent.getParcelableExtra(HttpServiceConstant.Extra.request_parcable)).thenReturn(rrSent);
+		
+		Request request = RequestBuilder.build(intent);
+		
+		assertNotNull(request);
+		assertEquals("http://www.google.com", request.getUrl());
+		ResultReceiver rrReceived = request.getResultReceiver();
+		assertNotNull(rrReceived);
 	}
 	
 	@Ignore

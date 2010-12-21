@@ -2,27 +2,28 @@ package novoda.lib.httpservice.provider.local;
 
 import java.util.HashMap;
 
-import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.ProviderException;
 import novoda.lib.httpservice.request.Request;
+import android.os.Bundle;
+import android.os.ResultReceiver;
 
-public class LocalProvider<T> implements Provider<T> {
-
-	public HashMap<String, T> map = new HashMap<String, T>();
+public class LocalProvider implements Provider {
+	
+	public HashMap<String, Object> map = new HashMap<String, Object>();
 	
 	public LocalProvider() {
 	}
 	
-	public LocalProvider(String url, T content) {
+	public LocalProvider(String url, Object content) {
 		map.put(url, content);
 	}
 	
-	public void add(String url, T content) {
+	public void add(String url, Object content) {
 		map.put(url, content);
 	}
 	
-	public T getContent(String url) {
+	public Object getContent(String url) {
 		if(map.containsKey(url)) {			
 			return map.get(url);
 		} else {
@@ -31,8 +32,21 @@ public class LocalProvider<T> implements Provider<T> {
 	}
 	
 	@Override
-	public void execute(Request req, AsyncHandler<T> asyncHandler) {
-		asyncHandler.onContentReceived(getContent(req.getUrl()));
+	public void execute(Request req) {
+		ResultReceiver receiver = req.getResultReceiver();
+		if(receiver != null) {
+			Object content = getContent(req.getUrl());
+			if(content == null) {
+				receiver.send(NOT_FOUND, null);	
+			}
+			Bundle b = new Bundle();
+			if(String.class.getSimpleName().equals(req.getContentClassSimpleName())) {
+				b.putString(Request.SIMPLE_BUNDLE_RESULT, (String)content);				
+			} else {
+				throw new ProviderException("The support for content type " + req.getContentClassSimpleName() + " is not implemented yet");
+			}
+			receiver.send(SUCCESS, b);
+		}
 	}
 
 }

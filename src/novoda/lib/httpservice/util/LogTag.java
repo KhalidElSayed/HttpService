@@ -32,6 +32,20 @@ public class LogTag {
 		return Log.isLoggable(LogTag.NET_SERVICE, Log.DEBUG);
 	}
 	
+	public static final boolean errorIsEnableForNS() {
+		return Log.isLoggable(LogTag.NET_SERVICE, Log.ERROR);
+	}
+	
+	public static final void errorNS(String msg) {
+		Log.e(NET_SERVICE, msg);
+	}
+	
+	public static final void errorNS(String msg, Throwable t) {
+		Log.e(NET_SERVICE, msg);
+		Log.e(NET_SERVICE, "message : " + t.getMessage());
+		Log.e(NET_SERVICE, "cause : " + t.getCause());
+	}
+	
 	public static final void debugNS(String msg) {
 		Log.d(NET_SERVICE, msg);
 	}

@@ -2,22 +2,18 @@ package novoda.lib.httpservice.handler;
 
 import java.util.concurrent.Callable;
 
+import android.util.Log;
+
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
 
 public class CallableWrapper<T> implements Callable<T> {
-
-	private AsyncHandler<T> handler;
 	
-	private Provider<T> provider;
+	private Provider provider;
 	
 	private Request request;
 	
-	public CallableWrapper(AsyncHandler<T> handler, Provider<T> provider, Request request) {
-		if(handler == null) {
-			throw new HandlerException("Configuration problem! An Handler must be specified!");
-		}
-		this.handler = handler;
+	public CallableWrapper(Provider provider, Request request) {
 		if(provider == null) {
 			throw new HandlerException("Configuration problem! A Provider must be specified!");
 		}
@@ -30,7 +26,12 @@ public class CallableWrapper<T> implements Callable<T> {
 	
 	@Override
 	public T call() throws Exception {
-		provider.execute(request, handler);
+		Log.i("Important", "Executing call");
+		try {
+			provider.execute(request);
+		} catch(Throwable t) {
+			request.getResultReceiver().send(Provider.ERROR, null);
+		}
 		//don't care bout returning result, I'm sending through the handler in an async way
 		return null;
 	}
