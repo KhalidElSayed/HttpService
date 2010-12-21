@@ -6,7 +6,7 @@ public interface HttpServiceConstant {
 	
 	String uri_request = "novoda.lib.httpservice.action.URI_REQUEST";
 
-	String parcable_request = "novoda.lib.httpservice.action.PARCABLE_REQUEST";;
+	String parcable_request = "novoda.lib.httpservice.action.PARCABLE_REQUEST";
 	
 	interface Extra {
 		

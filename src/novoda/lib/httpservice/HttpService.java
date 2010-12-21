@@ -5,8 +5,7 @@ import static novoda.lib.httpservice.util.LogTag.debugNS;
 
 import java.util.concurrent.Callable;
 
-import novoda.lib.httpservice.executor.MonitorableExecutorService;
-import novoda.lib.httpservice.handler.AsyncHandler;
+import novoda.lib.httpservice.executor.monitor.MonitorableExecutorService;
 import novoda.lib.httpservice.handler.CallableWrapper;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.http.HttpProvider;
@@ -23,15 +22,15 @@ import android.content.Intent;
  */
 public abstract class HttpService<T> extends MonitorableExecutorService<T> {
 	
-	private Provider<T> provider;
+	private Provider provider;
 	
 	public HttpService() {
 		this(null);
 	}
 	
-	public HttpService(Provider<T> provider) {
+	public HttpService(Provider provider) {
 		if(provider == null) {
-			this.provider = new HttpProvider<T>();
+			this.provider = new HttpProvider();
 		} else {
 			this.provider = provider;
 		}
@@ -40,17 +39,14 @@ public abstract class HttpService<T> extends MonitorableExecutorService<T> {
 	@Override
 	public Callable<T> getCallable(Intent intent) {
 		if (debugIsEnableForNS()) {
-			debugNS("trying to get the callable");
+			debugNS("Building up a callable with the provider and the request");
 		}
-		AsyncHandler<T> handler = getHandler();
 		Request request = getRequest(intent);
-		return new CallableWrapper<T>(handler, provider, request);
+		return new CallableWrapper<T>(provider, request);
 	}
-
-	protected abstract AsyncHandler<T> getHandler();
 	
 	protected Request getRequest(Intent intent) {
-		return RequestBuilder.build(intent);
+		return (Request)RequestBuilder.build(intent);
 	}
 
 }

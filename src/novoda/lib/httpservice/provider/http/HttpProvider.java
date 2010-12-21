@@ -1,5 +1,10 @@
 package novoda.lib.httpservice.provider.http;
 
+import static novoda.lib.httpservice.util.LogTag.debugIsEnableForNS;
+import static novoda.lib.httpservice.util.LogTag.debugNS;
+import static novoda.lib.httpservice.util.LogTag.errorIsEnableForNS;
+import static novoda.lib.httpservice.util.LogTag.errorNS;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,7 +13,6 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
-import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.ProviderException;
 import novoda.lib.httpservice.request.Request;
@@ -19,7 +23,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 
-public class HttpProvider<T> implements Provider<T> {
+import android.os.Bundle;
+import android.os.ResultReceiver;
+
+public class HttpProvider implements Provider {
 
 	private static final String USER_AGENT = new UserAgent.Builder().with("HttpService").build();
 
@@ -31,34 +38,42 @@ public class HttpProvider<T> implements Provider<T> {
 		client = AndroidHttpClient.newInstance(USER_AGENT);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public void execute(Request request, AsyncHandler<T> asyncHandler) {
+	public void execute(Request request) {
+		ResultReceiver receiver = request.getResultReceiver();
         HttpUriRequest get = new HttpGet(request.getUrl());
         HttpResponse response;
         try {
             response = client.execute(get);
             if(response == null) {
-            	throw new ProviderException("Response from " + request.getUrl() + " is null");
+            	longAndThrow("Response from " + request.getUrl() + " is null");
             }
             HttpEntity entity = response.getEntity();
             if(entity == null) {
-            	throw new ProviderException("Response from " + request.getUrl() + " is null");
+            	longAndThrow("Response from " + request.getUrl() + " is null");
             }
-            Class<?> clazz = asyncHandler.getContentClass();
-            if (clazz == String.class) {
+            String contentClass = request.getContentClassSimpleName();
+            if(debugIsEnableForNS()) {
+				debugNS("Processing content of class : " + contentClass);
+			}
+            if (String.class.getSimpleName().equals(contentClass)) {
 	            String content = convertStreamToString(entity.getContent());
-	            if(asyncHandler == null) {
-	            	throw new ProviderException("AsynchHnadler is not valid");
+	            if(receiver == null) {
+	            	longAndThrow("RequestReceiver is not valid");
 	            }
-	            asyncHandler.onContentReceived((T)content);
-            } else if(clazz == InputStream.class) {
-	            asyncHandler.onContentReceived((T)entity.getContent());
+	            Bundle b = new Bundle();
+				b.putString(Request.SIMPLE_BUNDLE_RESULT, (String)content);				
+				if(debugIsEnableForNS()) {
+					debugNS("seding bundle on the receiver");
+				}
+	            receiver.send(SUCCESS, b);
             } else {
-            	throw new ProviderException("The support for content type " + clazz + " is not implemented yet");
+            	longAndThrow("The support for content type " + contentClass + " is not implemented yet");
             }
         } catch (Exception e) {
-            throw new ProviderException("Problems executing the request for : " + request.getUrl());
+        	longAndThrow("Problems executing the request for : " + request.getUrl(), e);
+        } finally {
+        	get.abort();
         }
 	}
 
@@ -79,6 +94,21 @@ public class HttpProvider<T> implements Provider<T> {
 		} else {        
 			return "";
 		}
+	}
+	
+	
+	private void longAndThrow(String msg) {
+		if(errorIsEnableForNS()) {
+			errorNS(msg);
+		}
+		throw new ProviderException(msg);
+	}
+	
+	private void longAndThrow(String msg, Throwable e) {
+		if(errorIsEnableForNS()) {
+			errorNS(msg, e);
+		}
+		throw new ProviderException(msg);
 	}
 
 }

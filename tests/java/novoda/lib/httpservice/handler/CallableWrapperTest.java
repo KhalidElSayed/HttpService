@@ -13,17 +13,12 @@ public class CallableWrapperTest {
 
 	@Test(expected = HandlerException.class)
 	public void shouldThrowExceptionIfRequestIsNull() throws Exception {
-		new CallableWrapper<String>(new BaseAsyncHandler<String>(String.class), new LocalProvider<String>(), null).call();
+		new CallableWrapper<String>(new LocalProvider(), null).call();
 	}
 	
 	@Test(expected = HandlerException.class)
 	public void shouldThrowExceptionIfLocalProviderIsNull() throws Exception {
-		new CallableWrapper<String>(new BaseAsyncHandler<String>(String.class), null, new Request("www.google.com")).call();
-	}
-	
-	@Test(expected = HandlerException.class)
-	public void shouldThrowExceptionIfHandlerIsNull() throws Exception {
-		new CallableWrapper<String>(null, new LocalProvider<String>(), new Request("www.google.com")).call();
+		new CallableWrapper<String>(null, new Request("www.google.com")).call();
 	}
 	
 }

@@ -5,10 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import novoda.lib.httpservice.HttpService;
-import novoda.lib.httpservice.executor.Monitor;
-import novoda.lib.httpservice.handler.AsyncHandler;
-import novoda.lib.httpservice.handler.BaseAsyncHandler;
-import novoda.lib.httpservice.tester.util.AppLogger;
+import novoda.lib.httpservice.executor.monitor.Monitor;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,22 +23,17 @@ public class SimpleHttpService extends HttpService<String> {
 	
 	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(DUMP_MONITOR_ACTION);
 
-	private AsyncHandler<String> handler = new BaseAsyncHandler<String>(String.class) {
-		@Override
-		public void onContentReceived(String content) {
-			//AppLogger.debug("Content received : " + content);
-		}
-
-		@Override
-		public void onThrowable(Throwable t) {
-			AppLogger.logVisibly("There was an exception during the call : " + t);
-		}
-	};
-	
-	@Override
-	protected AsyncHandler<String> getHandler() {
-		return handler;
-	}
+//	private AsyncHandler<String> handler = new BaseAsyncHandler<String>(String.class) {
+//		@Override
+//		public void onContentReceived(String content) {
+//			//AppLogger.debug("Content received : " + content);
+//		}
+//
+//		@Override
+//		public void onThrowable(Throwable t) {
+//			AppLogger.logVisibly("There was an exception during the call : " + t);
+//		}
+//	};
 	
 	@Override
 	public void onCreate() {
@@ -49,17 +41,11 @@ public class SimpleHttpService extends HttpService<String> {
 			@Override
 			public void dump(Map<String, String> properties) {
 				ArrayList<String> keys = new ArrayList<String>();
-				
 				Intent intent = new Intent(DUMP_MONITOR_ACTION);
-				
-				//StringBuilder builder = new StringBuilder("Monitoring[ | ");
 				for (Entry<String, String> entry: properties.entrySet()) {
 					keys.add(entry.getKey());
 					intent.putExtra(entry.getKey(), entry.getValue());
-					//builder.append(entry.getKey()).append(":").append(entry.getValue()).append(" | ");
 				}
-				//AppLogger.debug(builder.append("]").toString());
-				
 				intent.putStringArrayListExtra(DUMP_MONITOR_EXTRA, keys);
 				sendBroadcast(intent);
 			}

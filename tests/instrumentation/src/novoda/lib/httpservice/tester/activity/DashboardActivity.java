@@ -3,6 +3,7 @@ package novoda.lib.httpservice.tester.activity;
 import java.util.ArrayList;
 
 import novoda.lib.httpservice.HttpServiceConstant;
+import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
 import novoda.lib.httpservice.tester.util.AppLogger;
@@ -10,6 +11,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -28,9 +31,7 @@ public class DashboardActivity extends BaseActivity {
 		final Button call = ((Button)findViewById(R.id.start));
 		final Button start = ((Button)findViewById(R.id.startMonitor));
 		final Button stop = ((Button)findViewById(R.id.stopMonitor));
-		
 		edit.setText("1");
-
 		call.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -39,6 +40,16 @@ public class DashboardActivity extends BaseActivity {
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					Intent intent = new Intent(HttpServiceConstant.simple_request);
 					intent.putExtra(HttpServiceConstant.Extra.url, "http://facebook-pipes.appspot.com/");
+					intent.putExtra(HttpServiceConstant.Extra.request_parcable, new ResultReceiver(new Handler()) {
+						@Override
+						protected void onReceiveResult(int resultCode, Bundle resultData) {
+							if(resultData == null) {
+								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
+							} else {
+								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
+							}
+						}
+					});
 					startService(intent);
 					start.setEnabled(true);
 				}
@@ -59,7 +70,6 @@ public class DashboardActivity extends BaseActivity {
 				monitorInfo.setText("Attaching monitor...");
 			}
 		});
-		
 		stop.setEnabled(false);
 		stop.setOnClickListener(new OnClickListener() {
 			@Override
@@ -86,7 +96,6 @@ public class DashboardActivity extends BaseActivity {
 	}
 	
 	private BroadcastReceiver monitorBroadcastReceiver =  new BroadcastReceiver() {
-
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.DUMP_MONITOR_EXTRA);
@@ -97,10 +106,8 @@ public class DashboardActivity extends BaseActivity {
 				viewBuilder.append(key).append(":").append(intent.getStringExtra(key)).append(" \n ");
 			}
 			AppLogger.debug(builder.append("]").toString());
-			
 			monitorInfo.setText(viewBuilder.toString());
 		}
-		
 	};
 	
 }

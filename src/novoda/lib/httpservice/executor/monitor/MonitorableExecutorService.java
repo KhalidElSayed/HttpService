@@ -1,14 +1,15 @@
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.executor.monitor;
 
 import static novoda.lib.httpservice.util.LogTag.debugES;
 import static novoda.lib.httpservice.util.LogTag.debugIsEnableForES;
+import novoda.lib.httpservice.executor.ExecutorService;
 
 public abstract class MonitorableExecutorService<T> extends ExecutorService<T> implements Monitorable {
 	
 	private Monitor monitor;
 
 	private boolean runMonitor = true;
-
+	
 	@Override
 	public void attach(Monitor monitor) {
 		this.monitor = monitor;
