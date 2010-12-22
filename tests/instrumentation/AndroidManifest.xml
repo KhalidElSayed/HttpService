@@ -44,7 +44,7 @@
 		-->
 		<service android:name=".service.SimpleHttpService">
 			<intent-filter>
-				<action android:name="novoda.lib.httpservice.action.SIMPLE_REQUEST" />				
+				<action android:name="novoda.lib.httpservice.action.REQUEST" />				
 			</intent-filter>
 		</service>
 

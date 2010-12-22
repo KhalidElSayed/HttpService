@@ -33,7 +33,9 @@ public class HttpProviderTest {
 	private Provider provider;
 	private EventBus eventBus;
 	private HttpClient httpClient;
-	private Request request = new Request(URL);
+	private Request request = new Request(); {
+		request.setUrl(URL);
+	}
 	
 	@Before
 	public void setUp() {

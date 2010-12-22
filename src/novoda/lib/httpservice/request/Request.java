@@ -1,23 +1,22 @@
 package novoda.lib.httpservice.request;
 
-import java.net.URI;
-
-import novoda.lib.httpservice.exception.RequestException;
-
+import android.net.Uri;
 import android.os.ResultReceiver;
-
 
 public class Request {
 	
-	public static final String SIMPLE_BUNDLE_RESULT = "result";
+	public interface Method {
+		int GET = 0;
+		int POST = 1;	
+	} 
 	
-	private static final String PROTOCOL_INDICATOR = "://";
-
-	private static final String DEFAULT_PROTOCOL = "http" + PROTOCOL_INDICATOR;
+	public static final String SIMPLE_BUNDLE_RESULT = "result";
 	
 	private String url;
 	
-	private URI uri;
+	private Uri uri;
+	
+	private int method;
 	
 	private ResultReceiver resultReceiver;
 	
@@ -27,14 +26,8 @@ public class Request {
 	}
 	
 	public Request(String url) {
-		if(url == null) {
-			throw new RequestException("Url is null!");
-		}
-		if(url.contains(PROTOCOL_INDICATOR)) {
-			this.url = url;			
-		} else {
-			this.url = DEFAULT_PROTOCOL + url;
-		}
+		setUrl(url);
+		setMethod(Method.GET);
 	}
 
 	public String getUrl() {
@@ -45,11 +38,11 @@ public class Request {
 		this.url = url;
 	}
 
-	public void setUri(URI uri) {
+	public void setUri(Uri uri) {
 		this.uri = uri;
 	}
 
-	public URI getUri() {
+	public Uri getUri() {
 		return uri;
 	}
 
@@ -85,5 +78,27 @@ public class Request {
 	public String getHandlerKey() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public boolean isGet() {
+		if(Method.GET == getMethod()) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isPost() {
+		if(Method.POST == getMethod()) {
+			return true;
+		}
+		return false;
+	}
+
+	public void setMethod(int method) {
+		this.method = method;
+	}
+
+	public int getMethod() {
+		return method;
 	}
 }

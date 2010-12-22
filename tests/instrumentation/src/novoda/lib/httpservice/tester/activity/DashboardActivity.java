@@ -2,8 +2,8 @@ package novoda.lib.httpservice.tester.activity;
 
 import java.util.ArrayList;
 
-import novoda.lib.httpservice.HttpServiceConstant;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.RequestWriter;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
 import novoda.lib.httpservice.tester.util.AppLogger;
@@ -39,18 +39,33 @@ public class DashboardActivity extends BaseActivity {
 				String text = edit.getText().toString();
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new Intent(HttpServiceConstant.simple_request);
-					intent.putExtra(HttpServiceConstant.Extra.url, "http://facebook-pipes.appspot.com/");
-					intent.putExtra(HttpServiceConstant.Extra.request_parcable, new ResultReceiver(new Handler()) {
-						@Override
-						protected void onReceiveResult(int resultCode, Bundle resultData) {
-							if(resultData == null) {
-								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
-							} else {
-								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
+					
+					Intent intent = new RequestWriter("http://facebook-pipes.appspot.com/").attach(new ResultReceiver(new Handler()) {
+							@Override
+							protected void onReceiveResult(int resultCode, Bundle resultData) {
+								if(resultData == null) {
+									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
+								} else {
+									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
+								}
 							}
-						}
-					});
+						}).write();
+					
+					//OLD WAY TO DO IT
+					//is still possible to do it in this way
+//					Intent intent = new Intent(HttpServiceConstant.request);
+//					intent.putExtra(HttpServiceConstant.Extra.url, "http://facebook-pipes.appspot.com/");
+//					intent.putExtra(HttpServiceConstant.Extra.request_parcable, new ResultReceiver(new Handler()) {
+//						@Override
+//						protected void onReceiveResult(int resultCode, Bundle resultData) {
+//							if(resultData == null) {
+//								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
+//							} else {
+//								AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
+//							}
+//						}
+//					});
+					
 					startService(intent);
 					start.setEnabled(true);
 				}
