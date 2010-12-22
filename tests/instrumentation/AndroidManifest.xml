@@ -47,12 +47,6 @@
 				<action android:name="novoda.lib.httpservice.action.SIMPLE_REQUEST" />				
 			</intent-filter>
 		</service>
-		
-		<service android:name=".service.UriHttpService">
-			<intent-filter>
-				<action android:name="novoda.lib.httpservice.action.URI_REQUEST" />				
-			</intent-filter>
-		</service>
 
 	</application>
 

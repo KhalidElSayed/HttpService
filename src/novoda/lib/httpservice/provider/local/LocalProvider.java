@@ -1,52 +1,57 @@
 package novoda.lib.httpservice.provider.local;
 
+import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.ProviderException;
 import java.util.HashMap;
 
+import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.provider.ProviderException;
 import novoda.lib.httpservice.request.Request;
-import android.os.Bundle;
-import android.os.ResultReceiver;
 
 public class LocalProvider implements Provider {
 	
-	public HashMap<String, Object> map = new HashMap<String, Object>();
+	public HashMap<String, String> map = new HashMap<String, String>();
 	
-	public LocalProvider() {
+	private EventBus eventBus;
+	
+	public LocalProvider(EventBus eventBus) {	
+		if(eventBus == null) {
+			throw new ProviderException("EventBus is null, can't procede");
+		}
+		this.eventBus = eventBus;
 	}
 	
-	public LocalProvider(String url, Object content) {
+	public LocalProvider(EventBus eventBus, String url, String content) {
+		this(eventBus);
 		map.put(url, content);
 	}
 	
-	public void add(String url, Object content) {
+	public void add(String url, String content) {
 		map.put(url, content);
 	}
 	
-	public Object getContent(String url) {
+	public InputStream getContent(String url) {
 		if(map.containsKey(url)) {			
-			return map.get(url);
+			return new ByteArrayInputStream(map.get(url).getBytes());
 		} else {
-			throw new ProviderException("There is no resource registered for the local provider for url : " + url);
+			if(debugIsEnable()) {
+				debug("There is no resource registered for the local provider for url : " + url);
+			}
+			return null;
 		}
 	}
 	
 	@Override
 	public void execute(Request req) {
-		ResultReceiver receiver = req.getResultReceiver();
-		if(receiver != null) {
-			Object content = getContent(req.getUrl());
-			if(content == null) {
-				receiver.send(NOT_FOUND, null);	
-			}
-			Bundle b = new Bundle();
-			if(String.class.getSimpleName().equals(req.getContentClassSimpleName())) {
-				b.putString(Request.SIMPLE_BUNDLE_RESULT, (String)content);				
-			} else {
-				throw new ProviderException("The support for content type " + req.getContentClassSimpleName() + " is not implemented yet");
-			}
-			receiver.send(SUCCESS, b);
+		InputStream content = getContent(req.getUrl());
+		if(content == null) {
+			eventBus.fireOnThrowable(req, new Throwable("Content not found"));
 		}
+		eventBus.fireOnContentReceived(req, content);
 	}
 
 }

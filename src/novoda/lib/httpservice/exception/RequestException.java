@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.exception;
 
 public class RequestException extends RuntimeException {
 

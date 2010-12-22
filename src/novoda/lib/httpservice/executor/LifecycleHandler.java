@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.executor;
 
-import static novoda.lib.httpservice.util.LogTag.debugES;
-import static novoda.lib.httpservice.util.LogTag.debugIsEnableForES;
+import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 import android.os.Handler;
 import android.os.Message;
 
@@ -27,19 +27,19 @@ public class LifecycleHandler extends Handler {
 	
 	@Override
 	public void handleMessage(Message msg) {
-		if(debugIsEnableForES()) {
-    		debugES("LifecycleHandler : " + msg);
+		if(debugIsEnable()) {
+    		debug("LifecycleHandler : " + msg);
     	}
 		switch (msg.what) {
 			case MESSAGE_ADD_TO_QUEUE: {
-				if (debugIsEnableForES()) {
-					debugES("Add to queue");
+				if (debugIsEnable()) {
+					debug("Add to queue");
 				}
 				break;
 			}
 			case MESSAGE_RECEIVED_REQUEST: {
-				if (debugIsEnableForES()) {
-					debugES("Message received request");
+				if (debugIsEnable()) {
+					debug("Message received request");
 				}
 				lastCall = System.currentTimeMillis();
 				sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_CALL, SERVICE_LIFESPAN);
@@ -48,17 +48,17 @@ public class LifecycleHandler extends Handler {
 			case MESSAGE_TIMEOUT_AFTER_CALL: {
 				boolean working = executorService.isWorking();
 				long delta = System.currentTimeMillis() - lastCall;
-				if (debugIsEnableForES()) {
-					debugES("Message service life timeout after call checking if is working : " + working + " and delta is " + delta);
+				if (debugIsEnable()) {
+					debug("Message service life timeout after call checking if is working : " + working + " and delta is " + delta);
 				}
 				if (working || delta < KEEP_ALIFE_TIME) {
-					if (debugIsEnableForES()) {
-						debugES("Keeping alive the service");
+					if (debugIsEnable()) {
+						debug("Keeping alive the service");
 					}
 					sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_CALL, SERVICE_LIFESPAN);					
 				} else {
-					if (debugIsEnableForES()) {
-						debugES("Stoping service");
+					if (debugIsEnable()) {
+						debug("Stoping service");
 					}
 					executorService.stopSelf();
 				}

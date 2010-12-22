@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.provider;
+package novoda.lib.httpservice.exception;
 
 public class ProviderException extends RuntimeException {
 

@@ -31,6 +31,7 @@ public class DashboardActivity extends BaseActivity {
 		final Button call = ((Button)findViewById(R.id.start));
 		final Button start = ((Button)findViewById(R.id.startMonitor));
 		final Button stop = ((Button)findViewById(R.id.stopMonitor));
+//		final Button log = ((Button)findViewById(R.id.log));
 		edit.setText("1");
 		call.setOnClickListener(new OnClickListener() {
 			@Override
@@ -81,6 +82,21 @@ public class DashboardActivity extends BaseActivity {
 				monitorInfo.setText("Monitor is detach");
 			}
 		});
+		
+//		log.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				AppLogger.debug("Changing log level");
+//				String coreLevel = System.getProperty("log.tag.HttpService-Core");
+//				if("VERBOSE".equals(coreLevel)) {
+//					System.setProperty("log.tag.HttpService-Core", "WARN");
+//					System.setProperty("log.tag.HttpService-Provider", "WARN");
+//				} else {
+//					System.setProperty("log.tag.HttpService-Core", "VERBOSE");
+//					System.setProperty("log.tag.HttpService-Provider", "VERBOSE");
+//				}
+//			}
+//		});
 	}
 	
 	@Override

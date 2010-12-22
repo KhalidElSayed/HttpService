@@ -1,11 +1,12 @@
 package novoda.lib.httpservice.request;
 
-import static novoda.lib.httpservice.util.LogTag.debugIsEnableForNS;
-import static novoda.lib.httpservice.util.LogTag.debugNS;
+import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Core.debug;
 
 import java.net.URISyntaxException;
 
 import novoda.lib.httpservice.HttpServiceConstant;
+import novoda.lib.httpservice.exception.RequestException;
 
 import org.apache.http.client.utils.URIUtils;
 
@@ -38,8 +39,8 @@ public class RequestBuilder {
 		//TODO need to generalize
 		request.setContentClassSimpleName(String.class.getSimpleName());
 		request.setResultReceiver(getResultReceiver(intent));
-		if (debugIsEnableForNS()) {
-			debugNS("Building request for intent : " + request.toString());
+		if (debugIsEnable()) {
+			debug("Building request for intent : " + request.toString());
 		}
 		return request;
 	}
@@ -75,13 +76,13 @@ public class RequestBuilder {
 		if(rr instanceof ResultReceiver) {
 			ResultReceiver rr1 = (ResultReceiver)rr;
 			if (rr1 == null) {
-				if (debugIsEnableForNS()) {
-					debugNS("Request receiver is null!");
+				if (debugIsEnable()) {
+					debug("Request receiver is null!");
 				}
 				return null;
 			} else {
-				if (debugIsEnableForNS()) {
-					debugNS("Building request for intent with request receiver");
+				if (debugIsEnable()) {
+					debug("Building request for intent with request receiver");
 				}
 				return rr1;
 			}

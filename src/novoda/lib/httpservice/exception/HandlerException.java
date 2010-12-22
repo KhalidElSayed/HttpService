@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.handler;
+package novoda.lib.httpservice.exception;
 
 public class HandlerException extends RuntimeException {
 

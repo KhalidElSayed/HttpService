@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import novoda.lib.httpservice.HttpServiceConstant;
+import novoda.lib.httpservice.exception.RequestException;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -13,7 +14,6 @@ import org.junit.runner.RunWith;
 
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Handler;
 import android.os.ResultReceiver;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -46,6 +46,7 @@ public class RequestBuilderTest {
 		RequestBuilder.build(intent);
 	}
 	
+	@Ignore
 	@Test
 	public void shouldBuildRequestFromSimpleIntent() {
 		Intent intent = mock(Intent.class);

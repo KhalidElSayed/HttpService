@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.executor.monitor;
 
-import static novoda.lib.httpservice.util.LogTag.debugES;
-import static novoda.lib.httpservice.util.LogTag.debugIsEnableForES;
+import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 import novoda.lib.httpservice.executor.ExecutorService;
 
 public abstract class MonitorableExecutorService<T> extends ExecutorService<T> implements Monitorable {
@@ -17,8 +17,8 @@ public abstract class MonitorableExecutorService<T> extends ExecutorService<T> i
 
 	@Override
 	public void startMonitoring() {	
-		if (debugIsEnableForES()) {
-			debugES("Starting monitoring the executor manager");
+		if (debugIsEnable()) {
+			debug("Starting monitoring the executor manager");
 		}
 		runMonitor = true;
 		new Thread() {
@@ -28,8 +28,8 @@ public abstract class MonitorableExecutorService<T> extends ExecutorService<T> i
 						monitor.dump(dump());
 						sleep(monitor.getInterval());
 					} catch (InterruptedException e) {
-						if (debugIsEnableForES()) {
-							debugES("Exception during the monitor execution loop");
+						if (debugIsEnable()) {
+							debug("Exception during the monitor execution loop");
 						}
 					}
 				}
@@ -39,8 +39,8 @@ public abstract class MonitorableExecutorService<T> extends ExecutorService<T> i
 
 	@Override
 	public void stopMonitoring() {
-		if (debugIsEnableForES()) {
-			debugES("Starting monitoring the executor manager");
+		if (debugIsEnable()) {
+			debug("Starting monitoring the executor manager");
 		}
 		runMonitor = false;
 	}

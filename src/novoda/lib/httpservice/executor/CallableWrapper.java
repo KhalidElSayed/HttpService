@@ -1,9 +1,11 @@
-package novoda.lib.httpservice.handler;
+package novoda.lib.httpservice.executor;
+
+import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Core.debug;
 
 import java.util.concurrent.Callable;
 
-import android.util.Log;
-
+import novoda.lib.httpservice.exception.HandlerException;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
 
@@ -26,12 +28,10 @@ public class CallableWrapper<T> implements Callable<T> {
 	
 	@Override
 	public T call() throws Exception {
-		Log.i("Important", "Executing call");
-		try {
-			provider.execute(request);
-		} catch(Throwable t) {
-			request.getResultReceiver().send(Provider.ERROR, null);
+		if(debugIsEnable()) {
+			debug("Executing request : " + request);
 		}
+		provider.execute(request);
 		//don't care bout returning result, I'm sending through the handler in an async way
 		return null;
 	}

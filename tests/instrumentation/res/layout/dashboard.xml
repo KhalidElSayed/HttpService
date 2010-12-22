@@ -17,5 +17,8 @@
 	<LinearLayout style="@style/DashboardRow">
 		<Button android:id="@+id/startMonitor" android:text="Start monitor" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
 		<Button android:id="@+id/stopMonitor" android:text="Stop monitor" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+		<!-- 
+		<Button android:id="@+id/log" android:text="Enable/Disable logs" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+		 -->
 	</LinearLayout>
 </LinearLayout>

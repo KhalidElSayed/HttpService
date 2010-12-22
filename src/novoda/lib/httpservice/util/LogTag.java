@@ -4,55 +4,64 @@ import android.util.Log;
 
 public class LogTag {
 	
-	private static final String EXECUTOR_SERVICE = "ExecutorService";
-	
-	private static final String NET_SERVICE = "NetService";
-	
-	public static final boolean debugIsEnableForES() {
-		return Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.DEBUG);
+	public static class Provider {
+		
+		private static final String TAG = "HttpService-Provider";
+		
+		public static final boolean debugIsEnable() {
+			return Log.isLoggable(TAG, Log.DEBUG);
+		}
+		
+		public static final boolean errorIsEnable() {
+			return Log.isLoggable(TAG, Log.ERROR);
+		}
+		
+		public static final void debug(String msg) {
+			Log.d(TAG, msg);
+		}
+		
+		public static final void error(String msg) {
+			Log.e(TAG, msg);
+		}
+		
+		public static final void error(String msg, Throwable t) {
+			Log.e(TAG, msg, t);
+		}
 	}
 	
-	public static final boolean infoIsEnableForES() {
-		return Log.isLoggable(LogTag.EXECUTOR_SERVICE, Log.INFO);
+	public static class Core {
+		
+		private static final String TAG = "HttpService-Core";
+				
+		public static final boolean debugIsEnable() {
+			return Log.isLoggable(TAG, Log.DEBUG);
+		}
+		
+		public static final boolean infoIsEnable() {
+			return Log.isLoggable(TAG, Log.DEBUG);
+		}
+		
+		public static final boolean errorIsEnable() {
+			return Log.isLoggable(TAG, Log.ERROR);
+		}
+		
+		public static final void error(String msg) {
+			Log.e(TAG, msg);
+		}
+		
+		public static final void error(String msg, Throwable t) {
+			Log.e(TAG, msg, t);
+		}
+		
+		public static final void debug(String msg) {
+			Log.d(TAG, msg);
+		}
+		
+		public static final void info(String msg) {
+			Log.i(TAG, msg);
+		}
 	}
 	
-	public static final void debugES(String msg) {
-		Log.d(EXECUTOR_SERVICE, msg);
-	}
 
-	public static final void infoES(String msg) {
-		Log.i(EXECUTOR_SERVICE, msg);
-	}
 	
-	public static final boolean debugIsEnableForNS() {
-		return Log.isLoggable(LogTag.NET_SERVICE, Log.DEBUG);
-	}
-	
-	public static final boolean infoIsEnableForNS() {
-		return Log.isLoggable(LogTag.NET_SERVICE, Log.DEBUG);
-	}
-	
-	public static final boolean errorIsEnableForNS() {
-		return Log.isLoggable(LogTag.NET_SERVICE, Log.ERROR);
-	}
-	
-	public static final void errorNS(String msg) {
-		Log.e(NET_SERVICE, msg);
-	}
-	
-	public static final void errorNS(String msg, Throwable t) {
-		Log.e(NET_SERVICE, msg);
-		Log.e(NET_SERVICE, "message : " + t.getMessage());
-		Log.e(NET_SERVICE, "cause : " + t.getCause());
-	}
-	
-	public static final void debugNS(String msg) {
-		Log.d(NET_SERVICE, msg);
-	}
-
-	public static final void infoNS(String msg) {
-		Log.i(NET_SERVICE, msg);
-	}
-
-
 }

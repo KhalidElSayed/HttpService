@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.util.concurrent.Callable;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.invocation.InvocationOnMock;
@@ -74,6 +75,7 @@ public class QueuedExecutorManagerTest {
 //		verify(mCallable2);
 	}
 	
+	@Ignore
 	@Test
 	public void shouldShutdownWork() throws Exception {
 		when(mCallable.call()).thenAnswer(new Answer<String>(){

@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="src" path="tests/java"/>
 	<classpathentry kind="lib" path="libs/test/junit-4.8.2.jar" sourcepath="/home/luigi/.m2/repository/junit/junit/4.8.2/junit-4.8.2-sources.jar"/>
-	<classpathentry kind="lib" path="libs/test/mockito-all-1.8.5.jar"/>
+	<classpathentry kind="lib" path="libs/test/mockito-all-1.8.5.jar" sourcepath="/home/luigi/.m2/repository/org/mockito/mockito-all/1.8.5/mockito-all-1.8.5-sources.jar"/>
 	<classpathentry kind="lib" path="libs/compile/jackson-core-asl-1.6.2.jar"/>
 	<classpathentry kind="lib" path="libs/compile/jackson-mapper-asl-1.6.2.jar"/>
 	<classpathentry kind="lib" path="/RESTProvider/libs/signpost-commonshttp4-1.2.1.jar"/>

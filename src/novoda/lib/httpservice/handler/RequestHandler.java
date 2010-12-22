@@ -1,7 +1,8 @@
 package novoda.lib.httpservice.handler;
 
+import java.io.InputStream;
 
-public interface AsyncHandler<T> {
+public interface RequestHandler {
 
 	void onStatusReceived(String status);
 
@@ -9,8 +10,6 @@ public interface AsyncHandler<T> {
 
     void onThrowable(Throwable t);
 
-	void onContentReceived(T content);
-
-	Class<?> getContentClass();
-    
+	void onContentReceived(InputStream content);
+	
 }

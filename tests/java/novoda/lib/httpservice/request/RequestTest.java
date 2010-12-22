@@ -2,8 +2,8 @@ package novoda.lib.httpservice.request;
 
 import static org.junit.Assert.assertEquals;
 
+import novoda.lib.httpservice.exception.RequestException;
 import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.RequestException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

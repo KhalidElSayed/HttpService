@@ -2,6 +2,8 @@ package novoda.lib.httpservice.request;
 
 import java.net.URI;
 
+import novoda.lib.httpservice.exception.RequestException;
+
 import android.os.ResultReceiver;
 
 
@@ -78,5 +80,10 @@ public class Request {
 
 	public String getContentClassSimpleName() {
 		return contentClassSimpleName;
+	}
+
+	public String getHandlerKey() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

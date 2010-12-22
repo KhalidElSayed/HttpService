@@ -1,11 +1,17 @@
 package novoda.lib.httpservice.tester.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import novoda.lib.httpservice.HttpService;
 import novoda.lib.httpservice.executor.monitor.Monitor;
+import novoda.lib.httpservice.handler.GlobalHandler;
+import novoda.lib.httpservice.handler.RequestHandler;
+import novoda.lib.httpservice.handler.SimpleGlobalHandler;
+import novoda.lib.httpservice.handler.SimpleRequestHandler;
+import novoda.lib.httpservice.tester.util.AppLogger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -23,17 +29,35 @@ public class SimpleHttpService extends HttpService<String> {
 	
 	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(DUMP_MONITOR_ACTION);
 
-//	private AsyncHandler<String> handler = new BaseAsyncHandler<String>(String.class) {
-//		@Override
-//		public void onContentReceived(String content) {
-//			//AppLogger.debug("Content received : " + content);
-//		}
-//
-//		@Override
-//		public void onThrowable(Throwable t) {
-//			AppLogger.logVisibly("There was an exception during the call : " + t);
-//		}
-//	};
+	private static int globalCount = 0;
+	
+	private GlobalHandler globalHandler = new SimpleGlobalHandler() {
+		@Override
+		public void onContentReceived(java.io.InputStream content) {
+			AppLogger.debug("Received content for global handler : " + globalCount);
+			if(content != null) {
+				try {
+					content.close();
+				} catch (IOException e) {
+					AppLogger.error(e);
+				}
+			}
+		};
+	};
+	
+	private RequestHandler requestHandler = new SimpleRequestHandler() {
+		@Override
+		public void onContentReceived(java.io.InputStream content) {
+			AppLogger.debug("Received content for request handler");
+			if(content != null) {
+				try {
+					content.close();
+				} catch (IOException e) {
+					AppLogger.error(e);
+				}
+			}
+		};
+	};
 	
 	@Override
 	public void onCreate() {
@@ -57,6 +81,10 @@ public class SimpleHttpService extends HttpService<String> {
 		});
 		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
 		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
+		
+		//Adding handlers
+		addGlobalHandler(globalHandler);
+		addRequestHandler(requestHandler);
 	}
 	
 	@Override

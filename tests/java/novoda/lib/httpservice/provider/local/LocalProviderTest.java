@@ -1,11 +1,19 @@
 package novoda.lib.httpservice.provider.local;
 
-import static novoda.lib.httpservice.util.Time.await;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.io.InputStream;
+
+import novoda.lib.httpservice.exception.ProviderException;
+import novoda.lib.httpservice.handler.GlobalHandler;
+import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.Request;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -15,34 +23,42 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class LocalProviderTest {
 	
 	private LocalProvider provider;
-	
-	private boolean async = false;
+	private EventBus eventBus;
 	
 	@Before
 	public void setUp() {
-		provider  = new LocalProvider();
+		eventBus = new EventBus();
+		provider  = new LocalProvider(eventBus);
 		provider.add("http://www.google.com", "ok");
 	}
+	
+	@Test(expected = ProviderException.class)
+	public void shouldThrowExceptionIfEventBusIsNull() {
+		new HttpProvider(null);
+	}
 
-	@Ignore
+	@Test
+	public void shouldBasicHttpProviderGoAndFetchSomeUrlContentFireOnContentReceived() {
+		GlobalHandler handler = mock(GlobalHandler.class);
+		eventBus.addGlobalHandler(handler);
+		
+		Request request = new Request("http://www.google.com");
+		
+		provider.execute(request);
+		
+		verify(handler, times(1)).onContentReceived(any(InputStream.class));
+	}
+	
 	@Test
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContent() {
-		provider.execute(new Request("http://www.google.com"));
+		GlobalHandler handler = mock(GlobalHandler.class);
+		eventBus.addGlobalHandler(handler);
 		
-
-		//TODO use the requestreceiver to test the same
-//		, new BaseAsyncHandler<String>(String.class) {
-//			@Override
-//			public void onContentReceived(String content) {
-//				async = true;
-//				assertEquals("ok", content);
-//			}
-//		}
+		Request request = new Request("http://www.foofle.com");
 		
+		provider.execute(request);
 		
-		await(100);
-		assertTrue(async);
-		async = false;
+		verify(handler, times(1)).onThrowable(any(Throwable.class));
 	}
 
 }
