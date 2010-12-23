@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.executor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 import android.os.Handler;
 import android.os.Message;
@@ -28,18 +28,18 @@ public class LifecycleHandler extends Handler {
 	@Override
 	public void handleMessage(Message msg) {
 		if(debugIsEnable()) {
-    		debug("LifecycleHandler : " + msg);
+    		d("LifecycleHandler : " + msg);
     	}
 		switch (msg.what) {
 			case MESSAGE_ADD_TO_QUEUE: {
 				if (debugIsEnable()) {
-					debug("Add to queue");
+					d("Add to queue");
 				}
 				break;
 			}
 			case MESSAGE_RECEIVED_REQUEST: {
 				if (debugIsEnable()) {
-					debug("Message received request");
+					d("Message received request");
 				}
 				lastCall = System.currentTimeMillis();
 				sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_CALL, SERVICE_LIFESPAN);
@@ -49,16 +49,16 @@ public class LifecycleHandler extends Handler {
 				boolean working = executorService.isWorking();
 				long delta = System.currentTimeMillis() - lastCall;
 				if (debugIsEnable()) {
-					debug("Message service life timeout after call checking if is working : " + working + " and delta is " + delta);
+					d("Message service life timeout after call checking if is working : " + working + " and delta is " + delta);
 				}
 				if (working || delta < KEEP_ALIFE_TIME) {
 					if (debugIsEnable()) {
-						debug("Keeping alive the service");
+						d("Keeping alive the service");
 					}
 					sendEmptyMessageDelayed(MESSAGE_TIMEOUT_AFTER_CALL, SERVICE_LIFESPAN);					
 				} else {
 					if (debugIsEnable()) {
-						debug("Stoping service");
+						d("Stoping service");
 					}
 					executorService.stopSelf();
 				}

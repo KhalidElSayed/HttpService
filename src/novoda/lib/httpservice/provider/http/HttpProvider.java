@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.provider.http;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+import static novoda.lib.httpservice.util.LogTag.Provider.d;
 import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Provider.error;
+import static novoda.lib.httpservice.util.LogTag.Provider.e;
 import static novoda.lib.httpservice.util.LogTag.Provider.errorIsEnable;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
@@ -41,7 +41,7 @@ public class HttpProvider implements Provider {
         HttpUriRequest method = null;
         try {
         	if(debugIsEnable()) {
-    			debug("HttpProvider execute for : " + request.getUri());
+    			d("HttpProvider execute for : " + request.getUri());
     		}
         	if(request.isGet()) {
         		method = new HttpGet(Request.asURI(request));
@@ -62,23 +62,19 @@ public class HttpProvider implements Provider {
         } catch (Throwable t) {
         	eventBus.fireOnThrowable(request, t);
         	logAndThrow("Problems executing the request for : " + request.getUri(), t);
-        } finally {
-        	if(method != null) {
-        		method.abort();
-        	}
         }
 	}
 	
 	private void logAndThrow(String msg) {
 		if(errorIsEnable()) {
-			error(msg);
+			e(msg);
 		}
 		throw new ProviderException(msg);
 	}
 	
 	private void logAndThrow(String msg, Throwable e) {
 		if(errorIsEnable()) {
-			error(msg, e);
+			e(msg, e);
 		}
 		throw new ProviderException(msg);
 	}

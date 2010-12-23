@@ -1,7 +1,7 @@
 
 package novoda.lib.httpservice.executor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.Map;
@@ -42,7 +42,7 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
 	@Override
     public void onCreate() {
 		if(debugIsEnable()) {
-    		debug("Executor Service on Create");
+    		d("Executor Service on Create");
     	}
         super.onCreate();
     }
@@ -50,16 +50,18 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
     @Override
     public void onDestroy() {
     	if(debugIsEnable()) {
-    		debug("Executor Service on Destroy");
+    		d("Executor Service on Destroy");
     	}
-    	executorManager.shutdown();
+    	if(executorManager != null) {
+    		executorManager.shutdown();
+    	}
         super.onDestroy();
     }
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
     	if(debugIsEnable()) {
-    		debug("Executing intent");
+    		d("Executing intent");
     	}
         executorManager.addTask(intent);
         lifecycleHandler.messageReceived();

@@ -16,15 +16,15 @@ public class LogTag {
 			return Log.isLoggable(TAG, Log.ERROR);
 		}
 		
-		public static final void debug(String msg) {
+		public static final void d(String msg) {
 			Log.d(TAG, msg);
 		}
 		
-		public static final void error(String msg) {
+		public static final void e(String msg) {
 			Log.e(TAG, msg);
 		}
 		
-		public static final void error(String msg, Throwable t) {
+		public static final void e(String msg, Throwable t) {
 			Log.e(TAG, msg, t);
 		}
 	}
@@ -45,19 +45,19 @@ public class LogTag {
 			return Log.isLoggable(TAG, Log.ERROR);
 		}
 		
-		public static final void error(String msg) {
+		public static final void e(String msg) {
 			Log.e(TAG, msg);
 		}
 		
-		public static final void error(String msg, Throwable t) {
+		public static final void e(String msg, Throwable t) {
 			Log.e(TAG, msg, t);
 		}
 		
-		public static final void debug(String msg) {
+		public static final void d(String msg) {
 			Log.d(TAG, msg);
 		}
 		
-		public static final void info(String msg) {
+		public static final void i(String msg) {
 			Log.i(TAG, msg);
 		}
 	}

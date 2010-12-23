@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.executor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.HashMap;
@@ -57,7 +57,7 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 			ThreadPoolExecutor poolExecutor,
 			ExecutorCompletionService<T> completitionService) {
 		if (debugIsEnable()) {
-			debug("starting thread manager");
+			d("starting thread manager");
 		}
 		if (poolExecutor == null) {
 			poolExecutor = getThreadPoolExecutor();
@@ -75,10 +75,14 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 	@Override
 	public void shutdown() {
 		if (debugIsEnable()) {
-			debug("Shutting down thread manager");
+			d("Shutting down thread manager");
 		}
-		looperThread.interrupt();
-		poolExecutor.shutdown();
+		if(looperThread != null) {
+			looperThread.interrupt();
+		}
+		if(poolExecutor != null) {
+			poolExecutor.shutdown();
+		}
 	}
 
 	@Override

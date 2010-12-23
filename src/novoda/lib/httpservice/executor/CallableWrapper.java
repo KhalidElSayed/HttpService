@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.executor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.concurrent.Callable;
@@ -29,7 +29,7 @@ public class CallableWrapper<T> implements Callable<T> {
 	@Override
 	public T call() throws Exception {
 		if(debugIsEnable()) {
-			debug("Executing request : " + request);
+			d("Executing request : " + request);
 		}
 		provider.execute(request);
 		//don't care bout returning result, I'm sending through the handler in an async way

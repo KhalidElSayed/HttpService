@@ -1,6 +1,6 @@
 package novoda.lib.httpservice;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.concurrent.Callable;
@@ -47,7 +47,7 @@ public abstract class HttpService<T> extends MonitorableExecutorService<T> imple
 	@Override
 	public Callable<T> getCallable(Intent intent) {
 		if (debugIsEnable()) {
-			debug("Building up a callable with the provider and the request");
+			d("Building up a callable with the provider and the request");
 		}
 		Request request = RequestReader.read(intent);
 		return new CallableWrapper<T>(provider, request);

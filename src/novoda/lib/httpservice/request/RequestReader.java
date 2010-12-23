@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.request;
 
-import static novoda.lib.httpservice.util.LogTag.Core.debug;
+import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.List;
@@ -44,14 +44,14 @@ public class RequestReader {
 		Object receiverObj = intent.getParcelableExtra(Request.Extra.result_receiver);
 		if (receiverObj == null) {
 			if (debugIsEnable()) {
-				debug("Request receiver is null!");
+				d("Request receiver is null!");
 			}
 			return;
 		}
 		if(receiverObj instanceof ResultReceiver) {
 			ResultReceiver resultReceiver = (ResultReceiver)receiverObj;
 				if (debugIsEnable()) {
-					debug("Building request for intent with request receiver");
+					d("Building request for intent with request receiver");
 				}
 				request.setResultReceiver(resultReceiver);
 		} else {

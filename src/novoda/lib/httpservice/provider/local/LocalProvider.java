@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.provider.local;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+import static novoda.lib.httpservice.util.LogTag.Provider.d;
 import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 
 import java.io.ByteArrayInputStream;
@@ -44,7 +44,7 @@ public class LocalProvider implements Provider {
 			return new ByteArrayInputStream(map.get(uri).getBytes());
 		} else {
 			if(debugIsEnable()) {
-				debug("There is no resource registered for the local provider for url : " + uri);
+				d("There is no resource registered for the local provider for url : " + uri);
 			}
 			return null;
 		}

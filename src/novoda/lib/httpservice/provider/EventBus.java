@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.provider;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+import static novoda.lib.httpservice.util.LogTag.Provider.d;
 import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 
 import java.io.BufferedReader;
@@ -112,14 +112,14 @@ public class EventBus implements HasHandlers {
 	
     public void fireOnThrowable(Request request, Throwable t) {
     	if(debugIsEnable()) {
-			debug("Delivering content to handlers or receivers for onThrowable");
+			d("Delivering content to handlers or receivers for onThrowable");
 		}
     	ResultReceiver receiver = request.getResultReceiver();
     	if(receiver != null) {
 			receiver.send(ERROR, null);
 		} else {
 			if(debugIsEnable()) {
-				debug("Receiver is null, not sending back the result");
+				d("Receiver is null, not sending back the result");
 			}
 		}
     	
@@ -144,7 +144,7 @@ public class EventBus implements HasHandlers {
 
 	public void fireOnContentReceived(Request request, InputStream content) {
 		if(debugIsEnable()) {
-			debug("Delivering content to handlers or receivers for onContentReceiver");
+			d("Delivering content to handlers or receivers for onContentReceiver");
 		}
 		ResultReceiver receiver = request.getResultReceiver();
 		if(receiver != null) {
@@ -157,7 +157,7 @@ public class EventBus implements HasHandlers {
 			}
 		} else {
 			if(debugIsEnable()) {
-				debug("Receiver is null, not sending back the result");
+				d("Receiver is null, not sending back the result");
 			}
 		}
 		
