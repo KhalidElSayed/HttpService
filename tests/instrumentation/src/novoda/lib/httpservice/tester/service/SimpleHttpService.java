@@ -29,6 +29,8 @@ public class SimpleHttpService extends HttpService<String> {
 	
 	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(DUMP_MONITOR_ACTION);
 
+	public static final String CITIES_HANDLER = "citiesHandler";
+	
 	private static int globalCount = 0;
 	
 	private GlobalHandler globalHandler = new SimpleGlobalHandler() {
@@ -59,6 +61,38 @@ public class SimpleHttpService extends HttpService<String> {
 		};
 	};
 	
+	private GlobalHandler citiesGlobalHandler = new SimpleGlobalHandler() {
+		@Override
+		public void onContentReceived(java.io.InputStream content) {
+			if(content != null) {
+				AppLogger.debug("Received cities for global handler");
+				try {
+					content.close();
+				} catch (IOException e) {
+					AppLogger.error(e);
+				}
+			} else {
+				AppLogger.debug("Received cities for global handler but content is null");
+			}
+		};
+	};
+	
+	private RequestHandler citiesRequestHandler = new SimpleRequestHandler() {
+		@Override
+		public void onContentReceived(java.io.InputStream content) {
+			if(content != null) {
+				AppLogger.debug("Received cities for request handler");
+				try {
+					content.close();
+				} catch (IOException e) {
+					AppLogger.error(e);
+				}
+			} else {
+				AppLogger.debug("Received cities for request handler but content is null");
+			}
+		};
+	};
+	
 	@Override
 	public void onCreate() {
 		attach(new Monitor() {
@@ -82,9 +116,13 @@ public class SimpleHttpService extends HttpService<String> {
 		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
 		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
 		
-		//Adding handlers
+		//Adding handlers with default key
 		addGlobalHandler(globalHandler);
 		addRequestHandler(requestHandler);
+		
+		//Adding handlers with specific key
+		addGlobalHandler(CITIES_HANDLER, citiesGlobalHandler);
+		addRequestHandler(CITIES_HANDLER, citiesRequestHandler);
 	}
 	
 	@Override

@@ -23,6 +23,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.net.Uri;
+
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -34,7 +36,7 @@ public class HttpProviderTest {
 	private EventBus eventBus;
 	private HttpClient httpClient;
 	private Request request = new Request(); {
-		request.setUrl(URL);
+		request.setUri(Uri.parse(URL));
 	}
 	
 	@Before

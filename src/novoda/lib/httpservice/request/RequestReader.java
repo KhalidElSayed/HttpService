@@ -2,7 +2,9 @@ package novoda.lib.httpservice.request;
 
 import static novoda.lib.httpservice.util.LogTag.Core.debug;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
-import novoda.lib.httpservice.HttpServiceConstant;
+
+import java.util.List;
+
 import novoda.lib.httpservice.exception.RequestException;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,23 +20,28 @@ public class RequestReader {
 		if (action == null) {
 			throw new RequestException("Can't build a request with a null action");
 		}
-		if (HttpServiceConstant.request.equals(action)) {
+		if (Request.Action.request.equals(action)) {
 			Request request = new Request();
+			readUri(intent, request);
 			readMethod(intent, request);
-			boolean uri = readUri(intent, request);
-			boolean url = readUrl(intent, request);
-			if(!uri && !url) {
-				throw new RequestException("Request url and uri are not specified. Need at least one!");
-			}
+			readHandlerKey(intent, request);
 			readResultReceiver(intent, request);
+			readParams(intent, request);
 			return request;
 		} else {
 			throw new RequestException("Action : " + action  + " is not implemented");
 		}
 	}
 
+	private static void readHandlerKey(Intent intent, Request request) {
+		String handlerKey = intent.getStringExtra(Request.Extra.handler_key);
+		if(handlerKey != null) {
+			request.setHandlerKey(handlerKey);
+		}
+	}
+
 	private static void readResultReceiver(Intent intent, Request request) {
-		Object receiverObj = intent.getParcelableExtra(HttpServiceConstant.Extra.result_receiver);
+		Object receiverObj = intent.getParcelableExtra(Request.Extra.result_receiver);
 		if (receiverObj == null) {
 			if (debugIsEnable()) {
 				debug("Request receiver is null!");
@@ -52,27 +59,22 @@ public class RequestReader {
 		}
 	}
 
-	private static boolean readUrl(Intent intent, Request request) {
-		String url = intent.getStringExtra(HttpServiceConstant.Extra.url);
-		if(url != null) {
-			request.setUrl(url);
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean readUri(Intent intent, Request request) {
+	private static void readUri(Intent intent, Request request) {
 		Uri uri = intent.getData();
-		if(uri != null) {
-			request.setUri(uri);
-			return true;
+		if(uri == null) {
+			throw new RequestException("Request url and uri are not specified. Need at least one!");
 		}
-		return false;
+		request.setUri(uri);
 	}
 
 	private static void readMethod(Intent intent, Request request) {
-		int method = intent.getIntExtra(HttpServiceConstant.Extra.method, Request.Method.GET);
+		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
 		request.setMethod(method);
+	}
+	
+	private static void readParams(Intent intent, Request request) {
+		List<ParcelableBasicNameValuePair> params = intent.getParcelableArrayListExtra(Request.Extra.params);
+	    request.setParams(params);
 	}
 
 	// StringBuilder query = new StringBuilder(URLEncodedUtils.format(

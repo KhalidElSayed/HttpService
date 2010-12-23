@@ -3,7 +3,9 @@ package novoda.lib.httpservice.request;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import novoda.lib.httpservice.HttpServiceConstant;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +29,7 @@ public class RequestWriterTest {
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
-		assertEquals(HttpServiceConstant.request, action);
+		assertEquals(Request.Action.request, action);
 	}
 	
 	@Test
@@ -36,17 +38,16 @@ public class RequestWriterTest {
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
-		assertEquals(HttpServiceConstant.request, action);
-		String url = intent.getStringExtra(HttpServiceConstant.Extra.url);
-		assertNotNull(url);
-		assertEquals(URL, url);
+		assertEquals(Request.Action.request, action);
+		Uri uri = intent.getData();
+		assertNotNull(uri);
 	}
 	
 	@Test
 	public void shouldAttachResultReceiver() {
 		ResultReceiver expectedReceiver = mock(ResultReceiver.class);
 		Intent intent = new RequestWriter(URL).attach(expectedReceiver).write();
-		ResultReceiver actualReceiver = intent.getParcelableExtra(HttpServiceConstant.Extra.result_receiver);
+		ResultReceiver actualReceiver = intent.getParcelableExtra(Request.Extra.result_receiver);
 		assertNotNull(actualReceiver);
 		assertEquals(expectedReceiver, actualReceiver);
 	}
@@ -54,21 +55,38 @@ public class RequestWriterTest {
 	@Test
 	public void shouldBuildGetByDefault() {
 		Intent intent = new RequestWriter(URL).write();
-		int method = intent.getIntExtra(HttpServiceConstant.Extra.method, Request.Method.GET);
+		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
 		assertEquals(Request.Method.GET, method);
 	}
 	
 	@Test
 	public void shouldBuildPost() {
-		Intent intent = new RequestWriter(URL).method(Request.Method.POST).write();
-		int method = intent.getIntExtra(HttpServiceConstant.Extra.method, Request.Method.GET);
+		Intent intent = new RequestWriter(URL).asPost().write();
+		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
 		assertEquals(Request.Method.POST, method);
 	}
 	
-	@Ignore
 	@Test
-	public void shouldAddParcellOfParametersForPost() {
-		//TODO something I know I have to do
+	public void shouldWriteHandlerInformationOnIntent() {
+		Intent intent = new RequestWriter(URL).handlerKey("specificHandler").write();
+		String handlerKey = intent.getStringExtra(Request.Extra.handler_key);
+		assertEquals("specificHandler", handlerKey);
+	}
+	
+	@Ignore //robolectric doesn't support getParcalableArrayList TODO fix this
+	@Test
+	public void shouldWriteParcellOfParameters() {
+		HashMap<String,String> expectedParams = new HashMap<String,String>();
+		expectedParams.put("key", "XXYY");
+		expectedParams.put("something", "somevalue");
+		Intent intent = new RequestWriter(URL).params(expectedParams).write();
+		ArrayList<ParcelableBasicNameValuePair> actualParams = intent.getParcelableArrayListExtra(Request.Extra.params);
+		assertNotNull(actualParams);
+		assertEquals(2, actualParams.size());
+		assertEquals("", actualParams.get(0).getName());
+		assertEquals("", actualParams.get(0).getValue());
+		assertEquals("", actualParams.get(1).getName());
+		assertEquals("", actualParams.get(1).getValue());
 	}
 
 }

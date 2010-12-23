@@ -1,8 +1,9 @@
 package novoda.lib.httpservice.tester.activity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.RequestWriter;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
@@ -11,8 +12,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -40,16 +39,30 @@ public class DashboardActivity extends BaseActivity {
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					
-					Intent intent = new RequestWriter("http://facebook-pipes.appspot.com/").attach(new ResultReceiver(new Handler()) {
-							@Override
-							protected void onReceiveResult(int resultCode, Bundle resultData) {
-								if(resultData == null) {
-									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
-								} else {
-									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
-								}
-							}
-						}).write();
+					//Https request with parameters and specific handler
+					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445
+					Map<String,String> parameters = new HashMap<String,String>();
+					parameters.put("key", "ABDE12456AB2324445");
+					parameters.put("state", "ny");
+
+					Intent intent = new RequestWriter("https://api.meetup.com/cities.xml/").params(parameters).
+						handlerKey(SimpleHttpService.CITIES_HANDLER).asPost().write();
+					
+					
+					//Next
+					//Post to http://api.meetup.com/ew/event/
+					
+					//Normal Http request
+//					Intent intent = new RequestWriter("http://facebook-pipes.appspot.com/").attach(new ResultReceiver(new Handler()) {
+//							@Override
+//							protected void onReceiveResult(int resultCode, Bundle resultData) {
+//								if(resultData == null) {
+//									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " but resultData is Null ");
+//								} else {
+//									AppLogger.logVisibly("onReceiveResult with status : " + resultCode + " and result: " + resultData.getString(Request.SIMPLE_BUNDLE_RESULT));
+//								}
+//							}
+//						}).write();
 					
 					//OLD WAY TO DO IT
 					//is still possible to do it in this way

@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.provider;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;

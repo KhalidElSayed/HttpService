@@ -6,7 +6,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import novoda.lib.httpservice.HttpServiceConstant;
+
+import java.util.ArrayList;
+
 import novoda.lib.httpservice.exception.RequestException;
 
 import org.junit.Before;
@@ -15,6 +17,7 @@ import org.junit.runner.RunWith;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.os.ResultReceiver;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -22,15 +25,14 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class RequestReaderTest { 
 	
-	private static final String URL = "http://www.google.com";
-	
 	private Intent intent;
 	
 	@Before
 	public void setUpValidDefaultRequest() {
 		intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceConstant.request);
-		when(intent.getStringExtra(HttpServiceConstant.Extra.url)).thenReturn(URL);
+		when(intent.getAction()).thenReturn(Request.Action.request);
+		Uri uri = mock(Uri.class);
+		when(intent.getData()).thenReturn(uri);
 	}
 	
 	@Test(expected = RequestException.class)
@@ -52,22 +54,13 @@ public class RequestReaderTest {
 	@Test(expected = RequestException.class)
 	public void shouldBuildSimpleHttpRequestFaildWithExceptionIfUrlAndUriAreNotProvided() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(HttpServiceConstant.request);
+		when(intent.getAction()).thenReturn(Request.Action.request);
 		
 		RequestReader.read(intent);
 	}
 	
 	@Test
-	public void shouldBuildRequestFromIntentWithOnlyUrl() {
-		Request request = RequestReader.read(intent);
-		
-		assertNotNull(request);
-		assertEquals(URL, request.getUrl());
-	}
-	
-	@Test
 	public void shoudBuildRequestFromIntentWithOnlyUri() {
-		when(intent.getStringExtra(HttpServiceConstant.Extra.url)).thenReturn(null);
 		Uri uri = mock(Uri.class);
 		when(intent.getData()).thenReturn(uri);
 
@@ -80,7 +73,7 @@ public class RequestReaderTest {
 	@Test
 	public void shouldSetTheRequestReceiverIfThere() {
 		ResultReceiver expectedReceived = mock(ResultReceiver.class);
-		when(intent.getParcelableExtra(HttpServiceConstant.Extra.result_receiver)).thenReturn(expectedReceived);
+		when(intent.getParcelableExtra(Request.Extra.result_receiver)).thenReturn(expectedReceived);
 		
 		Request request = RequestReader.read(intent);
 		
@@ -92,7 +85,7 @@ public class RequestReaderTest {
 	
 	@Test
 	public void shouldBuildRequestWithGetMethodByDefault() {
-		when(intent.getIntExtra(HttpServiceConstant.Extra.method, 
+		when(intent.getIntExtra(Request.Extra.method, 
 				Request.Method.GET)).thenReturn(Request.Method.GET);
 		
 		Request request = RequestReader.read(intent);
@@ -103,13 +96,34 @@ public class RequestReaderTest {
 	
 	@Test
 	public void shouldBuildWithPostMethod() {
-		when(intent.getIntExtra(HttpServiceConstant.Extra.method, 
+		when(intent.getIntExtra(Request.Extra.method, 
 				Request.Method.GET)).thenReturn(Request.Method.POST);
 		
 		Request request = RequestReader.read(intent);
 		
 		assertNotNull(request);
 		assertTrue(request.isPost());
+	}
+	
+	@Test
+	public void shouldReadTheHandlerKey() {
+		when(intent.getStringExtra(Request.Extra.handler_key)).thenReturn("specificHandler");
+		
+		Request request = RequestReader.read(intent);
+		
+		assertNotNull(request);
+		assertEquals("specificHandler", request.getHandlerKey());
+	}
+	
+	@Test
+	public void shouldReadParams() {
+		ArrayList<Parcelable> list = new ArrayList<Parcelable>();
+		when(intent.getParcelableArrayListExtra(Request.Extra.params)).thenReturn(list);
+		
+		Request request = RequestReader.read(intent);
+		
+		assertNotNull(request);
+		assertEquals(list, request.getParams());
 	}
 
 }

@@ -17,6 +17,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.net.Uri;
+
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -29,7 +31,7 @@ public class LocalProviderTest {
 	public void setUp() {
 		eventBus = new EventBus();
 		provider  = new LocalProvider(eventBus);
-		provider.add("http://www.google.com", "ok");
+		provider.add(Uri.parse("http://www.google.com"), "ok");
 	}
 	
 	@Test(expected = ProviderException.class)

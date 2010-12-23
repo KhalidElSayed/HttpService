@@ -1,9 +1,9 @@
 package novoda.lib.httpservice.provider.http;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.errorIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Provider.error;
-import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 import static novoda.lib.httpservice.util.LogTag.Provider.debug;
+import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Provider.error;
+import static novoda.lib.httpservice.util.LogTag.Provider.errorIsEnable;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
@@ -13,6 +13,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 
 public class HttpProvider implements Provider {
@@ -37,27 +38,33 @@ public class HttpProvider implements Provider {
 
 	@Override
 	public void execute(Request request) {
-        HttpUriRequest get = null;
+        HttpUriRequest method = null;
         try {
         	if(debugIsEnable()) {
-    			debug("HttpProvider execute for : " + request.getUrl());
+    			debug("HttpProvider execute for : " + request.getUri());
     		}
-        	get = new HttpGet(request.getUrl());
-        	HttpResponse response = client.execute(get);
+        	if(request.isGet()) {
+        		method = new HttpGet(Request.asURI(request));
+        	} else if(request.isPost()) {
+        		method = new HttpPost(Request.asURI(request));
+        	} else {
+        		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
+        	}
+        	final HttpResponse response = client.execute(method);
             if(response == null) {
-            	logAndThrow("Response from " + request.getUrl() + " is null");
+            	logAndThrow("Response from " + request.getUri() + " is null");
             }
-            HttpEntity entity = response.getEntity();
+            final HttpEntity entity = response.getEntity();
             if(entity == null) {
-            	logAndThrow("Entity from response of " + request.getUrl() + " is null");
+            	logAndThrow("Entity from response of " + request.getUri() + " is null");
             }
             eventBus.fireOnContentReceived(request, entity.getContent());
         } catch (Throwable t) {
         	eventBus.fireOnThrowable(request, t);
-        	logAndThrow("Problems executing the request for : " + request.getUrl(), t);
+        	logAndThrow("Problems executing the request for : " + request.getUri(), t);
         } finally {
-        	if(get != null) {
-        		get.abort();
+        	if(method != null) {
+        		method.abort();
         	}
         }
 	}

@@ -17,7 +17,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import novoda.lib.httpservice.exception.ExecutorException;
 import novoda.lib.httpservice.executor.monitor.Monitorable;
-
 import android.content.Intent;
 
 public class ThreadManager<T> implements ExecutorManager<T> {
