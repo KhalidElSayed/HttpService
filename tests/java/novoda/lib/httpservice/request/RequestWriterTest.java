@@ -25,7 +25,7 @@ public class RequestWriterTest {
 	@Test
 	public void shouldBuildUpGetRequestFromUri() {
 		Uri uri = Uri.parse(URL);
-		Intent intent = new RequestWriter(uri).write();
+		Intent intent = new IntentRequestBuilder(uri).build();
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
@@ -34,7 +34,7 @@ public class RequestWriterTest {
 	
 	@Test
 	public void shouldBuildUpGetRequestFromUrl() {
-		Intent intent = new RequestWriter(URL).write();
+		Intent intent = new IntentRequestBuilder(URL).build();
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
@@ -46,7 +46,7 @@ public class RequestWriterTest {
 	@Test
 	public void shouldAttachResultReceiver() {
 		ResultReceiver expectedReceiver = mock(ResultReceiver.class);
-		Intent intent = new RequestWriter(URL).attach(expectedReceiver).write();
+		Intent intent = new IntentRequestBuilder(URL).attach(expectedReceiver).build();
 		ResultReceiver actualReceiver = intent.getParcelableExtra(Request.Extra.result_receiver);
 		assertNotNull(actualReceiver);
 		assertEquals(expectedReceiver, actualReceiver);
@@ -54,21 +54,21 @@ public class RequestWriterTest {
 	
 	@Test
 	public void shouldBuildGetByDefault() {
-		Intent intent = new RequestWriter(URL).write();
+		Intent intent = new IntentRequestBuilder(URL).build();
 		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
 		assertEquals(Request.Method.GET, method);
 	}
 	
 	@Test
 	public void shouldBuildPost() {
-		Intent intent = new RequestWriter(URL).asPost().write();
+		Intent intent = new IntentRequestBuilder(URL).asPost().build();
 		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
 		assertEquals(Request.Method.POST, method);
 	}
 	
 	@Test
 	public void shouldWriteHandlerInformationOnIntent() {
-		Intent intent = new RequestWriter(URL).handlerKey("specificHandler").write();
+		Intent intent = new IntentRequestBuilder(URL).withHandlerKey("specificHandler").build();
 		String handlerKey = intent.getStringExtra(Request.Extra.handler_key);
 		assertEquals("specificHandler", handlerKey);
 	}
@@ -79,7 +79,7 @@ public class RequestWriterTest {
 		HashMap<String,String> expectedParams = new HashMap<String,String>();
 		expectedParams.put("key", "XXYY");
 		expectedParams.put("something", "somevalue");
-		Intent intent = new RequestWriter(URL).params(expectedParams).write();
+		Intent intent = new IntentRequestBuilder(URL).withParams(expectedParams).build();
 		ArrayList<ParcelableBasicNameValuePair> actualParams = intent.getParcelableArrayListExtra(Request.Extra.params);
 		assertNotNull(actualParams);
 		assertEquals(2, actualParams.size());

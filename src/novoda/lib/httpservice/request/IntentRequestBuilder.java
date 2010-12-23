@@ -18,47 +18,51 @@ import android.os.ResultReceiver;
  * @author luigi@novoda.com
  *
  */
-public class RequestWriter {
+public class IntentRequestBuilder {
 	
 	private Intent intent;
 	
-	public RequestWriter(String url)  {
+	public IntentRequestBuilder(String url)  {
 		this(Uri.parse(url));
 	}
 	
-	public RequestWriter(Uri uri)  {
+	public IntentRequestBuilder(Uri uri)  {
 		intent = new Intent(Request.Action.request, uri);
 	}
 	
-	private RequestWriter method(int method) {
-		intent.putExtra(Request.Extra.method, method);
-		return this;
-	}
-	
-	public RequestWriter asPost() {
+	public IntentRequestBuilder asPost() {
 		return method(Request.Method.POST);
 	}
 
-	public RequestWriter attach(ResultReceiver resultReceiver) {
+	private IntentRequestBuilder method(int method) {
+		intent.putExtra(Request.Extra.method, method);
+		return this;
+	}
+
+	public IntentRequestBuilder attach(ResultReceiver resultReceiver) {
 		intent.putExtra(Request.Extra.result_receiver, resultReceiver);
 		return this;
 	}
 	
-	public RequestWriter handlerKey(String handlerKey) {
+	public IntentRequestBuilder withHandlerKey(String handlerKey) {
 		intent.putExtra(Request.Extra.handler_key, handlerKey);
 		return this;
 	}
 
-	public RequestWriter params(Map<String, String> params) {
+	public IntentRequestBuilder withParams(Map<String, String> params) {
 		ArrayList<ParcelableBasicNameValuePair> parcelables = new ArrayList<ParcelableBasicNameValuePair>();
 		for(Entry<String,String> param : params.entrySet()) {
 			parcelables.add(new ParcelableBasicNameValuePair(param.getKey(), param.getValue()));
 		}
-		intent.putParcelableArrayListExtra(Request.Extra.params, parcelables);
+		return withParams(parcelables);
+	}
+	
+	public IntentRequestBuilder withParams(ArrayList<ParcelableBasicNameValuePair> params) {
+		intent.putParcelableArrayListExtra(Request.Extra.params, params);
 		return this;
 	}
 
-	public Intent write() {
+	public Intent build() {
 		return intent;
 	}
 

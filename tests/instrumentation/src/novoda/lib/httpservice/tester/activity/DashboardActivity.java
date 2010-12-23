@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import novoda.lib.httpservice.request.RequestWriter;
+import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
 import novoda.lib.httpservice.tester.util.AppLogger;
@@ -41,12 +41,13 @@ public class DashboardActivity extends BaseActivity {
 					
 					//Https request with parameters and specific handler
 					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445
+					//is it possible to send an array of parcelable as well
 					Map<String,String> parameters = new HashMap<String,String>();
 					parameters.put("key", "ABDE12456AB2324445");
 					parameters.put("state", "ny");
 
-					Intent intent = new RequestWriter("https://api.meetup.com/cities.xml/").params(parameters).
-						handlerKey(SimpleHttpService.CITIES_HANDLER).asPost().write();
+					Intent intent = new IntentRequestBuilder("https://api.meetup.com/cities.xml/").withParams(parameters).
+						withHandlerKey(SimpleHttpService.CITIES_HANDLER).asPost().build();
 					
 					
 					//Next
