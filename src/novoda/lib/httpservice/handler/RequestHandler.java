@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.handler;
 
-import java.io.InputStream;
+import novoda.lib.httpservice.request.Response;
 
 public interface RequestHandler {
 
@@ -10,6 +10,6 @@ public interface RequestHandler {
 
     void onThrowable(Throwable t);
 
-	void onContentReceived(InputStream content);
+	void onContentReceived(Response response);
 	
 }

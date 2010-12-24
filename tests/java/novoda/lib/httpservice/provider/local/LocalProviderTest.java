@@ -4,14 +4,12 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-
-import java.io.InputStream;
-
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -48,10 +46,10 @@ public class LocalProviderTest {
 		
 		provider.execute(request);
 		
-		verify(handler, times(1)).onContentReceived(any(InputStream.class));
+		verify(handler, times(1)).onContentReceived(any(Response.class));
 	}
 	
-	@Test
+	@Test(expected = ProviderException.class)
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContent() {
 		GlobalHandler handler = mock(GlobalHandler.class);
 		eventBus.addGlobalHandler(handler);

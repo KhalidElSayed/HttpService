@@ -8,8 +8,9 @@ import java.util.concurrent.Callable;
 import novoda.lib.httpservice.exception.HandlerException;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
-public class CallableWrapper<T> implements Callable<T> {
+public class CallableWrapper implements Callable<Response> {
 	
 	private Provider provider;
 	
@@ -27,13 +28,15 @@ public class CallableWrapper<T> implements Callable<T> {
 	}
 	
 	@Override
-	public T call() throws Exception {
+	public Response call() throws Exception {
 		if(debugIsEnable()) {
 			d("Executing request : " + request);
 		}
-		provider.execute(request);
-		//don't care bout returning result, I'm sending through the handler in an async way
-		return null;
+		Response response = provider.execute(request);
+		if(debugIsEnable()) {
+			d("Response received");
+		}
+		return response;
 	}
 
 }

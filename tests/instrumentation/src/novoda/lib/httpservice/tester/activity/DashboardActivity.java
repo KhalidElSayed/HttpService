@@ -1,8 +1,6 @@
 package novoda.lib.httpservice.tester.activity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.tester.R;
@@ -39,16 +37,18 @@ public class DashboardActivity extends BaseActivity {
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					
+					//
+					Intent intent = new IntentRequestBuilder("http://facebook-pipes.appspot.com/").build();
+					
 					//Https request with parameters and specific handler
 					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445
 					//is it possible to send an array of parcelable as well
-					Map<String,String> parameters = new HashMap<String,String>();
-					parameters.put("key", "ABDE12456AB2324445");
-					parameters.put("state", "ny");
-
-					Intent intent = new IntentRequestBuilder("https://api.meetup.com/cities.xml/").withParams(parameters).
-						withHandlerKey(SimpleHttpService.CITIES_HANDLER).asPost().build();
-					
+//					Map<String,String> parameters = new HashMap<String,String>();
+//					parameters.put("key", "ABDE12456AB2324445");
+//					parameters.put("state", "ny");
+//
+//					Intent intent = new IntentRequestBuilder("https://api.meetup.com/cities.xml/").withParams(parameters).
+//						withHandlerKey(SimpleHttpService.CITIES_HANDLER).asPost().build();
 					
 					//Next
 					//Post to http://api.meetup.com/ew/event/
@@ -111,6 +111,8 @@ public class DashboardActivity extends BaseActivity {
 				monitorInfo.setText("Monitor is detach");
 			}
 		});
+
+
 		
 //		log.setOnClickListener(new OnClickListener() {
 //			@Override

@@ -9,6 +9,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.concurrent.Callable;
 
+import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.request.Response;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +27,8 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class QueuedExecutorManagerTest {
 	
 	private Intent mIntent;
-	private Callable<String> mCallable;
+	private Callable<Response> mCallable;
+	private EventBus mEventBus;
 
 	private int getCallableCalls = 0;
 	
@@ -34,14 +38,15 @@ public class QueuedExecutorManagerTest {
 	public void setUp() {
 		mCallable = mock(Callable.class);
 		mIntent = mock(Intent.class);
+		mEventBus = mock(EventBus.class);
 		getCallableCalls = 0;
 	}
 	
 	@Test
 	public void shouldThrowExceptionOnTheFirstExecutionIfCallableCreatedByTheServiceIsNull() {
-		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
+		ThreadManager manager = new ThreadManager(mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				return null;
 			}
 		});
@@ -53,11 +58,12 @@ public class QueuedExecutorManagerTest {
 	@Test
 	public void shouldStartNormalPool() throws Exception {
 		mCallable = mock(Callable.class);
-		when(mCallable.call()).thenReturn("ok");
+		Response response = mock(Response.class);
+		when(mCallable.call()).thenReturn(response);
 		
-		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
+		ThreadManager manager = new ThreadManager(mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				getCallableCalls++;
 				return mCallable;
 			}
@@ -86,9 +92,9 @@ public class QueuedExecutorManagerTest {
 			}
 		});
 		
-		ThreadManager<String> manager = new ThreadManager<String>(new CallableExecutor<String>() {
+		ThreadManager manager = new ThreadManager(mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				getCallableCalls++;
 				await(100);
 				return mCallable;

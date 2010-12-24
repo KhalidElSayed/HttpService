@@ -4,7 +4,7 @@ import java.util.Map;
 
 import android.content.Intent;
 
-public interface ExecutorManager<T> {
+public interface ExecutorManager {
 
 	void shutdown();
 

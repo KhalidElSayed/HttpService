@@ -1,9 +1,10 @@
 package novoda.lib.httpservice.provider;
 
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
 public interface Provider {
 
-	void execute(Request request);
+	Response execute(Request request);
 	
 }

@@ -2,13 +2,24 @@ package novoda.lib.httpservice.executor.monitor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import novoda.lib.httpservice.executor.ExecutorManager;
 import novoda.lib.httpservice.executor.ExecutorService;
+import novoda.lib.httpservice.executor.LifecycleHandler;
+import novoda.lib.httpservice.provider.EventBus;
 
-public abstract class MonitorableExecutorService<T> extends ExecutorService<T> implements Monitorable {
+public abstract class MonitorableExecutorService extends ExecutorService implements Monitorable {
 	
 	private Monitor monitor;
 
 	private boolean runMonitor = true;
+	
+	public MonitorableExecutorService() {
+		this(null, null, null);
+	}
+	
+	public MonitorableExecutorService(EventBus eventBus, ExecutorManager executorManager, LifecycleHandler lifecycleHandler) {
+		super(eventBus, executorManager, lifecycleHandler);
+	}
 	
 	@Override
 	public void attach(Monitor monitor) {
@@ -40,7 +51,7 @@ public abstract class MonitorableExecutorService<T> extends ExecutorService<T> i
 	@Override
 	public void stopMonitoring() {
 		if (debugIsEnable()) {
-			d("Starting monitoring the executor manager");
+			d("Stopping monitoring the executor manager");
 		}
 		runMonitor = false;
 	}

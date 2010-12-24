@@ -1,5 +1,7 @@
 package novoda.lib.httpservice.provider.http;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -7,14 +9,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -53,18 +54,13 @@ public class HttpProviderTest {
 	@Test
 	public void shouldHttpProviderGoAndFireOnContentReceived() throws ClientProtocolException, IOException {
 		HttpResponse response = mock(HttpResponse.class);
-		HttpEntity httpEntity = mock(HttpEntity.class);
-		InputStream is = mock(InputStream.class);
-		
-		when(httpEntity.getContent()).thenReturn(is);
-		when(response.getEntity()).thenReturn(httpEntity);
 		when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
 		
 		provider  = new HttpProvider(httpClient, eventBus);
 		
-		provider.execute(request);
-		
-		verify(eventBus, times(1)).fireOnContentReceived(any(Request.class), any(InputStream.class));
+		Response actualResponse = provider.execute(request);
+		assertNotNull(actualResponse);
+		assertEquals("", "");
 	}
 	
 	@Test(expected = ProviderException.class)

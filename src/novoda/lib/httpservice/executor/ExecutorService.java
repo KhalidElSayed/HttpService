@@ -6,6 +6,12 @@ import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.Map;
 
+import novoda.lib.httpservice.handler.GlobalHandler;
+import novoda.lib.httpservice.handler.HasHandlers;
+import novoda.lib.httpservice.handler.RequestHandler;
+import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.request.Response;
+
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -17,20 +23,27 @@ import android.os.IBinder;
  *
  * @param <T>
  */
-public abstract class ExecutorService<T> extends Service implements CallableExecutor<T> {
+public abstract class ExecutorService extends Service implements CallableExecutor<Response>, HasHandlers {
     
-    protected ExecutorManager<T> executorManager;
+    protected ExecutorManager executorManager;
+    
+    protected EventBus eventBus;
     
     private LifecycleHandler lifecycleHandler;
     
     public ExecutorService() {
-    	this(null, null);
+    	this(null, null, null);
     }
     
-    public ExecutorService(ExecutorManager<T> executorManager, LifecycleHandler lifecycleHandler) {
+    public ExecutorService(EventBus eventBus, ExecutorManager executorManager, LifecycleHandler lifecycleHandler) {
+    	this.eventBus = eventBus;
+    	if(this.eventBus == null) {
+    		this.eventBus = new EventBus(); 
+    	}
+
     	this.executorManager = executorManager; 
     	if(this.executorManager == null) {
-    		this.executorManager = new ThreadManager<T>(this);
+    		this.executorManager = new ThreadManager(this.eventBus, this);
     	}
     	
     	this.lifecycleHandler = lifecycleHandler; 
@@ -44,6 +57,7 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
 		if(debugIsEnable()) {
     		d("Executor Service on Create");
     	}
+		executorManager.start();
         super.onCreate();
     }
 
@@ -85,4 +99,43 @@ public abstract class ExecutorService<T> extends Service implements CallableExec
 		return executorManager.isWorking();
 	}
 	
+	@Override
+	public void addGlobalHandler(String key, GlobalHandler handler) {
+		eventBus.addGlobalHandler(key, handler);
+	}
+	
+	@Override
+	public void removeGlobalHandler(String key, GlobalHandler handler) {
+		eventBus.removeGlobalHandler(key, handler);
+	}
+
+	@Override
+	public void addRequestHandler(String key, RequestHandler handler) {
+		eventBus.addRequestHandler(key, handler);
+	}
+
+	@Override
+	public void removeRequestHandler(String key, RequestHandler handler) {
+		eventBus.removeRequestHandler(key, handler);
+	}
+
+	@Override
+	public void addGlobalHandler(GlobalHandler handler) {
+		eventBus.addGlobalHandler(handler);
+	}
+	
+	@Override
+	public void removeGlobalHandler(GlobalHandler handler) {
+		eventBus.removeGlobalHandler(handler);
+	}
+
+	@Override
+	public void addRequestHandler(RequestHandler handler) {
+		eventBus.addRequestHandler(handler);
+	}
+
+	@Override
+	public void removeRequestHandler(RequestHandler handler) {
+		eventBus.removeRequestHandler(handler);
+	}
 }

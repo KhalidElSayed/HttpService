@@ -1,6 +1,5 @@
 package novoda.lib.httpservice.tester.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -11,13 +10,15 @@ import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.handler.SimpleGlobalHandler;
 import novoda.lib.httpservice.handler.SimpleRequestHandler;
+import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.tester.util.AppLogger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-public class SimpleHttpService extends HttpService<String> {
+
+public class SimpleHttpService extends HttpService {
 	
 	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.STOP_MONITOR";
 	
@@ -35,66 +36,21 @@ public class SimpleHttpService extends HttpService<String> {
 	
 	private GlobalHandler globalHandler = new SimpleGlobalHandler() {
 		@Override
-		public void onContentReceived(java.io.InputStream content) {
+		public void onContentReceived(Response response) {
 			AppLogger.debug("Received content for global handler : " + globalCount);
-			if(content != null) {
-				try {
-					content.close();
-				} catch (IOException e) {
-					AppLogger.error(e);
-				}
-			}
 		};
 	};
 	
 	private RequestHandler requestHandler = new SimpleRequestHandler() {
 		@Override
-		public void onContentReceived(java.io.InputStream content) {
-			AppLogger.debug("Received content for request handler");
-			if(content != null) {
-				try {
-					content.close();
-				} catch (IOException e) {
-					AppLogger.error(e);
-				}
-			}
-		};
-	};
-	
-	private GlobalHandler citiesGlobalHandler = new SimpleGlobalHandler() {
-		@Override
-		public void onContentReceived(java.io.InputStream content) {
-			if(content != null) {
-				AppLogger.debug("Received cities for global handler");
-				try {
-					content.close();
-				} catch (IOException e) {
-					AppLogger.error(e);
-				}
-			} else {
-				AppLogger.debug("Received cities for global handler but content is null");
-			}
-		};
-	};
-	
-	private RequestHandler citiesRequestHandler = new SimpleRequestHandler() {
-		@Override
-		public void onContentReceived(java.io.InputStream content) {
-			if(content != null) {
-				AppLogger.debug("Received cities for request handler");
-				try {
-					content.close();
-				} catch (IOException e) {
-					AppLogger.error(e);
-				}
-			} else {
-				AppLogger.debug("Received cities for request handler but content is null");
-			}
+		public void onContentReceived(Response response) {
+			AppLogger.debug("Received content for request handler : " + response.getContentAsString().length());
 		};
 	};
 	
 	@Override
 	public void onCreate() {
+		super.onCreate();
 		attach(new Monitor() {
 			@Override
 			public void dump(Map<String, String> properties) {
@@ -119,10 +75,6 @@ public class SimpleHttpService extends HttpService<String> {
 		//Adding handlers with default key
 		addGlobalHandler(globalHandler);
 		addRequestHandler(requestHandler);
-		
-		//Adding handlers with specific key
-		addGlobalHandler(CITIES_HANDLER, citiesGlobalHandler);
-		addRequestHandler(CITIES_HANDLER, citiesRequestHandler);
 	}
 	
 	@Override

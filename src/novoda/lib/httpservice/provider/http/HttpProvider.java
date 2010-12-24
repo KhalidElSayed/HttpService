@@ -8,8 +8,8 @@ import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -37,7 +37,8 @@ public class HttpProvider implements Provider {
 	}
 
 	@Override
-	public void execute(Request request) {
+	public Response execute(Request request) {
+		Response response = new Response();
         HttpUriRequest method = null;
         try {
         	if(debugIsEnable()) {
@@ -50,31 +51,28 @@ public class HttpProvider implements Provider {
         	} else {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}
-        	final HttpResponse response = client.execute(method);
-            if(response == null) {
+        	final HttpResponse httpResponse = client.execute(method);
+            if(httpResponse == null) {
             	logAndThrow("Response from " + request.getUri() + " is null");
             }
-            final HttpEntity entity = response.getEntity();
-            if(entity == null) {
-            	logAndThrow("Entity from response of " + request.getUri() + " is null");
-            }
-            eventBus.fireOnContentReceived(request, entity.getContent());
+            response.setHttpResponse(httpResponse);
+            response.setRequest(request);
+            if(debugIsEnable()) {
+    			d("Request returning response");
+    		}
+            return response;
         } catch (Throwable t) {
         	eventBus.fireOnThrowable(request, t);
-        	logAndThrow("Problems executing the request for : " + request.getUri(), t);
+        	if(errorIsEnable()) {
+    			e("Problems executing the request for : " + request.getUri(), t);
+    		}
+    		throw new ProviderException("Problems executing the request for : " + request.getUri());
         }
 	}
 	
 	private void logAndThrow(String msg) {
 		if(errorIsEnable()) {
 			e(msg);
-		}
-		throw new ProviderException(msg);
-	}
-	
-	private void logAndThrow(String msg, Throwable e) {
-		if(errorIsEnable()) {
-			e(msg, e);
 		}
 		throw new ProviderException(msg);
 	}

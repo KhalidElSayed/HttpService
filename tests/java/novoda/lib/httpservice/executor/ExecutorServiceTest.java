@@ -7,6 +7,9 @@ import static org.mockito.Mockito.mock;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.request.Response;
+
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,16 +24,16 @@ public class ExecutorServiceTest {
 	
 	private Intent mIntent = mock(Intent.class);
 	
-	private ExecutorService<String> service;
+	private ExecutorService service;
 	
 	private int calls = 0;
 	
 	@Before
 	public void setUp() {
 		calls = 0;
-		service = new ExecutorService<String>() {
+		service = new ExecutorService() {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				// TODO Auto-generated method stub
 				return null;
 			}
@@ -42,14 +45,14 @@ public class ExecutorServiceTest {
     	service.startService(mIntent);
     }
     
-    @SuppressWarnings("unchecked")
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
     	LifecycleHandler mHandler = mock(LifecycleHandler.class);
-    	ExecutorManager<String> mExecutorManager = mock(ExecutorManager.class);
-    	service = new ExecutorService<String>(mExecutorManager, mHandler) {
+    	ExecutorManager mExecutorManager = mock(ExecutorManager.class);
+    	EventBus mEventBus = mock(EventBus.class);
+    	service = new ExecutorService(mEventBus, mExecutorManager, mHandler) {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
 				return null;
 			}
@@ -62,9 +65,9 @@ public class ExecutorServiceTest {
     @Ignore
     @Test
     public void shouldShutdownAfterAWhile() throws InterruptedException, ExecutionException {
-    	service = new ExecutorService<String>() {
+    	service = new ExecutorService() {
 			@Override
-			public Callable<String> getCallable(Intent intent) {
+			public Callable<Response> getCallable(Intent intent) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
 				return null;
 			}

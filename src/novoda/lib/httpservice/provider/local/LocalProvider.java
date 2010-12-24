@@ -5,12 +5,13 @@ import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.security.ProviderException;
 import java.util.HashMap;
 
+import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 import android.net.Uri;
 
 public class LocalProvider implements Provider {
@@ -51,12 +52,17 @@ public class LocalProvider implements Provider {
 	}
 	
 	@Override
-	public void execute(Request req) {
+	public Response execute(Request req) {
 		InputStream content = getContent(req.getUri());
 		if(content == null) {
 			eventBus.fireOnThrowable(req, new Throwable("Content not found"));
+			throw new ProviderException("Content not found");
 		}
-		eventBus.fireOnContentReceived(req, content);
+		Response response = new Response();
+		response.setRequest(req);
+		response.setContent(content);
+		eventBus.fireOnContentReceived(response);
+		return response;
 	}
 
 }

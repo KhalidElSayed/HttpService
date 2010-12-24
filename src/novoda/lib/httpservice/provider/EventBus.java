@@ -19,6 +19,7 @@ import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
@@ -114,19 +115,18 @@ public class EventBus implements HasHandlers {
     	if(debugIsEnable()) {
 			d("Delivering content to handlers or receivers for onThrowable");
 		}
-    	ResultReceiver receiver = request.getResultReceiver();
-    	if(receiver != null) {
-			receiver.send(ERROR, null);
-		} else {
-			if(debugIsEnable()) {
-				d("Receiver is null, not sending back the result");
-			}
-		}
-    	
-    	String key = request.getHandlerKey();
-    	if(key == null) {
-    		key = DEFAULT_KEY;
+    	if(request != null) {    		
+    		ResultReceiver receiver = request.getResultReceiver();
+    		if(receiver != null) {
+    			receiver.send(ERROR, null);
+    		} else {
+    			if(debugIsEnable()) {
+    				d("Receiver is null, not sending back the result");
+    			}
+    		}
     	}
+    	
+    	String key = getHandlerKey(request);
     	
     	if(globalHandlers.containsKey(key)) {
 			List<GlobalHandler> handlers = globalHandlers.get(key);
@@ -142,42 +142,53 @@ public class EventBus implements HasHandlers {
 		}
     }
 
-	public void fireOnContentReceived(Request request, InputStream content) {
+	public void fireOnContentReceived(Response response) {
+		Request request = response.getRequest();
 		if(debugIsEnable()) {
 			d("Delivering content to handlers or receivers for onContentReceiver");
 		}
-		ResultReceiver receiver = request.getResultReceiver();
-		if(receiver != null) {
-			try {
-				Bundle b = new Bundle();
-				b.putString(Request.SIMPLE_BUNDLE_RESULT, convertStreamToString(content));				
-				receiver.send(SUCCESS, b);
-			} catch(Throwable t) {
-				receiver.send(ERROR, null);
-			}
-		} else {
-			if(debugIsEnable()) {
-				d("Receiver is null, not sending back the result");
+		if(request != null) {
+			ResultReceiver receiver = request.getResultReceiver();
+			if(receiver != null) {
+				try {
+					Bundle b = new Bundle();
+					b.putString(Request.SIMPLE_BUNDLE_RESULT, convertStreamToString(response.getContent()));				
+					receiver.send(SUCCESS, b);
+				} catch(Throwable t) {
+					receiver.send(ERROR, null);
+				}
+			} else {
+				if(debugIsEnable()) {
+					d("Receiver is null, not sending back the result");
+				}
 			}
 		}
 		
-    	String key = request.getHandlerKey();
-    	if(key == null) {
-    		key = DEFAULT_KEY;
-    	}
+		String key = getHandlerKey(request);
 		
 		if(globalHandlers.containsKey(key)) {
 			List<GlobalHandler> handlers = globalHandlers.get(key);
 			for(GlobalHandler handler : handlers) {
-				handler.onContentReceived(content);
+				handler.onContentReceived(response);
 			}
 		}
 		if(requestHandlers.containsKey(key)) {
 			List<RequestHandler> handlers = requestHandlers.get(key);
 			for(RequestHandler handler : handlers) {
-				handler.onContentReceived(content);
+				handler.onContentReceived(response);
 			}
 		}
+	}
+	
+	private String getHandlerKey(Request request) {
+		String key = null;
+		if(request != null) {			
+			key = request.getHandlerKey();
+		}
+    	if(key == null) {
+    		key = DEFAULT_KEY;
+    	}
+    	return key;
 	}
 	
 	private String convertStreamToString(InputStream is) throws IOException {

@@ -1,11 +1,11 @@
 package novoda.lib.httpservice.handler;
 
-import java.io.InputStream;
+import novoda.lib.httpservice.request.Response;
 
 public class SimpleGlobalHandler implements GlobalHandler {
 
 	@Override
-	public void onContentReceived(InputStream content) {
+	public void onContentReceived(Response response) {
 		// TODO Auto-generated method stub
 		
 	}

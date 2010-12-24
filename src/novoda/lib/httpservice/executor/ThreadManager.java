@@ -1,6 +1,7 @@
 package novoda.lib.httpservice.executor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
+import static novoda.lib.httpservice.util.LogTag.Core.e;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.HashMap;
@@ -17,9 +18,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import novoda.lib.httpservice.exception.ExecutorException;
 import novoda.lib.httpservice.executor.monitor.Monitorable;
+import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.request.Response;
 import android.content.Intent;
 
-public class ThreadManager<T> implements ExecutorManager<T> {
+public class ThreadManager implements ExecutorManager {
 
 	private static final int CORE_POOL_SIZE = 5;
 
@@ -43,21 +46,22 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	private ThreadPoolExecutor poolExecutor;
 
-	private ExecutorCompletionService<T> completitionService;
+	private ExecutorCompletionService<Response> completitionService;
 
 	private Thread looperThread;
 
-	private CallableExecutor<T> callableExecutor;
+	private CallableExecutor<Response> callableExecutor;
 
-	public ThreadManager(CallableExecutor<T> callableExecutor) {
-		this(callableExecutor, null, null);
+	private EventBus eventBus;
+	
+	public ThreadManager(EventBus eventBus, CallableExecutor<Response> callableExecutor) {
+		this(eventBus, callableExecutor, null, null);
 	}
 
-	public ThreadManager(CallableExecutor<T> callableExecutor,
-			ThreadPoolExecutor poolExecutor,
-			ExecutorCompletionService<T> completitionService) {
+	public ThreadManager(EventBus eventBus, CallableExecutor<Response> callableExecutor, ThreadPoolExecutor poolExecutor,
+			ExecutorCompletionService<Response> completitionService) {
 		if (debugIsEnable()) {
-			d("starting thread manager");
+			d("Starting thread manager");
 		}
 		if (poolExecutor == null) {
 			poolExecutor = getThreadPoolExecutor();
@@ -65,10 +69,11 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 		this.poolExecutor = poolExecutor;
 
 		if (completitionService == null) {
-			completitionService = (ExecutorCompletionService<T>) getCompletionService(poolExecutor);
+			completitionService = (ExecutorCompletionService<Response>) getCompletionService(poolExecutor);
 		}
 		this.completitionService = completitionService;
 		
+		this.eventBus = eventBus;
 		this.callableExecutor = callableExecutor;
 	}
 
@@ -87,7 +92,7 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	@Override
 	public void addTask(Intent intent) {
-		Callable<T> callable = callableExecutor.getCallable(intent);
+		Callable<Response> callable = callableExecutor.getCallable(intent);
 		if (callable == null) {
 			throw new ExecutorException(
 					"The callable retrieve from the service to hanble the intent is null");
@@ -110,14 +115,30 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 
 	@Override
 	public void start() {
+		if (debugIsEnable()) {
+			d("Starting looperThread");
+		}
 		looperThread = new Thread() {
 			public void run() {
+				Thread.currentThread().setPriority(MIN_PRIORITY);
+				if (debugIsEnable()) {
+					d("Run looperThread");
+				}
 				while (!isInterrupted()) {
 					try {
-						completitionService.take().get();
+						if (debugIsEnable()) {
+							d("Executing callable");
+						}
+						Response response = completitionService.take().get();
+						if (debugIsEnable()) {
+							d("Response received");
+						}
+						eventBus.fireOnContentReceived(response);
 					} catch (InterruptedException e) {
+						e("InterruptedException", e);
 						throw new ExecutorException("Interrupted Exception");
 					} catch (ExecutionException e) {
+						e("ExecutionException", e);
 						throw new ExecutorException("Execution Exeption");
 					}
 				}
@@ -131,9 +152,8 @@ public class ThreadManager<T> implements ExecutorManager<T> {
 				KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
 	}
 
-	private final CompletionService<T> getCompletionService(
-			ThreadPoolExecutor poolExecutor) {
-		return new ExecutorCompletionService<T>(poolExecutor);
+	private final CompletionService<Response> getCompletionService(ThreadPoolExecutor poolExecutor) {
+		return new ExecutorCompletionService<Response>(poolExecutor);
 	}
 
 	@Override

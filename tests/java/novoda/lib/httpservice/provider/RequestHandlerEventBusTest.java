@@ -1,14 +1,12 @@
 package novoda.lib.httpservice.provider;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.io.InputStream;
-
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,62 +23,62 @@ public class RequestHandlerEventBusTest {
 	
 	private Request request;
 	
+	private Response response;
+	
 	@Before
 	public void setUp() {
 		eventBus = new EventBus();
 		request = mock(Request.class);
 		when(request.getHandlerKey()).thenReturn(KEY);
+		response = mock(Response.class);
+		when(response.getRequest()).thenReturn(request);
 	}
 	
 	@Test
 	public void shouldFireOnContentReceivedOnGlobalHandler() {
 		RequestHandler h = mock(RequestHandler.class);
-		InputStream is = mock(InputStream.class);
 
 		eventBus.addRequestHandler(KEY, h);
 
-		eventBus.fireOnContentReceived(request, is);
+		eventBus.fireOnContentReceived(response);
 		
-		verify(h).onContentReceived(is);
+		verify(h).onContentReceived(response);
 	}
 	
 	@Test
 	public void shouldFireOnContentReceivedOnMultipleGlobalHandler() {
 		RequestHandler h1 = mock(RequestHandler.class);
 		RequestHandler h2 = mock(RequestHandler.class);
-		InputStream is = mock(InputStream.class);
-
+		
 		eventBus.addRequestHandler(KEY, h1);
 		eventBus.addRequestHandler(KEY, h2);
 		
-		eventBus.fireOnContentReceived(request, is);
+		eventBus.fireOnContentReceived(response);
 		
-		verify(h2).onContentReceived(is);
-		verify(h1).onContentReceived(is);
+		verify(h2).onContentReceived(response);
+		verify(h1).onContentReceived(response);
 	}
 	
 	@Test
 	public void shouldNotFireOnContentReceivedIfHasBeenRemoved() {
 		RequestHandler h1 = mock(RequestHandler.class);
 		RequestHandler h2 = mock(RequestHandler.class);
-		InputStream is = mock(InputStream.class);
 
 		eventBus.addRequestHandler(KEY, h1);
 		eventBus.addRequestHandler(KEY, h2);
 		
 		eventBus.removeRequestHandler(KEY, h1);
 
-		eventBus.fireOnContentReceived(request, is);
+		eventBus.fireOnContentReceived(response);
 		
-		verify(h2, times(1)).onContentReceived(is);
-		verify(h1, times(0)).onContentReceived(is);
+		verify(h2, times(1)).onContentReceived(response);
+		verify(h1, times(0)).onContentReceived(response);
 	}
 	
 	@Test
 	public void shouldGlobalRemovedWorkInEvenOnSecondCall() {
 		RequestHandler h1 = mock(RequestHandler.class);
 		RequestHandler h2 = mock(RequestHandler.class);
-		InputStream is = mock(InputStream.class);
 
 		eventBus.addRequestHandler(KEY, h1);
 		eventBus.addRequestHandler(KEY, h2);
@@ -88,10 +86,10 @@ public class RequestHandlerEventBusTest {
 		eventBus.removeRequestHandler(KEY, h1);
 		eventBus.removeRequestHandler(KEY, h1);
 		
-		eventBus.fireOnContentReceived(request, is);
+		eventBus.fireOnContentReceived(response);
 		
-		verify(h2, times(1)).onContentReceived(is);
-		verify(h1, times(0)).onContentReceived(is);
+		verify(h2, times(1)).onContentReceived(response);
+		verify(h1, times(0)).onContentReceived(response);
 	}
 	
 	@Test

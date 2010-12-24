@@ -19,9 +19,9 @@ public class LifecycleHandler extends Handler {
     
     private long lastCall;
 	
-	private ExecutorService<?> executorService;
+	private ExecutorService executorService;
 	
-	public LifecycleHandler(ExecutorService<?> executorService) {
+	public LifecycleHandler(ExecutorService executorService) {
 		this.executorService = executorService;
 	}
 	

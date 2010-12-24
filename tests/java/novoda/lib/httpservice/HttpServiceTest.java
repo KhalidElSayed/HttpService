@@ -2,11 +2,14 @@ package novoda.lib.httpservice;
 
 
 import static novoda.lib.httpservice.util.Time.await;
-import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.local.LocalProvider;
-import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -14,40 +17,39 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import android.content.Intent;
+import android.net.Uri;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
 public class HttpServiceTest {
 	
+	private static final String URL = "http://www.google.com";
+	
 	private EventBus eventBus = mock(EventBus.class);
 
 	private LocalProvider provider = new LocalProvider(eventBus); {
-		provider.add("http://www.google.com", "ok");
+		provider.add(URL, "ok");
 	}
 
-	private int calls; 
-
 	private Intent mIntent;
+	
+	private EventBus mEventBus;
 	
 	@Before
 	public void setUp() {
 		mIntent = mock(Intent.class);
-		calls = 0;
+		when(mIntent.getData()).thenReturn(Uri.parse(URL));
+		mEventBus = mock(EventBus.class);
 	}
 
-	@Ignore
+	@Ignore  //TODO 
 	@Test
-	public void shouldWork() {
-		HttpService<String> service = new HttpService<String>(eventBus, provider) {
-			@Override
-			protected Request getRequest(Intent intent) {
-				return new Request("http://www.google.com");
-			}
-		};
+	public void shouldFireEventOnTheBus() {
+		HttpService service = new HttpService(provider, mEventBus, null, null) { };
 		service.startService(mIntent);
 		await(200);
-		assertEquals("The service was suppose to call onHandleResult once but didn't", 1, calls);
+		verify(mEventBus, times(1)).fireOnContentReceived(any(Response.class));
 	}
 	
 }
