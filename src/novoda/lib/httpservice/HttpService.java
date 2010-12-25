@@ -13,7 +13,7 @@ import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.RequestReader;
+import novoda.lib.httpservice.request.IntentRequestParser;
 import novoda.lib.httpservice.request.Response;
 import android.content.Intent;
 
@@ -47,12 +47,12 @@ public abstract class HttpService extends MonitorableExecutorService {
 		if (debugIsEnable()) {
 			d("Building up a callable with the provider and the request");
 		}
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		return new CallableWrapper(provider, request);
 	}
 	
 	protected Request getRequest(Intent intent) {
-		return (Request)RequestReader.read(intent);
+		return (Request)IntentRequestParser.parse(intent);
 	}
 
 }

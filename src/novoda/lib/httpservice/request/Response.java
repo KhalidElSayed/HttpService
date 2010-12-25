@@ -14,6 +14,12 @@ import novoda.lib.httpservice.exception.RequestException;
 
 import org.apache.http.HttpResponse;
 
+/**
+ * Wrapper for the HttpResponse.
+ * 
+ * @author luigi
+ *
+ */
 public class Response {
 
 	private HttpResponse httpResponse;
@@ -71,7 +77,7 @@ public class Response {
 	
 	private static final String asString(final InputStream is) {
 		if (is != null) {
-			Writer writer = new StringWriter();
+			Writer writer = new StringWriter(BUFFER);
 			char[] buffer = new char[BUFFER];
 			try {
 				Reader reader = new BufferedReader(new InputStreamReader(is, ENCODING), BUFFER);

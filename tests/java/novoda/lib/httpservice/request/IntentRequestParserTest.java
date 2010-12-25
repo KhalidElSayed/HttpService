@@ -23,14 +23,17 @@ import android.os.ResultReceiver;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class RequestReaderTest { 
+public class IntentRequestParserTest { 
+	
+	private static final String ACTION = "ACTION";
 	
 	private Intent intent;
 	
 	@Before
 	public void setUpValidDefaultRequest() {
 		intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(Request.Action.request);
+		when(intent.getAction()).thenReturn(ACTION);
+		
 		Uri uri = mock(Uri.class);
 		when(intent.getData()).thenReturn(uri);
 	}
@@ -40,7 +43,7 @@ public class RequestReaderTest {
 		Intent intent = mock(Intent.class);
 		when(intent.getAction()).thenReturn(null);
 		
-		RequestReader.read(intent);
+		IntentRequestParser.parse(intent);
 	}
 	
 	@Test(expected = RequestException.class)
@@ -48,15 +51,14 @@ public class RequestReaderTest {
 		Intent intent = mock(Intent.class);
 		when(intent.getAction()).thenReturn("action.not.implemented");
 		
-		RequestReader.read(intent);
+		IntentRequestParser.parse(intent);
 	}
 	
 	@Test(expected = RequestException.class)
 	public void shouldBuildSimpleHttpRequestFaildWithExceptionIfUrlAndUriAreNotProvided() {
 		Intent intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(Request.Action.request);
 		
-		RequestReader.read(intent);
+		IntentRequestParser.parse(intent);
 	}
 	
 	@Test
@@ -64,7 +66,7 @@ public class RequestReaderTest {
 		Uri uri = mock(Uri.class);
 		when(intent.getData()).thenReturn(uri);
 
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		assertEquals(uri, request.getUri());
@@ -75,7 +77,7 @@ public class RequestReaderTest {
 		ResultReceiver expectedReceived = mock(ResultReceiver.class);
 		when(intent.getParcelableExtra(Request.Extra.result_receiver)).thenReturn(expectedReceived);
 		
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		ResultReceiver actualReceived = request.getResultReceiver();
@@ -88,7 +90,7 @@ public class RequestReaderTest {
 		when(intent.getIntExtra(Request.Extra.method, 
 				Request.Method.GET)).thenReturn(Request.Method.GET);
 		
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		assertTrue(request.isGet());
@@ -99,7 +101,7 @@ public class RequestReaderTest {
 		when(intent.getIntExtra(Request.Extra.method, 
 				Request.Method.GET)).thenReturn(Request.Method.POST);
 		
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		assertTrue(request.isPost());
@@ -109,7 +111,7 @@ public class RequestReaderTest {
 	public void shouldReadTheHandlerKey() {
 		when(intent.getStringExtra(Request.Extra.handler_key)).thenReturn("specificHandler");
 		
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		assertEquals("specificHandler", request.getHandlerKey());
@@ -120,7 +122,7 @@ public class RequestReaderTest {
 		ArrayList<Parcelable> list = new ArrayList<Parcelable>();
 		when(intent.getParcelableArrayListExtra(Request.Extra.params)).thenReturn(list);
 		
-		Request request = RequestReader.read(intent);
+		Request request = IntentRequestParser.parse(intent);
 		
 		assertNotNull(request);
 		assertEquals(list, request.getParams());

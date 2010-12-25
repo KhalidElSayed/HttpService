@@ -20,6 +20,8 @@ import android.content.IntentFilter;
 
 public class SimpleHttpService extends HttpService {
 	
+	public static final String ACTION = "novoda.lib.httpservice.tester.action.REQUEST";
+	
 	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.STOP_MONITOR";
 	
 	public static final String STOP_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.START_MONITOR";

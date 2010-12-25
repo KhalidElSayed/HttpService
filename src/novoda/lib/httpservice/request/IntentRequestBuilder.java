@@ -22,12 +22,12 @@ public class IntentRequestBuilder {
 	
 	private Intent intent;
 	
-	public IntentRequestBuilder(String url)  {
-		this(Uri.parse(url));
+	public IntentRequestBuilder(String action, String url)  {
+		this(action, Uri.parse(url));
 	}
 	
-	public IntentRequestBuilder(Uri uri)  {
-		intent = new Intent(Request.Action.request, uri);
+	public IntentRequestBuilder(String action, Uri uri)  {
+		intent = new Intent(action, uri);
 	}
 	
 	public IntentRequestBuilder asPost() {

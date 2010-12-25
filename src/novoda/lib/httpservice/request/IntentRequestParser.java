@@ -10,27 +10,30 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.ResultReceiver;
 
-public class RequestReader {
+/**
+ * Request are built/written to the intent and then sent to the service.
+ * This class is here to help reading the intent content and extract a request.
+ * 
+ * @author luigi@novoda.com
+ *
+ */
+public class IntentRequestParser {
 
-	protected RequestReader() {
+	protected IntentRequestParser() {
 	}
 
-	public static final Request read(Intent intent) {
+	public static final Request parse(Intent intent) {
 		String action = intent.getAction();
 		if (action == null) {
 			throw new RequestException("Can't build a request with a null action");
 		}
-		if (Request.Action.request.equals(action)) {
-			Request request = new Request();
-			readUri(intent, request);
-			readMethod(intent, request);
-			readHandlerKey(intent, request);
-			readResultReceiver(intent, request);
-			readParams(intent, request);
-			return request;
-		} else {
-			throw new RequestException("Action : " + action  + " is not implemented");
-		}
+		Request request = new Request();
+		readUri(intent, request);
+		readMethod(intent, request);
+		readHandlerKey(intent, request);
+		readResultReceiver(intent, request);
+		readParams(intent, request);
+		return request;
 	}
 
 	private static void readHandlerKey(Intent intent, Request request) {

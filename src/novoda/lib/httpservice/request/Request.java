@@ -12,6 +12,13 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import android.net.Uri;
 import android.os.ResultReceiver;
 
+/**
+ * This class contains all the information necessary to the provider
+ * to execute the http method.
+ * 
+ * @author luigi@novoda.com
+ *
+ */
 public class Request {
 	
 	public static final String SIMPLE_BUNDLE_RESULT = "result";
@@ -21,11 +28,6 @@ public class Request {
 	private static final char AND = '&';
 	
 	private static final String EMPTY = "";
-	
-	
-	public static interface Action {
-		String request = "novoda.lib.httpservice.action.REQUEST";
-	}
 	
 	public static interface Extra {
 		String result_receiver = "novoda.lib.httpservice.extra.RESULT_RECEIVER";

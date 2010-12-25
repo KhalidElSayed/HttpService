@@ -43,7 +43,7 @@ public class HttpServiceTest {
 		mEventBus = mock(EventBus.class);
 	}
 
-	@Ignore  //TODO 
+	@Ignore
 	@Test
 	public void shouldFireEventOnTheBus() {
 		HttpService service = new HttpService(provider, mEventBus, null, null) { };

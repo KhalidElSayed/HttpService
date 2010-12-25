@@ -6,6 +6,13 @@ import org.apache.http.message.BasicNameValuePair;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+/**
+ * If you need to send parameters with the request you can add a list of 
+ * parcelableBasicNameValuePair directly to the intent with the IntentRequestBuilder.
+ * 
+ * @author luigi@novoda.com
+ *
+ */
 public class ParcelableBasicNameValuePair extends BasicNameValuePair implements Parcelable, NameValuePair {
 
     public ParcelableBasicNameValuePair(String name, String value) {
