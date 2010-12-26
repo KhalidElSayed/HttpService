@@ -53,6 +53,10 @@ public class LogTag {
 			Log.e(TAG, msg, t);
 		}
 		
+		public static final void w(String msg, Throwable t) {
+			Log.w(TAG, msg, t);
+		}
+		
 		public static final void d(String msg) {
 			Log.d(TAG, msg);
 		}

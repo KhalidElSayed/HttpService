@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.executor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.e;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Core.w;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -80,13 +80,13 @@ public class ThreadManager implements ExecutorManager {
 	@Override
 	public void shutdown() {
 		if (debugIsEnable()) {
-			d("Shutting down thread manager");
+			d("Shutting down looper Thread");
 		}
 		if(looperThread != null) {
 			looperThread.interrupt();
 		}
 		if(poolExecutor != null) {
-			poolExecutor.shutdown();
+			poolExecutor.shutdownNow();
 		}
 	}
 
@@ -120,7 +120,7 @@ public class ThreadManager implements ExecutorManager {
 		}
 		looperThread = new Thread() {
 			public void run() {
-				Thread.currentThread().setPriority(MIN_PRIORITY);
+				Thread.currentThread().setPriority(NORM_PRIORITY-1);
 				if (debugIsEnable()) {
 					d("Run looperThread");
 				}
@@ -135,11 +135,9 @@ public class ThreadManager implements ExecutorManager {
 						}
 						eventBus.fireOnContentReceived(response);
 					} catch (InterruptedException e) {
-						e("InterruptedException", e);
-						throw new ExecutorException("Interrupted Exception");
+						w("InterruptedException", e);
 					} catch (ExecutionException e) {
-						e("ExecutionException", e);
-						throw new ExecutorException("Execution Exeption");
+						w("ExecutionException", e);
 					}
 				}
 			};

@@ -1,7 +1,12 @@
 package novoda.lib.httpservice.executor.monitor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
+import static novoda.lib.httpservice.util.LogTag.Core.w;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
 import novoda.lib.httpservice.executor.ExecutorManager;
 import novoda.lib.httpservice.executor.ExecutorService;
 import novoda.lib.httpservice.executor.LifecycleHandler;
@@ -10,8 +15,8 @@ import novoda.lib.httpservice.provider.EventBus;
 public abstract class MonitorableExecutorService extends ExecutorService implements Monitorable {
 	
 	private Monitor monitor;
-
-	private boolean runMonitor = true;
+	
+	private Timer timer;
 	
 	public MonitorableExecutorService() {
 		this(null, null, null);
@@ -31,29 +36,28 @@ public abstract class MonitorableExecutorService extends ExecutorService impleme
 		if (debugIsEnable()) {
 			d("Starting monitoring the executor manager");
 		}
-		runMonitor = true;
-		new Thread() {
-			public void run() {
-				while (runMonitor) {
-					try {					
-						monitor.dump(dump());
-						sleep(monitor.getInterval());
-					} catch (InterruptedException e) {
-						if (debugIsEnable()) {
-							d("Exception during the monitor execution loop");
-						}
-					}
+		try {
+			timer = new Timer();
+			TimerTask monitorThread = new TimerTask() {
+				@Override
+				public void run() {
+					monitor.dump(dump());
 				}
-			}
-		}.start();
+			};
+			timer.schedule(monitorThread, 0, monitor.getInterval());
+		} catch(Throwable t) {
+			w("Scheduling timer already scheduled", t);
+		}
 	}
 
 	@Override
 	public void stopMonitoring() {
-		if (debugIsEnable()) {
-			d("Stopping monitoring the executor manager");
+		try {
+			timer.cancel();
+			timer.purge();
+		} catch(Throwable t) {
+			w("Cancel on a not scheduled timer", t);
 		}
-		runMonitor = false;
 	}
 
 }

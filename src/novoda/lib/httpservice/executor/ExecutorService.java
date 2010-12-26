@@ -11,7 +11,6 @@ import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
