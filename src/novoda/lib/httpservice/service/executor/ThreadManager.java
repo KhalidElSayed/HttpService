@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.service.executor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -17,9 +18,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import novoda.lib.httpservice.exception.ExecutorException;
-import novoda.lib.httpservice.executor.monitor.Monitorable;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.service.monitor.Monitorable;
 import android.content.Intent;
 
 public class ThreadManager implements ExecutorManager {
@@ -54,6 +55,8 @@ public class ThreadManager implements ExecutorManager {
 
 	private EventBus eventBus;
 	
+	private boolean runLoop = true;
+	
 	public ThreadManager(EventBus eventBus, CallableExecutor<Response> callableExecutor) {
 		this(eventBus, callableExecutor, null, null);
 	}
@@ -79,14 +82,28 @@ public class ThreadManager implements ExecutorManager {
 
 	@Override
 	public void shutdown() {
-		if (debugIsEnable()) {
-			d("Shutting down looper Thread");
+		if(poolExecutor != null) {
+			if (debugIsEnable()) {
+				d("Shutting down pool executor");
+			}
+			poolExecutor.shutdown();
+			while(poolExecutor.isTerminating()) {
+				if (debugIsEnable()) {
+					d("Thread Manager : waiting for shut down of poolExecutor...");
+				}
+			}
+			if (debugIsEnable()) {
+				d("Thread Manager : poolExecutor is terminated...");
+			}
 		}
 		if(looperThread != null) {
-			looperThread.interrupt();
-		}
-		if(poolExecutor != null) {
-			poolExecutor.shutdownNow();
+			if (debugIsEnable()) {
+				d("Thread Manager : Shutting down looperThread");
+			}
+			runLoop = false;
+			if (debugIsEnable()) {
+				d("Thread Manager : looperThread is terminated");
+			}
 		}
 	}
 
@@ -116,20 +133,22 @@ public class ThreadManager implements ExecutorManager {
 	@Override
 	public void start() {
 		if (debugIsEnable()) {
-			d("Starting looperThread");
+			d("Thread Manager : Starting Thread Loop");
 		}
 		looperThread = new Thread() {
 			public void run() {
 				Thread.currentThread().setPriority(NORM_PRIORITY-1);
 				if (debugIsEnable()) {
-					d("Run looperThread");
+					d("Thread Manager : is running now");
 				}
-				while (!isInterrupted()) {
+				while (runLoop) {
 					try {
 						if (debugIsEnable()) {
-							d("Executing callable");
+							d("Thread Manager : new cycle");
 						}
-						Response response = completitionService.take().get();
+						Future<Response> future = completitionService.take();
+						Response response = future.get();
+						future.cancel(true);
 						if (debugIsEnable()) {
 							d("Response received");
 						}
@@ -139,6 +158,9 @@ public class ThreadManager implements ExecutorManager {
 					} catch (ExecutionException e) {
 						w("ExecutionException", e);
 					}
+				}
+				if (debugIsEnable()) {
+					d("Thread Manager : ending cycle");
 				}
 			};
 		};

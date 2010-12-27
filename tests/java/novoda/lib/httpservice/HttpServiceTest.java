@@ -46,7 +46,7 @@ public class HttpServiceTest {
 	@Ignore
 	@Test
 	public void shouldFireEventOnTheBus() {
-		HttpService service = new HttpService(provider, mEventBus, null, null) { };
+		HttpService service = new HttpService(provider, mEventBus, null) { };
 		service.startService(mIntent);
 		await(200);
 		verify(mEventBus, times(1)).fireOnContentReceived(any(Response.class));

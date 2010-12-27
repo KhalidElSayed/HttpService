@@ -37,22 +37,19 @@ public class DashboardActivity extends BaseActivity {
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					
-					//
 					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION, "http://facebook-pipes.appspot.com/").build();
-					
 					//Https request with parameters and specific handler
 					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445
 					//is it possible to send an array of parcelable as well
 //					Map<String,String> parameters = new HashMap<String,String>();
 //					parameters.put("key", "ABDE12456AB2324445");
 //					parameters.put("state", "ny");
-//
+
 //					Intent intent = new IntentRequestBuilder("https://api.meetup.com/cities.xml/").withParams(parameters).
 //						withHandlerKey(SimpleHttpService.CITIES_HANDLER).asPost().build();
-					
 					//Next
 					//Post to http://api.meetup.com/ew/event/
-					
+
 					//Normal Http request
 //					Intent intent = new RequestWriter("http://facebook-pipes.appspot.com/").attach(new ResultReceiver(new Handler()) {
 //							@Override
@@ -64,6 +61,7 @@ public class DashboardActivity extends BaseActivity {
 //								}
 //							}
 //						}).write();
+					
 					
 					//OLD WAY TO DO IT
 					//is still possible to do it in this way

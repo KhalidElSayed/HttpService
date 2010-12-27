@@ -1,5 +1,5 @@
 
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.service;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
@@ -11,6 +11,9 @@ import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.service.executor.CallableExecutor;
+import novoda.lib.httpservice.service.executor.ExecutorManager;
+import novoda.lib.httpservice.service.executor.ThreadManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -28,13 +31,11 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     
     protected EventBus eventBus;
     
-    private LifecycleHandler lifecycleHandler;
-    
     public ExecutorService() {
-    	this(null, null, null);
+    	this(null, null);
     }
     
-    public ExecutorService(EventBus eventBus, ExecutorManager executorManager, LifecycleHandler lifecycleHandler) {
+    public ExecutorService(EventBus eventBus, ExecutorManager executorManager) {
     	this.eventBus = eventBus;
     	if(this.eventBus == null) {
     		this.eventBus = new EventBus(); 
@@ -43,11 +44,6 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     	this.executorManager = executorManager; 
     	if(this.executorManager == null) {
     		this.executorManager = new ThreadManager(this.eventBus, this);
-    	}
-    	
-    	this.lifecycleHandler = lifecycleHandler; 
-    	if(this.lifecycleHandler == null) {
-    		this.lifecycleHandler = new LifecycleHandler(this); 
     	}
     }
 
@@ -68,6 +64,8 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     	if(executorManager != null) {
     		executorManager.shutdown();
     	}
+    	this.eventBus = null;
+    	this.executorManager = null;
         super.onDestroy();
     }
     
@@ -77,11 +75,10 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     		d("Executing intent");
     	}
         executorManager.addTask(intent);
-        lifecycleHandler.messageReceived();
         return START_NOT_STICKY;
     }
-    
-    @Override
+
+	@Override
     public IBinder onBind(Intent intent) {
         return null;
     }

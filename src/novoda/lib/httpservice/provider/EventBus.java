@@ -2,6 +2,8 @@ package novoda.lib.httpservice.provider;
 
 import static novoda.lib.httpservice.util.LogTag.Provider.d;
 import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.LogTag.Provider.w;
+import static novoda.lib.httpservice.util.LogTag.Provider.warnIsEnable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,14 +37,20 @@ public class EventBus implements HasHandlers {
 	
 	public static final int ERROR = 500; 
 
-	private static HashMap<String, List<GlobalHandler>> globalHandlers = new HashMap<String, List<GlobalHandler>>();
+	private HashMap<String, List<GlobalHandler>> globalHandlers = new HashMap<String, List<GlobalHandler>>();
 	
-	private static HashMap<String, List<RequestHandler>> requestHandlers = new HashMap<String, List<RequestHandler>>();
+	private HashMap<String, List<RequestHandler>> requestHandlers = new HashMap<String, List<RequestHandler>>();
 
 	@Override
 	public void addGlobalHandler(String key, GlobalHandler handler) {
 		if(globalHandlers.containsKey(key)) {
 			List<GlobalHandler> handlers = globalHandlers.get(key);
+			if(handlers.contains(handler)) {
+				if(warnIsEnable()) {
+					w("Adding the same global handler again");
+				}
+				return;
+			}
 			List<GlobalHandler> newHandlers = new ArrayList<GlobalHandler>();
 			newHandlers.addAll(handlers);
 			newHandlers.add(handler);
@@ -79,6 +87,12 @@ public class EventBus implements HasHandlers {
 	public void addRequestHandler(String key, RequestHandler handler) {
 		if(requestHandlers.containsKey(key)) {
 			List<RequestHandler> handlers = requestHandlers.get(key);
+			if(handlers.contains(handler)) {
+				if(warnIsEnable()) {
+					w("Adding the same request handler again");
+				}
+				return;
+			}
 			List<RequestHandler> newHandlers = new ArrayList<RequestHandler>();
 			newHandlers.addAll(handlers);
 			newHandlers.add(handler);

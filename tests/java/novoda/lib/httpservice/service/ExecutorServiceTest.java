@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.service;
 
 import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutionException;
 
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.service.executor.ExecutorManager;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -47,10 +48,9 @@ public class ExecutorServiceTest {
     
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
-    	LifecycleHandler mHandler = mock(LifecycleHandler.class);
     	ExecutorManager mExecutorManager = mock(ExecutorManager.class);
     	EventBus mEventBus = mock(EventBus.class);
-    	service = new ExecutorService(mEventBus, mExecutorManager, mHandler) {
+    	service = new ExecutorService(mEventBus, mExecutorManager) {
 			@Override
 			public Callable<Response> getCallable(Intent intent) {
 				// here there should be the logic to use the httpclient and grab the content from the intent

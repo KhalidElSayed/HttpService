@@ -5,17 +5,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import novoda.lib.httpservice.HttpService;
-import novoda.lib.httpservice.executor.monitor.Monitor;
+import novoda.lib.httpservice.SimpleGlobalHandler;
+import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
-import novoda.lib.httpservice.handler.SimpleGlobalHandler;
-import novoda.lib.httpservice.handler.SimpleRequestHandler;
 import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.service.monitor.Monitor;
 import novoda.lib.httpservice.tester.util.AppLogger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 
 public class SimpleHttpService extends HttpService {
@@ -52,6 +53,7 @@ public class SimpleHttpService extends HttpService {
 	
 	@Override
 	public void onCreate() {
+		AppLogger.debug("creating service");
 		super.onCreate();
 		attach(new Monitor() {
 			@Override
@@ -65,7 +67,6 @@ public class SimpleHttpService extends HttpService {
 				intent.putStringArrayListExtra(DUMP_MONITOR_EXTRA, keys);
 				sendBroadcast(intent);
 			}
-
 			@Override
 			public long getInterval() {
 				return 1000;
@@ -73,17 +74,19 @@ public class SimpleHttpService extends HttpService {
 		});
 		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
 		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
-		
 		//Adding handlers with default key
+		AppLogger.debug("adding handlers");
 		addGlobalHandler(globalHandler);
 		addRequestHandler(requestHandler);
 	}
 	
 	@Override
 	public void onDestroy() {
+		AppLogger.debug("destroy on the service");
 		stopMonitoring();
 		unregisterReceiver(startMonitor);
 		unregisterReceiver(stopMonitor);
+		super.onDestroy();
 	}
 	
 	private BroadcastReceiver startMonitor = new BroadcastReceiver(){

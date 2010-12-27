@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.service.executor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;

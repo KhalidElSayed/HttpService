@@ -4,6 +4,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
@@ -125,6 +126,30 @@ public class RequestHandlerEventBusTest {
 		
 		verify(h2, times(1)).onThrowable(t);
 		verify(h1, times(0)).onThrowable(t);
+	}
+	
+	@Test
+	public void shouldNotHaveMultipleHandlerForTheSameRequestHandler() {
+		RequestHandler h1 = mock(RequestHandler.class);
+		
+		eventBus.addRequestHandler(KEY, h1);
+		eventBus.addRequestHandler(KEY, h1);
+		
+		eventBus.fireOnContentReceived(response);
+		
+		verify(h1, times(1)).onContentReceived(response);
+	}
+	
+	@Test
+	public void shouldNotHaveMultipleHandlerForTheSameGlobalHandler() {
+		GlobalHandler h1 = mock(GlobalHandler.class);
+		
+		eventBus.addGlobalHandler(KEY, h1);
+		eventBus.addGlobalHandler(KEY, h1);
+		
+		eventBus.fireOnContentReceived(response);
+		
+		verify(h1, times(1)).onContentReceived(response);
 	}
 	
 }

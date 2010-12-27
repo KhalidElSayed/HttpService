@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.executor;
+package novoda.lib.httpservice.service;
 
 import static novoda.lib.httpservice.util.Time.await;
 import static org.junit.Assert.assertEquals;
@@ -11,6 +11,8 @@ import java.util.concurrent.Callable;
 
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.service.executor.CallableExecutor;
+import novoda.lib.httpservice.service.executor.ThreadManager;
 
 import org.junit.Before;
 import org.junit.Ignore;

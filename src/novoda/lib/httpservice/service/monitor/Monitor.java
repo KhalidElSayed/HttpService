@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.executor.monitor;
+package novoda.lib.httpservice.service.monitor;
 
 import java.util.Map;
 

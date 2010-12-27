@@ -1,8 +1,9 @@
-package novoda.lib.httpservice.handler;
+package novoda.lib.httpservice;
 
+import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.request.Response;
 
-public class SimpleGlobalHandler implements GlobalHandler {
+public class SimpleRequestHandler implements GlobalHandler {
 
 	@Override
 	public void onContentReceived(Response response) {
