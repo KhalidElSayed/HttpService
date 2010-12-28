@@ -9,22 +9,17 @@ import java.util.TimerTask;
 
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
-
 import android.content.Intent;
 
 public abstract class LifecycleManagedExecutorService extends ExecutorService {
 	
 	private static final long SERVICE_LIFECYCLE = 1000 * 30;
 	
-	private static final long KEEP_ALIFE_TIME = 1000 * 25;
+	private static final long KEEP_ALIFE_TIME = 1000 * 60;
 	
 	private long lastCall;
 	
 	private Timer timer;
-	
-	public LifecycleManagedExecutorService() {
-		this(null, null);
-	}
 	
 	public LifecycleManagedExecutorService(EventBus eventBus, ExecutorManager executorManager) {
 		super(eventBus, executorManager);

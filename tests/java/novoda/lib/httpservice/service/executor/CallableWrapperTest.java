@@ -4,7 +4,6 @@ import novoda.lib.httpservice.exception.HandlerException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.local.LocalProvider;
 import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.service.executor.CallableWrapper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

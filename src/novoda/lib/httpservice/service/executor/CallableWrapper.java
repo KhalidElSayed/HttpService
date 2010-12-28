@@ -10,6 +10,12 @@ import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 
+/**
+ * Wrapper for the callable.
+ * 
+ * @author luigi@novoda.com
+ *
+ */
 public class CallableWrapper implements Callable<Response> {
 	
 	private Provider provider;

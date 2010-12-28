@@ -1,10 +1,9 @@
 package novoda.lib.httpservice.service.executor;
 
-import java.util.Map;
-
+import novoda.lib.httpservice.service.monitor.Dumpable;
 import android.content.Intent;
 
-public interface ExecutorManager {
+public interface ExecutorManager extends Dumpable{
 
 	void shutdown();
 
@@ -15,7 +14,5 @@ public interface ExecutorManager {
 	void start();
 	
 	void pause();
-	
-	Map<String, String> dump();
 
 }

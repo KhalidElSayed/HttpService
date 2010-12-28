@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.service;
+package novoda.lib.httpservice.service.monitor;
 
 import static novoda.lib.httpservice.util.LogTag.Core.d;
 import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
@@ -7,23 +7,16 @@ import static novoda.lib.httpservice.util.LogTag.Core.w;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import novoda.lib.httpservice.provider.EventBus;
-import novoda.lib.httpservice.service.executor.ExecutorManager;
-import novoda.lib.httpservice.service.monitor.Monitor;
-import novoda.lib.httpservice.service.monitor.Monitorable;
-
-public abstract class MonitorableExecutorService extends LifecycleManagedExecutorService implements Monitorable {
+public class MonitorManager implements Monitorable  {
 	
 	private Monitor monitor;
 	
 	private Timer timer;
 	
-	public MonitorableExecutorService() {
-		this(null, null);
-	}
+	private Dumpable toDump;
 	
-	public MonitorableExecutorService(EventBus eventBus, ExecutorManager executorManager) {
-		super(eventBus, executorManager);
+	public MonitorManager(Dumpable toDump) {
+		this.toDump = toDump;
 	}
 	
 	@Override
@@ -41,7 +34,10 @@ public abstract class MonitorableExecutorService extends LifecycleManagedExecuto
 			TimerTask monitorThread = new TimerTask() {
 				@Override
 				public void run() {
-					monitor.dump(dump());
+					if(toDump == null) {
+						stopMonitoring();
+					}
+					monitor.update(toDump.dump());
 				}
 			};
 			timer.schedule(monitorThread, 0, monitor.getInterval());

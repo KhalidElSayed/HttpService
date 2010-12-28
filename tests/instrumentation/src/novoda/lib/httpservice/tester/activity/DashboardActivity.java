@@ -62,7 +62,6 @@ public class DashboardActivity extends BaseActivity {
 //							}
 //						}).write();
 					
-					
 					//OLD WAY TO DO IT
 					//is still possible to do it in this way
 //					Intent intent = new Intent(HttpServiceConstant.request);

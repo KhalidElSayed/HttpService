@@ -16,7 +16,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.util.Log;
 
 
 public class SimpleHttpService extends HttpService {
@@ -41,6 +40,7 @@ public class SimpleHttpService extends HttpService {
 		@Override
 		public void onContentReceived(Response response) {
 			AppLogger.debug("Received content for global handler : " + globalCount);
+			globalCount++;
 		};
 	};
 	
@@ -50,6 +50,7 @@ public class SimpleHttpService extends HttpService {
 			AppLogger.debug("Received content for request handler : " + response.getContentAsString().length());
 		};
 	};
+	
 	
 	@Override
 	public void onCreate() {
@@ -74,6 +75,7 @@ public class SimpleHttpService extends HttpService {
 		});
 		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
 		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
+		
 		//Adding handlers with default key
 		AppLogger.debug("adding handlers");
 		addGlobalHandler(globalHandler);
@@ -102,5 +104,5 @@ public class SimpleHttpService extends HttpService {
 			stopMonitoring();
 		}
 	};
-	
+
 }

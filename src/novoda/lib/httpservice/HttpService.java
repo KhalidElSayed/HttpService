@@ -11,7 +11,7 @@ import novoda.lib.httpservice.provider.http.HttpProvider;
 import novoda.lib.httpservice.request.IntentRequestParser;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
-import novoda.lib.httpservice.service.MonitorableExecutorService;
+import novoda.lib.httpservice.service.LifecycleManagedExecutorService;
 import novoda.lib.httpservice.service.executor.CallableWrapper;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
 import android.content.Intent;
@@ -23,7 +23,7 @@ import android.content.Intent;
  *
  * @param <T>
  */
-public abstract class HttpService extends MonitorableExecutorService {
+public abstract class HttpService extends LifecycleManagedExecutorService {
 	
 	private Provider provider;
 	
@@ -39,7 +39,6 @@ public abstract class HttpService extends MonitorableExecutorService {
 			this.provider = provider;
 		}
 	}
-	
 	
 	@Override
 	public Callable<Response> getCallable(Intent intent) {

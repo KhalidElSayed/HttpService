@@ -12,8 +12,13 @@ import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.executor.CallableExecutor;
+import novoda.lib.httpservice.service.executor.ConnectedThreadPoolExecutor;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
 import novoda.lib.httpservice.service.executor.ThreadManager;
+import novoda.lib.httpservice.service.monitor.Dumpable;
+import novoda.lib.httpservice.service.monitor.Monitor;
+import novoda.lib.httpservice.service.monitor.MonitorManager;
+import novoda.lib.httpservice.service.monitor.Monitorable;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
@@ -25,26 +30,26 @@ import android.os.IBinder;
  *
  * @param <T>
  */
-public abstract class ExecutorService extends Service implements CallableExecutor<Response>, HasHandlers {
+public abstract class ExecutorService extends Service implements CallableExecutor<Response>, HasHandlers, Dumpable, Monitorable {
     
     protected ExecutorManager executorManager;
     
+    private MonitorManager monitorManager;
+    
     protected EventBus eventBus;
     
-    public ExecutorService() {
-    	this(null, null);
-    }
-    
     public ExecutorService(EventBus eventBus, ExecutorManager executorManager) {
+    	super();
     	this.eventBus = eventBus;
     	if(this.eventBus == null) {
     		this.eventBus = new EventBus(); 
     	}
-
     	this.executorManager = executorManager; 
     	if(this.executorManager == null) {
-    		this.executorManager = new ThreadManager(this.eventBus, this);
+    		ConnectedThreadPoolExecutor pool = new ConnectedThreadPoolExecutor(this);
+    		this.executorManager = new ThreadManager(pool, this.eventBus, this);
     	}
+    	this.monitorManager = new MonitorManager(this);
     }
 
 	@Override
@@ -61,11 +66,10 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     	if(debugIsEnable()) {
     		d("Executor Service on Destroy");
     	}
+    	stopMonitoring();
     	if(executorManager != null) {
     		executorManager.shutdown();
     	}
-    	this.eventBus = null;
-    	this.executorManager = null;
         super.onDestroy();
     }
     
@@ -82,18 +86,38 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     public IBinder onBind(Intent intent) {
         return null;
     }
-    
-    /**
-     * The use of this method can be expensive!
-     * @return
-     */
-    public Map<String, String> dump() {
-    	return executorManager.dump();
-    }
-
+	
 	public boolean isWorking() {
 		return executorManager.isWorking();
 	}
+	
+	//==============================================================
+	//Relative to the monitor functionalities
+	//==============================================================
+    
+	@Override
+    public Map<String, String> dump() {
+    	return executorManager.dump();
+    }
+	
+	@Override
+	public void startMonitoring() {
+		monitorManager.startMonitoring();
+	}
+	
+	@Override
+	public void stopMonitoring() {
+		monitorManager.stopMonitoring();
+	}
+	
+	@Override
+	public void attach(Monitor monitor) {
+		monitorManager.attach(monitor);
+	}
+
+	//==============================================================
+	//Relative handlers for the eventBus
+	//==============================================================
 	
 	@Override
 	public void addGlobalHandler(String key, GlobalHandler handler) {

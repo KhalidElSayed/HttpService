@@ -20,10 +20,9 @@ public class HttpServiceTester extends Application {
             AppLogger.info("============================================");
             AppLogger.info("Create event : Start up");
         }
-        
         instance = this;
     }
-
+    
     @Override
     public void onLowMemory() {
         super.onLowMemory();

@@ -1,7 +1,6 @@
 package novoda.lib.httpservice.service;
 
 import static novoda.lib.httpservice.util.Time.await;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import java.util.concurrent.Callable;
@@ -12,7 +11,6 @@ import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,23 +25,21 @@ public class ExecutorServiceTest {
 	
 	private ExecutorService service;
 	
-	private int calls = 0;
-	
 	@Before
 	public void setUp() {
-		calls = 0;
-		service = new ExecutorService() {
-			@Override
-			public Callable<Response> getCallable(Intent intent) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-    	};
 	}
 	
     @Test
     public void shouldBeAbleToInitializeTheService() throws InterruptedException, ExecutionException {
-    	service.startService(mIntent);
+    	ExecutorManager mExecutorManager = mock(ExecutorManager.class);
+    	EventBus mEventBus = mock(EventBus.class);
+    	service = new ExecutorService(mEventBus, mExecutorManager) {
+			@Override
+			public Callable<Response> getCallable(Intent intent) {
+				// here there should be the logic to use the httpclient and grab the content from the intent
+				return null;
+			}
+    	};
     }
     
     @Test
@@ -60,33 +56,6 @@ public class ExecutorServiceTest {
     	service.startService(mIntent);
     	await(100);
     	service.stopService(mIntent);
-    }
-    
-    @Ignore
-    @Test
-    public void shouldShutdownAfterAWhile() throws InterruptedException, ExecutionException {
-    	service = new ExecutorService() {
-			@Override
-			public Callable<Response> getCallable(Intent intent) {
-				// here there should be the logic to use the httpclient and grab the content from the intent
-				return null;
-			}
-			
-			@Override
-			public void onDestroy() {
-				calls++;
-			}
-			
-    	};
-    	service.startService(mIntent);
-    	assertEquals("destroy shouldn't be called straight away", 0, calls);
-    	await(100);
-    	assertEquals("destroy shouldn't be after 100 mill", 0, calls);
-    	await(100);
-    	service.stopSelf();
-    	
-    	await(300);
-    	assertEquals("should have called destroy", 1, calls);
     }
 
 }

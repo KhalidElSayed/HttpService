@@ -11,11 +11,7 @@ import java.util.concurrent.CompletionService;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import novoda.lib.httpservice.exception.ExecutorException;
 import novoda.lib.httpservice.provider.EventBus;
@@ -24,26 +20,6 @@ import novoda.lib.httpservice.service.monitor.Monitorable;
 import android.content.Intent;
 
 public class ThreadManager implements ExecutorManager {
-
-	private static final int CORE_POOL_SIZE = 5;
-
-	private static final int MAXIMUM_POOL_SIZE = 5;
-
-	private static final int KEEP_ALIVE = 5;
-	
-	private static final String PREFIX = "HttpService #";
-
-	private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
-		private final AtomicInteger mCount = new AtomicInteger(1);
-
-		public Thread newThread(Runnable r) {
-			Thread thread = new Thread(r, PREFIX + mCount.getAndIncrement());
-			thread.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
-			return thread;
-		}
-	};
-
-	private static LinkedBlockingQueue<Runnable> BLOCKING_QUEUE = new LinkedBlockingQueue<Runnable>(100);
 
 	private ThreadPoolExecutor poolExecutor;
 
@@ -57,25 +33,21 @@ public class ThreadManager implements ExecutorManager {
 	
 	private boolean runLoop = true;
 	
-	public ThreadManager(EventBus eventBus, CallableExecutor<Response> callableExecutor) {
-		this(eventBus, callableExecutor, null, null);
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor) {
+		this(poolExecutor, eventBus, callableExecutor, null);
 	}
 
-	public ThreadManager(EventBus eventBus, CallableExecutor<Response> callableExecutor, ThreadPoolExecutor poolExecutor,
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor,
 			ExecutorCompletionService<Response> completitionService) {
 		if (debugIsEnable()) {
 			d("Starting thread manager");
 		}
-		if (poolExecutor == null) {
-			poolExecutor = getThreadPoolExecutor();
-		}
-		this.poolExecutor = poolExecutor;
-
 		if (completitionService == null) {
 			completitionService = (ExecutorCompletionService<Response>) getCompletionService(poolExecutor);
 		}
 		this.completitionService = completitionService;
 		
+		this.poolExecutor = poolExecutor;		
 		this.eventBus = eventBus;
 		this.callableExecutor = callableExecutor;
 	}
@@ -165,11 +137,6 @@ public class ThreadManager implements ExecutorManager {
 			};
 		};
 		looperThread.start();
-	}
-
-	private final ThreadPoolExecutor getThreadPoolExecutor() {
-		return new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE,
-				KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
 	}
 
 	private final CompletionService<Response> getCompletionService(ThreadPoolExecutor poolExecutor) {
