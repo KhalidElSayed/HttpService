@@ -58,7 +58,7 @@ public class SimpleHttpService extends HttpService {
 		super.onCreate();
 		attach(new Monitor() {
 			@Override
-			public void dump(Map<String, String> properties) {
+			public void update(Map<String, String> properties) {
 				ArrayList<String> keys = new ArrayList<String>();
 				Intent intent = new Intent(DUMP_MONITOR_ACTION);
 				for (Entry<String, String> entry: properties.entrySet()) {
@@ -71,7 +71,7 @@ public class SimpleHttpService extends HttpService {
 			@Override
 			public long getInterval() {
 				return 1000;
-			}		
+			}
 		});
 		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
 		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
