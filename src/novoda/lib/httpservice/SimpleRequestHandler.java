@@ -1,38 +1,37 @@
 package novoda.lib.httpservice;
 
-import novoda.lib.httpservice.handler.GlobalHandler;
+import android.net.Uri;
+import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.request.Response;
 
-public class SimpleRequestHandler implements GlobalHandler {
+/**
+ * Empty implementation of RequestHandler always matching.
+ * Nice to extends so that you can override only the necessary methods
+ * 
+ * @author luigi@novoda.com
+ *
+ */
+public class SimpleRequestHandler implements RequestHandler {
 
 	@Override
 	public void onContentReceived(Response response) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onHeadersReceived(String headers) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onStatusReceived(String status) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void onThrowable(Throwable t) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void onProgress() {
-		// TODO Auto-generated method stub
-		
+	public boolean match(Uri uri) {
+		return true;
 	}
 
 }

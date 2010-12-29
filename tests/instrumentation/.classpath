@@ -3,13 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="src" path="httpservice_src"/>
-	<classpathentry kind="lib" path="/HttpService/libs/compile/async-http-client-1.4.1.jar" sourcepath="/home/luigi/.m2/repository/com/ning/async-http-client/1.4.1/async-http-client-1.4.1-sources.jar"/>
-	<classpathentry kind="lib" path="/HttpService/libs/compile/jcl-over-slf4j-1.6.1.jar"/>
-	<classpathentry kind="lib" path="/HttpService/libs/compile/netty-3.2.3.Final.jar"/>
-	<classpathentry kind="lib" path="/HttpService/libs/compile/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="src" path="HttpService"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-commonshttp4-1.2.1.jar"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-core-1.2.1.jar"/>
+	<classpathentry kind="src" path="HttpService_src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.service;
 
-import static novoda.lib.httpservice.util.Time.await;
+import static novoda.lib.httpservice.test.Time.await;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

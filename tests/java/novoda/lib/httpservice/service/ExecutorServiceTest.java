@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.service;
 
-import static novoda.lib.httpservice.util.Time.await;
+import static novoda.lib.httpservice.test.Time.await;
 import static org.mockito.Mockito.mock;
 
 import java.util.concurrent.Callable;

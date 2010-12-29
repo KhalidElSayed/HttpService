@@ -4,6 +4,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.provider.EventBus;
@@ -40,7 +41,8 @@ public class LocalProviderTest {
 	@Test
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContentFireOnContentReceived() {
 		GlobalHandler handler = mock(GlobalHandler.class);
-		eventBus.addGlobalHandler(handler);
+		when(handler.match(Uri.parse("http://www.google.com"))).thenReturn(true);
+		eventBus.add(handler);
 		
 		Request request = new Request("http://www.google.com");
 		
@@ -52,7 +54,8 @@ public class LocalProviderTest {
 	@Test(expected = ProviderException.class)
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContent() {
 		GlobalHandler handler = mock(GlobalHandler.class);
-		eventBus.addGlobalHandler(handler);
+		when(handler.match(Uri.parse("http://www.foofle.com"))).thenReturn(true);
+		eventBus.add(handler);
 		
 		Request request = new Request("http://www.foofle.com");
 		

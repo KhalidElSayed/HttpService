@@ -1,7 +1,7 @@
 package novoda.lib.httpservice;
 
 
-import static novoda.lib.httpservice.util.Time.await;
+import static novoda.lib.httpservice.test.Time.await;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;

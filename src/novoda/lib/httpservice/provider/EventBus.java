@@ -13,11 +13,8 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.request.Request;
@@ -36,93 +33,37 @@ public class EventBus implements HasHandlers {
 	public static final int SUCCESS = 200;
 	
 	public static final int ERROR = 500; 
-
-	private HashMap<String, List<GlobalHandler>> globalHandlers = new HashMap<String, List<GlobalHandler>>();
 	
-	private HashMap<String, List<RequestHandler>> requestHandlers = new HashMap<String, List<RequestHandler>>();
+	private List<RequestHandler> handlers = new ArrayList<RequestHandler>();
 
 	@Override
-	public void addGlobalHandler(String key, GlobalHandler handler) {
-		if(globalHandlers.containsKey(key)) {
-			List<GlobalHandler> handlers = globalHandlers.get(key);
-			if(handlers.contains(handler)) {
-				if(warnIsEnable()) {
-					w("Adding the same global handler again");
-				}
-				return;
+	public void add(RequestHandler handler) {
+		if(handler == null) {
+			if(warnIsEnable()) {
+				w("The handler is null, there is no point in adding it!");
 			}
-			List<GlobalHandler> newHandlers = new ArrayList<GlobalHandler>();
-			newHandlers.addAll(handlers);
-			newHandlers.add(handler);
-			globalHandlers.put(key, newHandlers);
-		} else {
-			globalHandlers.put(key, Arrays.asList(handler));
-		}
-	}
-	
-	@Override
-	public void addGlobalHandler(GlobalHandler handler) {
-		addGlobalHandler(DEFAULT_KEY, handler);
-	}
-	
-	@Override
-	public void removeGlobalHandler(String key, GlobalHandler handler) {
-		if(globalHandlers.containsKey(key)) {
-			List<GlobalHandler> handlers = globalHandlers.get(key);
-			List<GlobalHandler> newHandlers = new ArrayList<GlobalHandler>();
-			newHandlers.addAll(handlers);
-			newHandlers.remove(handler);
-			globalHandlers.put(key, newHandlers);
-		} else {
 			return;
 		}
-	}
-	
-	@Override
-	public void removeGlobalHandler(GlobalHandler handler) {
-		removeGlobalHandler(DEFAULT_KEY, handler);
-	}
-
-	@Override
-	public void addRequestHandler(String key, RequestHandler handler) {
-		if(requestHandlers.containsKey(key)) {
-			List<RequestHandler> handlers = requestHandlers.get(key);
-			if(handlers.contains(handler)) {
-				if(warnIsEnable()) {
-					w("Adding the same request handler again");
-				}
-				return;
+		if(handlers.contains(handler)) {
+			if(warnIsEnable()) {
+				w("The handler is already registered!");
 			}
-			List<RequestHandler> newHandlers = new ArrayList<RequestHandler>();
-			newHandlers.addAll(handlers);
-			newHandlers.add(handler);
-			requestHandlers.put(key, newHandlers);
-		} else {
-			requestHandlers.put(key, Arrays.asList(handler));
-		}
-	}
-	
-	@Override
-	public void addRequestHandler(RequestHandler handler) {
-		addRequestHandler(DEFAULT_KEY, handler);
-	}
-
-	@Override
-	public void removeRequestHandler(String key, RequestHandler handler) {
-		if(requestHandlers.containsKey(key)) {
-			List<RequestHandler> handlers = requestHandlers.get(key);
-			List<RequestHandler> newHandlers = new ArrayList<RequestHandler>();
-			newHandlers.addAll(handlers);
-			newHandlers.remove(handler);
-			requestHandlers.put(key, newHandlers);
-		} else {
 			return;
 		}
+		handlers.add(handler);
 	}
 	
 	@Override
-	public void removeRequestHandler(RequestHandler handler) {
-		removeRequestHandler(DEFAULT_KEY, handler);
+	public void remove(RequestHandler handler) {
+		if(handler == null) {
+			if(warnIsEnable()) {
+				w("The handler is null, can't remove it!");
+			}
+			return;
+		}
+		if(handlers.contains(handler)) {
+			handlers.remove(handler);
+		}
 	}
 	
     public void fireOnThrowable(Request request, Throwable t) {
@@ -140,20 +81,11 @@ public class EventBus implements HasHandlers {
     		}
     	}
     	
-    	String key = getHandlerKey(request);
-    	
-    	if(globalHandlers.containsKey(key)) {
-			List<GlobalHandler> handlers = globalHandlers.get(key);
-			for(GlobalHandler handler : handlers) {
-				handler.onThrowable(t);
-			}
-		}
-		if(requestHandlers.containsKey(key)) {
-			List<RequestHandler> handlers = requestHandlers.get(key);
-			for(RequestHandler handler : handlers) {
-				handler.onThrowable(t);
-			}
-		}
+    	for(RequestHandler handler: handlers) {
+    		if(handler.match(request.getUri())) {
+    			handler.onThrowable(t);
+    		}
+    	}
     }
 
 	public void fireOnContentReceived(Response response) {
@@ -178,31 +110,11 @@ public class EventBus implements HasHandlers {
 			}
 		}
 		
-		String key = getHandlerKey(request);
-		
-		if(globalHandlers.containsKey(key)) {
-			List<GlobalHandler> handlers = globalHandlers.get(key);
-			for(GlobalHandler handler : handlers) {
-				handler.onContentReceived(response);
-			}
-		}
-		if(requestHandlers.containsKey(key)) {
-			List<RequestHandler> handlers = requestHandlers.get(key);
-			for(RequestHandler handler : handlers) {
-				handler.onContentReceived(response);
-			}
-		}
-	}
-	
-	private String getHandlerKey(Request request) {
-		String key = null;
-		if(request != null) {			
-			key = request.getHandlerKey();
-		}
-    	if(key == null) {
-    		key = DEFAULT_KEY;
+		for(RequestHandler handler: handlers) {
+    		if(handler.match(request.getUri())) {
+    			handler.onContentReceived(response);
+    		}
     	}
-    	return key;
 	}
 	
 	private String convertStreamToString(InputStream is) throws IOException {

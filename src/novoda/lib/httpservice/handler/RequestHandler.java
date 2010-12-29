@@ -1,8 +1,11 @@
 package novoda.lib.httpservice.handler;
 
+import android.net.Uri;
 import novoda.lib.httpservice.request.Response;
 
 public interface RequestHandler {
+	
+	boolean match(Uri uri);
 
 	void onStatusReceived(String status);
 

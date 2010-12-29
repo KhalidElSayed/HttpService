@@ -6,7 +6,6 @@ import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
 
 import java.util.Map;
 
-import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.provider.EventBus;
@@ -120,42 +119,13 @@ public abstract class ExecutorService extends Service implements CallableExecuto
 	//==============================================================
 	
 	@Override
-	public void addGlobalHandler(String key, GlobalHandler handler) {
-		eventBus.addGlobalHandler(key, handler);
+	public void add(RequestHandler handler) {
+		eventBus.add(handler);
+	}
+
+	@Override
+	public void remove(RequestHandler handler) {
+		eventBus.remove(handler);
 	}
 	
-	@Override
-	public void removeGlobalHandler(String key, GlobalHandler handler) {
-		eventBus.removeGlobalHandler(key, handler);
-	}
-
-	@Override
-	public void addRequestHandler(String key, RequestHandler handler) {
-		eventBus.addRequestHandler(key, handler);
-	}
-
-	@Override
-	public void removeRequestHandler(String key, RequestHandler handler) {
-		eventBus.removeRequestHandler(key, handler);
-	}
-
-	@Override
-	public void addGlobalHandler(GlobalHandler handler) {
-		eventBus.addGlobalHandler(handler);
-	}
-	
-	@Override
-	public void removeGlobalHandler(GlobalHandler handler) {
-		eventBus.removeGlobalHandler(handler);
-	}
-
-	@Override
-	public void addRequestHandler(RequestHandler handler) {
-		eventBus.addRequestHandler(handler);
-	}
-
-	@Override
-	public void removeRequestHandler(RequestHandler handler) {
-		eventBus.removeRequestHandler(handler);
-	}
 }

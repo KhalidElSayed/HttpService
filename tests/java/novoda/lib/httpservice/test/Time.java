@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.util;
+package novoda.lib.httpservice.test;
 
 public class Time {
 
