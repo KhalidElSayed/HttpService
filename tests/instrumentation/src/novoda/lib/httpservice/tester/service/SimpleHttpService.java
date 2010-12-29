@@ -17,20 +17,25 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 
-
+/**
+ * Simple sample on how to use the HttpService.
+ * 
+ * @author luigi
+ *
+ */
 public class SimpleHttpService extends HttpService {
 	
-	public static final String ACTION = "novoda.lib.httpservice.tester.action.REQUEST";
+	public static final String ACTION_REQUEST = "novoda.lib.httpservice.tester.action.ACTION_REQUEST";
 	
-	public static final String START_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.STOP_MONITOR";
+	public static final String ACTION_START_MONITOR = "novoda.lib.httpservice.tester.ACTION_STOP_MONITOR";
 	
-	public static final String STOP_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.START_MONITOR";
+	public static final String ACTION_STOP_MONITOR = "novoda.lib.httpservice.tester.action.ACTION_START_MONITOR";
 	
-	private static final String DUMP_MONITOR_ACTION = "novoda.lib.httpservice.tester.action.DUMP_MONITOR";
+	private static final String ACTION_DUMP_MONITOR = "novoda.lib.httpservice.tester.action.ACTION_DUMP_MONITOR";
 	
-	public static final String DUMP_MONITOR_EXTRA = "novoda.lib.httpservice.tester.extra.DUMP_MONITOR";
+	public static final String EXTRA_DUMP_MONITOR = "novoda.lib.httpservice.tester.extra.EXTRA_DUMP_MONITOR";
 	
-	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(DUMP_MONITOR_ACTION);
+	public static final IntentFilter MONITOR_INTENT_FILTER = new IntentFilter(ACTION_DUMP_MONITOR);
 
 	public static final String CITIES_HANDLER = "citiesHandler";
 	
@@ -60,12 +65,12 @@ public class SimpleHttpService extends HttpService {
 			@Override
 			public void update(Map<String, String> properties) {
 				ArrayList<String> keys = new ArrayList<String>();
-				Intent intent = new Intent(DUMP_MONITOR_ACTION);
+				Intent intent = new Intent(ACTION_DUMP_MONITOR);
 				for (Entry<String, String> entry: properties.entrySet()) {
 					keys.add(entry.getKey());
 					intent.putExtra(entry.getKey(), entry.getValue());
 				}
-				intent.putStringArrayListExtra(DUMP_MONITOR_EXTRA, keys);
+				intent.putStringArrayListExtra(EXTRA_DUMP_MONITOR, keys);
 				sendBroadcast(intent);
 			}
 			@Override
@@ -73,8 +78,8 @@ public class SimpleHttpService extends HttpService {
 				return 1000;
 			}
 		});
-		registerReceiver(startMonitor, new IntentFilter(START_MONITOR_ACTION));
-		registerReceiver(stopMonitor, new IntentFilter(STOP_MONITOR_ACTION));
+		registerReceiver(startMonitor, new IntentFilter(ACTION_START_MONITOR));
+		registerReceiver(stopMonitor, new IntentFilter(ACTION_STOP_MONITOR));
 		
 		//Adding handlers with default key
 		AppLogger.debug("adding handlers");

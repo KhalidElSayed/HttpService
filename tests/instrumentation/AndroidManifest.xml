@@ -44,7 +44,7 @@
 		-->
 		<service android:name=".service.SimpleHttpService">
 			<intent-filter>
-				<action android:name="novoda.lib.httpservice.tester.action.REQUEST" />		
+				<action android:name="novoda.lib.httpservice.tester.action.ACTION_REQUEST" />		
 				<data android:scheme="http" />
 				<data android:scheme="https" />		
 			</intent-filter>

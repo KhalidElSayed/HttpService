@@ -37,7 +37,7 @@ public class DashboardActivity extends BaseActivity {
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					
-					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION, "http://facebook-pipes.appspot.com/").build();
+					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION_REQUEST, "http://facebook-pipes.appspot.com/").build();
 					//Https request with parameters and specific handler
 					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445
 					//is it possible to send an array of parcelable as well
@@ -91,7 +91,7 @@ public class DashboardActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				AppLogger.debug("Starting monitor");
-				sendBroadcast(new Intent(SimpleHttpService.START_MONITOR_ACTION));
+				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
 				start.setEnabled(false);
 				stop.setEnabled(true);
 				monitorInfo.setText("Attaching monitor...");
@@ -102,7 +102,7 @@ public class DashboardActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				AppLogger.debug("Stopping monitor");
-				sendBroadcast(new Intent(SimpleHttpService.STOP_MONITOR_ACTION));
+				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
 				start.setEnabled(true);
 				stop.setEnabled(false);
 				monitorInfo.setText("Monitor is detach");
@@ -142,7 +142,7 @@ public class DashboardActivity extends BaseActivity {
 	private BroadcastReceiver monitorBroadcastReceiver =  new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.DUMP_MONITOR_EXTRA);
+			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.EXTRA_DUMP_MONITOR);
 			StringBuilder builder = new StringBuilder("Monitoring[ | ");
 			StringBuilder viewBuilder = new StringBuilder();
 			for (String key: keys) {

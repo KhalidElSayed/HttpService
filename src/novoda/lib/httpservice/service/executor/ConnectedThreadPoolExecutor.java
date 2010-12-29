@@ -12,13 +12,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import novoda.lib.httpservice.util.ConnectivityReceiver;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 /**
  * This is a copy of the same class from the RestProvider project,
@@ -60,29 +55,22 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 
     private Condition unpaused = pauseLock.newCondition();
 
-    private BroadcastReceiver connectivityReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            final String action = intent.getAction();
-            if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, true)) {
-                    if (debugIsEnable()) {
-                        d("ThreadPool : No connectivity pausing...");
-                    }
-                    pause();
-                }
-                if (intent.hasExtra(ConnectivityManager.EXTRA_NETWORK_INFO)) {
-                    NetworkInfo info = intent
-                            .getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                    if (info.isConnectedOrConnecting()) {
-                        if (debugIsEnable()) {
-                            d("ThreadPool : Connectivity is back, resuming for: " + info.toString());
-                        }
-                        resume();
-                    }
-                }
+    private ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver() {
+		@Override
+		protected void onConnectionLost() {
+			if (debugIsEnable()) {
+                d("ThreadPool : Connection lost");
             }
-        }
+			pause();
+		}
+		
+		@Override
+		protected void onConnectionResume() {
+			if (debugIsEnable()) {
+                d("ThreadPool : Connection resumed");
+            }
+			resume();
+		}
     };
 
     public ConnectedThreadPoolExecutor(Service service) {
@@ -98,13 +86,12 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     	if (debugIsEnable()) {
 			d("ThreadPool : Registering receivers");
 		}
-    	service.registerReceiver(connectivityReceiver, new IntentFilter(
-                ConnectivityManager.CONNECTIVITY_ACTION));
-    	service.registerReceiver(connectivityReceiver, new IntentFilter(
-                ConnectivityManager.ACTION_BACKGROUND_DATA_SETTING_CHANGED));
+    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.CONNECTIVITY_FILTER);
+    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.SETTING_CHANGED_FILTER);
     	receiverNotReady = false;
     }
-
+    
+    
 	@Override
     public void shutdown() {
         removeReceiver();
