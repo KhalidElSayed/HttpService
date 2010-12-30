@@ -2,15 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/jackson-mapper-asl-1.6.2.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/slf4j-api-1.6.1.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/signpost-core-1.2.1.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/jcl-over-slf4j-1.6.1.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/signpost-commonshttp4-1.2.1.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/async-http-client-1.4.1.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/netty-3.2.3.Final.jar"/>
-	<classpathentry kind="con" path="/media/work/android/HttpService/libs/compile/jackson-core-asl-1.6.2.jar"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/opt/android/platforms/android-9/android.jar"/>
-	<classpathentry kind="output" path="bin/scala_2.8.1"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-commonshttp4-1.2.1.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-core-1.2.1.jar"/>
+	<classpathentry kind="src" path="HttpService_src"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
