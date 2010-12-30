@@ -1,38 +1,68 @@
 package novoda.lib.httpservice.provider.local;
 
+import static novoda.lib.httpservice.util.LogTag.Provider.d;
+import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.HashMap;
 
-import novoda.lib.httpservice.handler.AsyncHandler;
+import novoda.lib.httpservice.exception.ProviderException;
+import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.provider.ProviderException;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
+import android.net.Uri;
 
-public class LocalProvider<T> implements Provider<T> {
-
-	public HashMap<String, T> map = new HashMap<String, T>();
+public class LocalProvider implements Provider {
 	
-	public LocalProvider() {
+	public HashMap<Uri, String> map = new HashMap<Uri, String>();
+	
+	private EventBus eventBus;
+	
+	public LocalProvider(EventBus eventBus) {	
+		if(eventBus == null) {
+			throw new ProviderException("EventBus is null, can't procede");
+		}
+		this.eventBus = eventBus;
 	}
 	
-	public LocalProvider(String url, T content) {
-		map.put(url, content);
+	public LocalProvider(EventBus eventBus, Uri uri, String content) {
+		this(eventBus);
+		map.put(uri, content);
 	}
 	
-	public void add(String url, T content) {
-		map.put(url, content);
+	public void add(Uri uri, String content) {
+		map.put(uri, content);
 	}
 	
-	public T getContent(String url) {
-		if(map.containsKey(url)) {			
-			return map.get(url);
+	public void add(String url, String content) {
+		map.put(Uri.parse(url), content);
+	}
+	
+	public InputStream getContent(Uri uri) {
+		if(map.containsKey(uri)) {			
+			return new ByteArrayInputStream(map.get(uri).getBytes());
 		} else {
-			throw new ProviderException("There is no resource registered for the local provider for url : " + url);
+			if(debugIsEnable()) {
+				d("There is no resource registered for the local provider for url : " + uri);
+			}
+			return null;
 		}
 	}
 	
 	@Override
-	public void execute(Request req, AsyncHandler<T> asyncHandler) {
-		asyncHandler.onContentReceived(getContent(req.getUrl()));
+	public Response execute(Request req) {
+		InputStream content = getContent(req.getUri());
+		if(content == null) {
+			eventBus.fireOnThrowable(req, new Throwable("Content not found"));
+			throw new ProviderException("Content not found");
+		}
+		Response response = new Response();
+		response.setRequest(req);
+		response.setContent(content);
+		eventBus.fireOnContentReceived(response);
+		return response;
 	}
 
 }

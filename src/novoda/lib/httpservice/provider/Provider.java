@@ -1,10 +1,10 @@
 package novoda.lib.httpservice.provider;
 
-import novoda.lib.httpservice.handler.AsyncHandler;
 import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.request.Response;
 
-public interface Provider<T> {
+public interface Provider {
 
-	void execute(Request request, AsyncHandler<T> asyncHandler);
+	Response execute(Request request);
 	
 }
