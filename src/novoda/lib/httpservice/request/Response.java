@@ -1,18 +1,12 @@
 package novoda.lib.httpservice.request;
 
-import static novoda.lib.httpservice.util.LogTag.Core.e;
-
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 
 import novoda.lib.httpservice.exception.RequestException;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.util.EntityUtils;
 
 /**
  * Wrapper for the HttpResponse.
@@ -49,12 +43,18 @@ public class Response {
 			return content;
 		}
 		InputStream content = null;
+		HttpEntity entity = null;
 		try {
-			content = httpResponse.getEntity().getContent();
-		} catch (IllegalStateException e) {
-			throw new RequestException("" + e.getMessage());
-		} catch (IOException e) {
-			throw new RequestException("" + e.getMessage());
+			entity = httpResponse.getEntity();
+			content = entity.getContent();
+		} catch (Exception e) {
+			throw new RequestException("Exception getting the content", e);
+		} finally {
+			try {
+				entity.consumeContent();
+			} catch (Exception e) {
+				throw new RequestException("Exception consuming content", e);
+			}
 		}
 		return content;
 	}
@@ -64,41 +64,19 @@ public class Response {
 	}
 	
 	public String getContentAsString() {
-		return asString(getContent());
-	}
-	
-	//==========================================================
-	// is not responsibility of this class ... should move ???
-	//==========================================================
-	
-	private static final String ENCODING = "UTF-8";
-	
-	private static final int BUFFER = 8192;
-	
-	private static final String asString(final InputStream is) {
-		if (is != null) {
-			Writer writer = new StringWriter(BUFFER);
-			char[] buffer = new char[BUFFER];
+		HttpEntity entity = null;
+		try {
+			entity = httpResponse.getEntity();
+			return EntityUtils.toString(entity);
+		} catch (Exception e) {
+			throw new RequestException("Exception converting entity to string", e);
+		} finally {
 			try {
-				Reader reader = new BufferedReader(new InputStreamReader(is, ENCODING), BUFFER);
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
+				entity.consumeContent();
 			} catch (Exception e) {
-				e("Convertion problem from input to string ", e);
-			} finally {
-				try {
-					is.close();
-				} catch(Exception e) {
-					e("Convertion problem while closing stream ", e);	
-				}
+				throw new RequestException("Exception consuming content", e);
 			}
-			return writer.toString();
-		} else {        
-			return "";
 		}
 	}
 	
-
 }
