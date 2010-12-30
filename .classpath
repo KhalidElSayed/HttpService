@@ -2,6 +2,8 @@
       <classpathentry kind="src" path="src"></classpathentry>
       <classpathentry kind="src" path="gen"></classpathentry>
       <classpathentry kind="lib" path="libs/compile/jackson-mapper-asl-1.6.2.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/slf4j-api-1.6.1.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/signpost-core-1.2.1.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/jcl-over-slf4j-1.6.1.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/signpost-commonshttp4-1.2.1.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/async-http-client-1.4.1.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/netty-3.2.3.Final.jar"></classpathentry><classpathentry kind="lib" path="libs/compile/jackson-core-asl-1.6.2.jar"></classpathentry>
-      <classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"></classpathentry>
+      
+      
       <classpathentry kind="output" path="bin/scala_2.8.1"></classpathentry>
-      </classpath>
+      <classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"></classpathentry>
+    </classpath>
