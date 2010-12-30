@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>httpservice_tests</name>
+	<name>HttpServiceTest</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -40,6 +40,11 @@
 			<name>HttpService_src</name>
 			<type>2</type>
 			<locationURI>_android_HttpService_c9bd4ed/src</locationURI>
+		</link>
+		<link>
+			<name>HttpService_tests_java</name>
+			<type>2</type>
+			<locationURI>_android_HttpService_c9bd4ed/tests/java</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
