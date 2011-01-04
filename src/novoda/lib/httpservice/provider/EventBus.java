@@ -98,6 +98,8 @@ public class EventBus implements HasHandlers {
 			if(receiver != null) {
 				try {
 					Bundle b = new Bundle();
+					
+					// TODO check the size of the response before putting it in the bundle?
 					b.putString(Request.SIMPLE_BUNDLE_RESULT, convertStreamToString(response.getContent()));				
 					receiver.send(SUCCESS, b);
 				} catch(Throwable t) {
