@@ -30,5 +30,8 @@ class HttpService(info: ProjectInfo) extends ParentProject(info) {
       
   class TestProject(info: ProjectInfo) extends AndroidTestProject(info) with Defaults {
     val robotium = "com.jayway.android.robotium" % "robotium-solo" % "1.9.0" % "test"
+    
+    def getString(classpath:ClassLoader) : Option[String] = { println("hello world" + classpath); Some("test")}
+    override def testOptions = super.testOptions ++ Seq(new TestSetup(getString))
   }  
 }

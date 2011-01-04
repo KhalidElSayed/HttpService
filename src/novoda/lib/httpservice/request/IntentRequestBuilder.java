@@ -1,3 +1,4 @@
+
 package novoda.lib.httpservice.request;
 
 import java.util.ArrayList;
@@ -9,61 +10,70 @@ import android.net.Uri;
 import android.os.ResultReceiver;
 
 /**
- * This class is responsible to help in setting all the necessary
- * request information on the intent so that the ReqeustReader 
- * can on the other side extract the request object from the intent.
- * A simple intent can be build like :
- * new RequestWriter(URI).build()  -> is a simple get on the specified uri
+ * This class is responsible to help in setting all the necessary request
+ * information on the intent so that the ReqeustReader can on the other side
+ * extract the request object from the intent. A simple intent can be build like
+ * : new RequestWriter(URI).build() -> is a simple get on the specified uri
  * 
  * @author luigi@novoda.com
- *
  */
 public class IntentRequestBuilder {
-	
-	private Intent intent;
-	
-	public IntentRequestBuilder(String action, String url)  {
-		this(action, Uri.parse(url));
-	}
-	
-	public IntentRequestBuilder(String action, Uri uri)  {
-		intent = new Intent(action, uri);
-	}
-	
-	public IntentRequestBuilder asPost() {
-		return method(Request.Method.POST);
-	}
 
-	private IntentRequestBuilder method(int method) {
-		intent.putExtra(Request.Extra.method, method);
-		return this;
-	}
+    private Intent intent;
 
-	public IntentRequestBuilder attach(ResultReceiver resultReceiver) {
-		intent.putExtra(Request.Extra.result_receiver, resultReceiver);
-		return this;
-	}
-	
-	public IntentRequestBuilder withHandlerKey(String handlerKey) {
-		intent.putExtra(Request.Extra.handler_key, handlerKey);
-		return this;
-	}
+    private ArrayList<ParcelableBasicNameValuePair> params = new ArrayList<ParcelableBasicNameValuePair>();
 
-	public IntentRequestBuilder withParams(Map<String, String> params) {
-		ArrayList<ParcelableBasicNameValuePair> parcelables = new ArrayList<ParcelableBasicNameValuePair>();
-		for(Entry<String,String> param : params.entrySet()) {
-			parcelables.add(new ParcelableBasicNameValuePair(param.getKey(), param.getValue()));
-		}
-		return withParams(parcelables);
-	}
-	
-	public IntentRequestBuilder withParams(ArrayList<ParcelableBasicNameValuePair> params) {
-		intent.putParcelableArrayListExtra(Request.Extra.params, params);
-		return this;
-	}
+    public IntentRequestBuilder(String action, String url) {
+        this(action, Uri.parse(url));
+    }
 
-	public Intent build() {
-		return intent;
-	}
+    public IntentRequestBuilder(String action, Uri uri) {
+        intent = new Intent(action, uri);
+    }
 
+    public IntentRequestBuilder asPost() {
+        return method(Request.Method.POST);
+    }
+
+    private IntentRequestBuilder method(int method) {
+        intent.putExtra(Request.Extra.method, method);
+        return this;
+    }
+
+    public IntentRequestBuilder attach(ResultReceiver resultReceiver) {
+        intent.putExtra(Request.Extra.result_receiver, resultReceiver);
+        return this;
+    }
+
+    public IntentRequestBuilder withHandlerKey(String handlerKey) {
+        intent.putExtra(Request.Extra.handler_key, handlerKey);
+        return this;
+    }
+
+    public IntentRequestBuilder withParams(Map<String, String> params) {
+        for (Entry<String, String> param : params.entrySet()) {
+            this.params.add(new ParcelableBasicNameValuePair(param.getKey(), param.getValue()));
+        }
+        return this;
+    }
+
+    public IntentRequestBuilder withParam(String key, String value) {
+        params.add(new ParcelableBasicNameValuePair(key, value));
+        return this;
+    }
+
+    public IntentRequestBuilder withParams(ArrayList<ParcelableBasicNameValuePair> params) {
+        params.addAll(params);
+        return this;
+    }
+
+    public IntentRequestBuilder withResultReceiver(ResultReceiver receiver) {
+        intent.putExtra(Request.Extra.result_receiver, receiver);
+        return this;
+    }
+    
+    public Intent build() {
+        intent.putParcelableArrayListExtra(Request.Extra.params, params);
+        return intent;
+    }
 }

@@ -143,6 +143,9 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * @param context
 	 */
 	public void fireOnPreProcessRequest(Uri uri, HttpRequest request, HttpContext context) {
+	    if(debugIsEnable()) {
+            d("pre process request");
+        }
 		for(Processor processor: processors) {
     		if(processor.match(uri)) {
     			try {
