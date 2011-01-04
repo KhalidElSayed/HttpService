@@ -8,6 +8,8 @@ import java.util.Map;
 
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
+import novoda.lib.httpservice.processor.HasProcessors;
+import novoda.lib.httpservice.processor.Processor;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.executor.CallableExecutor;
@@ -29,7 +31,7 @@ import android.os.IBinder;
  *
  * @param <T>
  */
-public abstract class ExecutorService extends Service implements CallableExecutor<Response>, HasHandlers, Dumpable, Monitorable {
+public abstract class ExecutorService extends Service implements CallableExecutor<Response>, HasHandlers, HasProcessors, Dumpable, Monitorable {
     
     protected ExecutorManager executorManager;
     
@@ -115,7 +117,7 @@ public abstract class ExecutorService extends Service implements CallableExecuto
 	}
 
 	//==============================================================
-	//Relative handlers for the eventBus
+	//Relative handlers and processors for the eventBus
 	//==============================================================
 	
 	@Override
@@ -126,6 +128,16 @@ public abstract class ExecutorService extends Service implements CallableExecuto
 	@Override
 	public void remove(RequestHandler handler) {
 		eventBus.remove(handler);
+	}
+	
+	@Override
+	public void add(Processor processor) {
+		eventBus.add(processor);
+	}
+
+	@Override
+	public void remove(Processor processor) {
+		eventBus.remove(processor);
 	}
 	
 }

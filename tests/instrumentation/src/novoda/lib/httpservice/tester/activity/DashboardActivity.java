@@ -36,7 +36,6 @@ public class DashboardActivity extends BaseActivity {
 				String text = edit.getText().toString();
 				AppLogger.debug("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					
 					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION_REQUEST, "http://facebook-pipes.appspot.com/").build();
 					//Https request with parameters and specific handler
 					//https://api.meetup.com/cities.xml/?state=ny&key=ABDE12456AB2324445

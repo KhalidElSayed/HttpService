@@ -15,7 +15,9 @@ import android.os.Parcelable;
  */
 public class ParcelableBasicNameValuePair extends BasicNameValuePair implements Parcelable, NameValuePair {
 
-    public ParcelableBasicNameValuePair(String name, String value) {
+	private static final long serialVersionUID = 1L;
+
+	public ParcelableBasicNameValuePair(String name, String value) {
         super(name, value);
     }
 

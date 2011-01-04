@@ -34,6 +34,7 @@ public class LogTag {
 		
 		public static final void e(String msg, Throwable t) {
 			Log.e(TAG, msg, t);
+			t.printStackTrace();
 		}
 	}
 	

@@ -29,15 +29,15 @@ public class ThreadManager implements ExecutorManager {
 
 	private CallableExecutor<Response> callableExecutor;
 
-	private EventBus eventBus;
-	
+	private EventBus handlerBus;
+
 	private boolean runLoop = true;
 	
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor) {
-		this(poolExecutor, eventBus, callableExecutor, null);
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus handlerBus, CallableExecutor<Response> callableExecutor) {
+		this(poolExecutor, handlerBus, callableExecutor, null);
 	}
 
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor,
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus handlerBus, CallableExecutor<Response> callableExecutor,
 			ExecutorCompletionService<Response> completitionService) {
 		if (debugIsEnable()) {
 			d("Starting thread manager");
@@ -47,8 +47,8 @@ public class ThreadManager implements ExecutorManager {
 		}
 		this.completitionService = completitionService;
 		
-		this.poolExecutor = poolExecutor;		
-		this.eventBus = eventBus;
+		this.poolExecutor = poolExecutor;
+		this.handlerBus = handlerBus;
 		this.callableExecutor = callableExecutor;
 	}
 
@@ -124,7 +124,7 @@ public class ThreadManager implements ExecutorManager {
 						if (debugIsEnable()) {
 							d("Response received");
 						}
-						eventBus.fireOnContentReceived(response);
+						handlerBus.fireOnContentReceived(response);
 					} catch (InterruptedException e) {
 						w("InterruptedException", e);
 					} catch (ExecutionException e) {

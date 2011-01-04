@@ -20,16 +20,8 @@ class HttpService(info: ProjectInfo) extends ParentProject(info) {
   class MainProject(info: ProjectInfo) extends AndroidProject(info) with Defaults with Robolectric {        
     val jacksoncore = "org.codehaus.jackson" % "jackson-core-asl" % "1.6.2" % "compile"
   	val jacksonmapper = "org.codehaus.jackson" % "jackson-mapper-asl" % "1.6.2" % "compile"
-  	val asyncclient = "com.ning" % "async-http-client" % "1.4.1" % "compile"
-
-
-       val awaitility = "com.jayway.awaitility" % "awaitility-scala" % "1.3.1" % "test"
-       val cglib = "cglib" % "cglib-nodep" % "2.2" % "test"
-       val hamcrestcore = "org.hamcrest" % "hamcrest-core" % "1.1" % "test"
-       val hamcrestlibrary = "org.hamcrest" % "hamcrest-library" % "1.1" % "test"
-      val objenisis = "org.objenesis" % "objenesis" % "1.2" % "test"
-val roboelectric = "org.robolectric" % "robolectric" % "0.9.4" % "test" from "http://pivotal.github.com/robolectric/downloads/robolectric-0.9.4.jar"
-val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test"
+	val roboelectric = "org.robolectric" % "robolectric" % "0.9.4" % "test" from "http://pivotal.github.com/robolectric/downloads/robolectric-0.9.4-all.jar"
+	val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test"
 
     val signpostcore = "oauth.signpost" % "signpost-core" % "1.2.1" % "compile"
     val signpostcommons = "oauth.signpost" % "signpost-commonshttp4" % "1.2.1" % "compile"
@@ -38,5 +30,8 @@ val mockito = "org.mockito" % "mockito-all" % "1.8.5" % "test"
       
   class TestProject(info: ProjectInfo) extends AndroidTestProject(info) with Defaults {
     val robotium = "com.jayway.android.robotium" % "robotium-solo" % "1.9.0" % "test"
+    
+    def getString(classpath:ClassLoader) : Option[String] = { println("hello world" + classpath); Some("test")}
+    override def testOptions = super.testOptions ++ Seq(new TestSetup(getString))
   }  
 }
