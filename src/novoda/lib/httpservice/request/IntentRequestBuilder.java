@@ -67,9 +67,13 @@ public class IntentRequestBuilder {
         return this;
     }
 
+    public IntentRequestBuilder withResultReceiver(ResultReceiver receiver) {
+        intent.putExtra(Request.Extra.result_receiver, receiver);
+        return this;
+    }
+    
     public Intent build() {
         intent.putParcelableArrayListExtra(Request.Extra.params, params);
         return intent;
     }
-
 }
