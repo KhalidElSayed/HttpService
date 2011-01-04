@@ -22,7 +22,7 @@ import android.content.Intent;
  * 
  * It is depending on :<br>
  * - Provider : makes resources identified by uri available  (example http)
- * - EventBus : is responsible to deliver event to handlers
+ * - EventBus : is responsible to deliver events
  * - ExecutorManager : controls the threads 
  * 
  * To intercept responsed you need to add a RequestHandler.
@@ -52,7 +52,7 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 	 * Constructor with explicit dependencies.
 	 * 
 	 * @param provider Provider
-	 * @param eventBus EventBus
+	 * @param eventBus event bus
 	 * @param executorManager ExecutorManager
 	 */
 	public HttpService(Provider provider, EventBus eventBus, ExecutorManager executorManager) {
@@ -87,5 +87,6 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 	protected Request buildRequest(Intent intent) {
 		return (Request)IntentRequestParser.parse(intent);
 	}
-
+	
+	
 }

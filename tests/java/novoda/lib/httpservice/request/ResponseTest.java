@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.request;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,7 +13,6 @@ import novoda.lib.httpservice.test.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -31,10 +30,9 @@ public class ResponseTest {
 		when(entity.getContentLength()).thenReturn(new Long(-1));
 		when(entity.getContentType()).thenReturn(null);
 		
-		assertNull(EntityUtils.toString(entity));
+		assertNotNull("If this is not working the roboletric has some change in the EntityUtils", EntityUtils.toString(entity));
 	}
 	
-	@Ignore("I think that the shadow of EntityUtils is making this test unusable, see first test")
 	@Test
 	public void shouldConvertTheContentIntoString() throws IllegalStateException, IOException{
 		String expectedContent = "pippo";
@@ -55,7 +53,6 @@ public class ResponseTest {
 		assertEquals("pippo", response.getContentAsString());
 	}
 	
-	@Ignore("I think that the shadow of EntityUtils is making this test unusable, see first test")
 	@Test
 	public void shouldConvertTheContentIntoStringReturnEmptyWhenContentIsNull() throws IllegalStateException, IOException{
 		HttpResponse httpResponse = mock(HttpResponse.class);

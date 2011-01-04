@@ -1,7 +1,8 @@
 package novoda.lib.httpservice.handler;
 
 /**
- * Simple interface to mark object that are able to add and remove requestHandlers
+ * Simple interface to mark object that are able to add and remove from a collection of 
+ * some kind of Handler.
  * 
  * @author luigi@novoda.com
  */

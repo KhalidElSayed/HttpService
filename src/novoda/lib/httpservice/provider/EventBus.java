@@ -5,67 +5,77 @@ import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
 import static novoda.lib.httpservice.util.LogTag.Provider.w;
 import static novoda.lib.httpservice.util.LogTag.Provider.warnIsEnable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
+import novoda.lib.httpservice.exception.RequestException;
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
+import novoda.lib.httpservice.processor.HasProcessors;
+import novoda.lib.httpservice.processor.Processor;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
-public class EventBus implements HasHandlers {
-	
-	private static final String ENCODING = "UTF-8";
+/**
+ * This class is responsible to register/unregister handlers and processors.
+ * Plus has to deliver the events to handlers and processors.
+ * <br>
+ * It is clear that the double responsibility of managing processors and handlers
+ * can be a sign to do some refactoring.
+ * 
+ * @author luigi@novoda.com
+ *
+ */
+public class EventBus implements HasHandlers, HasProcessors {
 	
 	public static final String DEFAULT_KEY = "default";
-	
-	private static final int BUFFER = 8192;
 	
 	public static final int SUCCESS = 200;
 	
 	public static final int ERROR = 500; 
 	
 	private List<RequestHandler> handlers = new ArrayList<RequestHandler>();
+	
+	private List<Processor> processors = new ArrayList<Processor>();
 
 	@Override
 	public void add(RequestHandler handler) {
-		if(handler == null) {
-			if(warnIsEnable()) {
-				w("The handler is null, there is no point in adding it!");
-			}
-			return;
-		}
-		if(handlers.contains(handler)) {
-			if(warnIsEnable()) {
-				w("The handler is already registered!");
-			}
-			return;
-		}
-		handlers.add(handler);
+		add(handlers, handler);
 	}
 	
 	@Override
 	public void remove(RequestHandler handler) {
-		if(handler == null) {
-			if(warnIsEnable()) {
-				w("The handler is null, can't remove it!");
-			}
-			return;
-		}
-		if(handlers.contains(handler)) {
-			handlers.remove(handler);
-		}
+		remove(handlers, handler);
 	}
 	
+	@Override
+	public void add(Processor processor) {
+		add(processors, processor);
+	}
+
+	@Override
+	public void remove(Processor processor) {
+		remove(processors, processor);
+	}
+	
+	/**
+	 * This method is called when there is an exception during the execution of a request.
+	 * It is propagating onThrowable down to handlers.
+	 * 
+	 * @param request
+	 * @param t
+	 */
     public void fireOnThrowable(Request request, Throwable t) {
     	if(debugIsEnable()) {
 			d("Delivering content to handlers or receivers for onThrowable");
@@ -88,6 +98,13 @@ public class EventBus implements HasHandlers {
     	}
     }
 
+    /**
+	 * This method is called when the content of a request is received.
+	 * It is propagating onContentReceived down to handlers.
+	 * 
+	 * @param request
+	 * @param t
+	 */
 	public void fireOnContentReceived(Response response) {
 		Request request = response.getRequest();
 		if(debugIsEnable()) {
@@ -98,7 +115,7 @@ public class EventBus implements HasHandlers {
 			if(receiver != null) {
 				try {
 					Bundle b = new Bundle();
-					b.putString(Request.SIMPLE_BUNDLE_RESULT, convertStreamToString(response.getContent()));				
+					b.putString(Request.SIMPLE_BUNDLE_RESULT, getContentAsString(response.getHttpResponse()));				
 					receiver.send(SUCCESS, b);
 				} catch(Throwable t) {
 					receiver.send(ERROR, null);
@@ -117,23 +134,90 @@ public class EventBus implements HasHandlers {
     	}
 	}
 	
-	private String convertStreamToString(InputStream is) throws IOException {
-		if (is != null) {
-			Writer writer = new StringWriter(BUFFER);
-			char[] buffer = new char[BUFFER];
-			try {
-				Reader reader = new BufferedReader(new InputStreamReader(is, ENCODING), BUFFER);
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
+	/**
+	 * This event is fired before the execution of a request. In this way a processor
+	 * can intercept the request before is made and execute some logic.
+	 * 
+	 * @param uri
+	 * @param request
+	 * @param context
+	 */
+	public void fireOnPreProcessRequest(Uri uri, HttpRequest request, HttpContext context) {
+		for(Processor processor: processors) {
+    		if(processor.match(uri)) {
+    			try {
+					processor.process(request, context);
+				} catch (Exception e) {
+					throw new RequestException("Exception preprocessing content", e);
 				}
-			} finally {
-				is.close();
-			}
-			return writer.toString();
-		} else {        
-			return "";
+    		}
+    	}
+	}
+	
+	/**
+	 * This event is fired after the execution of a request. In this way a processor
+	 * can intercept the request after is made and execute some logic on the response.
+	 * 
+	 * @param uri
+	 * @param response
+	 * @param context
+	 */
+	public void fireOnPostProcessRequest(Uri uri, HttpResponse response, HttpContext context) {
+		
+		for(ListIterator<Processor> iterator = processors.listIterator(processors.size()); iterator.hasPrevious();) {
+			final Processor processor = iterator.previous();
+			if(processor.match(uri)) {
+				try {
+					processor.process(response, context);
+				} catch (Exception e) {
+					throw new RequestException("Exception preprocessing content", e);
+				}
+			}			
 		}
+	}
+	
+	private String getContentAsString(HttpResponse httpResponse) {
+		HttpEntity entity = null;
+		try {
+			entity = httpResponse.getEntity();
+			return EntityUtils.toString(entity);
+		} catch (Exception e) {
+			throw new RequestException("Exception converting entity to string", e);
+		} finally {
+			try {
+				entity.consumeContent();
+			} catch (Exception e) {
+				throw new RequestException("Exception consuming content", e);
+			}
+		}
+	}
+	
+	private static final <T> void remove(List<T> ts, T t) {
+		if(t == null) {
+			if(warnIsEnable()) {
+				w("Trying to remove null object, can't remove it!");
+			}
+			return;
+		}
+		if(ts.contains(t)) {
+			ts.remove(t);
+		}
+	}
+	
+	private static final <T> void add(List<T> ts, T t) {
+		if(t == null) {
+			if(warnIsEnable()) {
+				w("The object is null, there is no point in adding it to the event bus!");
+			}
+			return;
+		}
+		if(ts.contains(t)) {
+			if(warnIsEnable()) {
+				w("The object is already registered!");
+			}
+			return;
+		}
+		ts.add(t);	
 	}
 	
 }

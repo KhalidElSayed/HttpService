@@ -41,12 +41,14 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldAddHandlerNotFailIfTheHandlerIsNull() {
-		eventBus.add(null);
+		RequestHandler handler = null;
+		eventBus.add(handler);
 	}
 	
 	@Test
 	public void shouldRemoveHandlerNotFailIfTheHandlerIsNull() {
-		eventBus.remove(null);
+		RequestHandler handler = null;
+		eventBus.remove(handler);
 	}
 	
 	@Test

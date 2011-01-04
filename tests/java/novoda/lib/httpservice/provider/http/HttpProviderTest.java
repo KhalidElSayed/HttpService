@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -54,7 +55,7 @@ public class HttpProviderTest {
 	@Test
 	public void shouldHttpProviderGoAndFireOnContentReceived() throws ClientProtocolException, IOException {
 		HttpResponse response = mock(HttpResponse.class);
-		when(httpClient.execute(any(HttpGet.class))).thenReturn(response);
+		when(httpClient.execute(any(HttpGet.class), any(HttpContext.class))).thenReturn(response);
 		
 		provider  = new HttpProvider(httpClient, eventBus);
 		

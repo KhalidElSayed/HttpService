@@ -15,6 +15,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HttpContext;
 
 public class HttpProvider implements Provider {
 
@@ -51,7 +53,10 @@ public class HttpProvider implements Provider {
         	} else {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}
-        	final HttpResponse httpResponse = client.execute(method);
+        	HttpContext context = new BasicHttpContext();
+        	eventBus.fireOnPreProcessRequest(request.getUri(), method, context);
+        	final HttpResponse httpResponse = client.execute(method, context);
+        	eventBus.fireOnPostProcessRequest(request.getUri(), httpResponse, context);
             if(httpResponse == null) {
             	logAndThrow("Response from " + request.getUri() + " is null");
             }
