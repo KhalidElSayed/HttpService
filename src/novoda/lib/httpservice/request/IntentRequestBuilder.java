@@ -50,9 +50,9 @@ public class IntentRequestBuilder {
         return this;
     }
 
-    public IntentRequestBuilder withParams(Map<String, String> params) {
-        for (Entry<String, String> param : params.entrySet()) {
-            this.params.add(new ParcelableBasicNameValuePair(param.getKey(), param.getValue()));
+    public IntentRequestBuilder withParams(Map<String, String> parameters) {
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            this.params.add(new ParcelableBasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         return this;
     }
