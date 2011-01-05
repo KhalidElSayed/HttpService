@@ -14,6 +14,7 @@ import novoda.lib.httpservice.HttpService;
 import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.Processor;
+import novoda.lib.httpservice.processor.oauth.OAuthProcessor;
 import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.monitor.Monitor;
 import novoda.lib.httpservice.tester.util.AppLogger;
@@ -95,7 +96,6 @@ public class SimpleHttpService extends HttpService {
 		public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
 			AppLogger.debug("Processing response 2...");	
 		}
-		
 	};
 	
 	@Override
@@ -128,6 +128,7 @@ public class SimpleHttpService extends HttpService {
 		
 		add(logProcessor1);
 		add(logProcessor2);
+		add(new OAuthProcessor("test", "test"));
 	}
 	
 	@Override
