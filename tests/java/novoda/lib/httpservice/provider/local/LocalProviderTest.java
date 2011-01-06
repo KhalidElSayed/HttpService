@@ -9,6 +9,7 @@ import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.http.HttpProvider;
+import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 
@@ -26,11 +27,16 @@ public class LocalProviderTest {
 	private LocalProvider provider;
 	private EventBus eventBus;
 	
+	private static final String URL = "http://www.google.com";
+	private static final String FOOFLE_URL = "http://www.foofle.com";
+	private Request request = new Request(new IntentRequestBuilder("action", URL).build());
+	private Request foofleRequest = new Request(new IntentRequestBuilder("action", FOOFLE_URL).build());
+	
 	@Before
 	public void setUp() {
 		eventBus = new EventBus();
 		provider  = new LocalProvider(eventBus);
-		provider.add(Uri.parse("http://www.google.com"), "ok");
+		provider.add(Uri.parse(URL), "ok");
 	}
 	
 	@Test(expected = ProviderException.class)
@@ -41,10 +47,8 @@ public class LocalProviderTest {
 	@Test
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContentFireOnContentReceived() {
 		GlobalHandler handler = mock(GlobalHandler.class);
-		when(handler.match(Uri.parse("http://www.google.com"))).thenReturn(true);
+		when(handler.match(request)).thenReturn(true);
 		eventBus.add(handler);
-		
-		Request request = new Request("http://www.google.com");
 		
 		provider.execute(request);
 		
@@ -54,10 +58,10 @@ public class LocalProviderTest {
 	@Test(expected = ProviderException.class)
 	public void shouldBasicHttpProviderGoAndFetchSomeUrlContent() {
 		GlobalHandler handler = mock(GlobalHandler.class);
-		when(handler.match(Uri.parse("http://www.foofle.com"))).thenReturn(true);
+		when(handler.match(foofleRequest)).thenReturn(true);
 		eventBus.add(handler);
 		
-		Request request = new Request("http://www.foofle.com");
+		Request request = new Request(new IntentRequestBuilder("action", FOOFLE_URL).build());
 		
 		provider.execute(request);
 		

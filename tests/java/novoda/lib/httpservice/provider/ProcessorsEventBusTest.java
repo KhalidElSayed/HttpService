@@ -70,36 +70,36 @@ public class ProcessorsEventBusTest {
 	
 	@Test
 	public void shouldFireOnPreProcessRequest() throws HttpException, IOException {
-		when(processor.match(uri)).thenReturn(true);
+		when(processor.match(request)).thenReturn(true);
 		eventBus.add(processor);
-		eventBus.fireOnPreProcessRequest(uri, httpRequest, httpContext);
+		eventBus.fireOnPreProcessRequest(request, httpRequest, httpContext);
 		
 		verify(processor, times(1)).process(any(HttpRequest.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPreProcessRequestSkipTheProcessorIfDoesntMatch() throws HttpException, IOException {
-		when(processor.match(uri)).thenReturn(false);
+		when(processor.match(request)).thenReturn(false);
 		eventBus.add(processor);
-		eventBus.fireOnPreProcessRequest(uri, httpRequest, httpContext);
+		eventBus.fireOnPreProcessRequest(request, httpRequest, httpContext);
 		
 		verify(processor, times(0)).process(any(HttpRequest.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPostProcessRequest() throws HttpException, IOException {
-		when(processor.match(uri)).thenReturn(true);
+		when(processor.match(request)).thenReturn(true);
 		eventBus.add(processor);
-		eventBus.fireOnPostProcessRequest(uri, httpResponse, httpContext);
+		eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
 		
 		verify(processor, times(1)).process(any(HttpResponse.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPostProcessRequestSkipTheProcessorIfDoesntMatch() throws HttpException, IOException {
-		when(processor.match(uri)).thenReturn(false);
+		when(processor.match(request)).thenReturn(false);
 		eventBus.add(processor);
-		eventBus.fireOnPostProcessRequest(uri, httpResponse, httpContext);
+		eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
 		
 		verify(processor, times(0)).process(any(HttpResponse.class), any(HttpContext.class));
 	}
@@ -109,12 +109,12 @@ public class ProcessorsEventBusTest {
 		Processor processor1 = mock(Processor.class);
 		Processor processor2 = mock(Processor.class);
 		
-		when(processor1.match(uri)).thenThrow(new RuntimeException());
-		when(processor2.match(uri)).thenReturn(true);
+		when(processor1.match(request)).thenThrow(new RuntimeException());
+		when(processor2.match(request)).thenReturn(true);
 		eventBus.add(processor1);
 		eventBus.add(processor2);
 		try {
-			eventBus.fireOnPostProcessRequest(uri, httpResponse, httpContext);
+			eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
 		} catch(Exception e) {
 			//don't care in this case the exception is a trick to check the order
 		}

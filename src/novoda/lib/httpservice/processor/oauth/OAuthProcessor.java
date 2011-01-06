@@ -5,6 +5,7 @@ import static novoda.lib.httpservice.util.LogTag.Processor.e;
 import java.io.IOException;
 
 import novoda.lib.httpservice.processor.Processor;
+import novoda.lib.httpservice.request.Request;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
@@ -15,8 +16,6 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
-
-import android.net.Uri;
 
 /**
  * Processor responsible implement oauth.
@@ -74,13 +73,12 @@ public class OAuthProcessor implements Processor {
     }
 
     @Override
-    public void process(HttpResponse response, HttpContext context) throws HttpException,
-            IOException {
+    public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
         // Do nothing
     }
 
     @Override
-    public boolean match(Uri uri) {
+    public boolean match(Request request) {
         return true;
     }
 

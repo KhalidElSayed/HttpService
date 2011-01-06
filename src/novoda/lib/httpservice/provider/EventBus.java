@@ -23,7 +23,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
 
@@ -92,7 +91,7 @@ public class EventBus implements HasHandlers, HasProcessors {
     	}
     	
     	for(RequestHandler handler: handlers) {
-    		if(handler.match(request.getUri())) {
+    		if(handler.match(request)) {
     			handler.onThrowable(t);
     		}
     	}
@@ -128,7 +127,7 @@ public class EventBus implements HasHandlers, HasProcessors {
 		}
 		
 		for(RequestHandler handler: handlers) {
-    		if(handler.match(request.getUri())) {
+    		if(handler.match(request)) {
     			handler.onContentReceived(response);
     		}
     	}
@@ -138,18 +137,18 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * This event is fired before the execution of a request. In this way a processor
 	 * can intercept the request before is made and execute some logic.
 	 * 
-	 * @param uri
+	 * @param request
 	 * @param request
 	 * @param context
 	 */
-	public void fireOnPreProcessRequest(Uri uri, HttpRequest request, HttpContext context) {
+	public void fireOnPreProcessRequest(Request request, HttpRequest httpRequest, HttpContext context) {
 	    if(debugIsEnable()) {
             d("pre process request");
         }
 		for(Processor processor: processors) {
-    		if(processor.match(uri)) {
+    		if(processor.match(request)) {
     			try {
-					processor.process(request, context);
+					processor.process(httpRequest, context);
 				} catch (Exception e) {
 					throw new RequestException("Exception preprocessing content", e);
 				}
@@ -165,11 +164,11 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * @param response
 	 * @param context
 	 */
-	public void fireOnPostProcessRequest(Uri uri, HttpResponse response, HttpContext context) {
+	public void fireOnPostProcessRequest(Request request, HttpResponse response, HttpContext context) {
 		
 		for(ListIterator<Processor> iterator = processors.listIterator(processors.size()); iterator.hasPrevious();) {
 			final Processor processor = iterator.previous();
-			if(processor.match(uri)) {
+			if(processor.match(request)) {
 				try {
 					processor.process(response, context);
 				} catch (Exception e) {

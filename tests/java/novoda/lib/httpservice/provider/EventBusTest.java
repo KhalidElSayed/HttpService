@@ -63,10 +63,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldFireOnContentReceivedOnMultipleGlobalHandler() {
 		T h1 = mock(clazz);
-		when(h1.match(uri)).thenReturn(true);
+		when(h1.match(request)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(uri)).thenReturn(true);
+		when(h2.match(request)).thenReturn(true);
 
 		eventBus.add(h1);
 		eventBus.add(h2);
@@ -80,10 +80,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldNotFireOnContentReceivedIfHasBeenRemoved() {
 		T h1 = mock(clazz);
-		when(h1.match(uri)).thenReturn(true);
+		when(h1.match(request)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(uri)).thenReturn(true);
+		when(h2.match(request)).thenReturn(true);
 
 		eventBus.add(h1);
 		eventBus.add(h2);
@@ -99,10 +99,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldGlobalRemovedWorkInEvenOnSecondCall() {
 		T h1 = mock(clazz);
-		when(h1.match(uri)).thenReturn(true);
+		when(h1.match(request)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(uri)).thenReturn(true);
+		when(h2.match(request)).thenReturn(true);
 		
 		eventBus.add(h1);
 		eventBus.add(h2);
@@ -125,7 +125,7 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldGlobalFireOnThrowable() {
 		T h = mock(clazz);
-		when(h.match(uri)).thenReturn(true);
+		when(h.match(request)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
 
@@ -139,9 +139,9 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldFireOnThrowableForMultipleHandler() {
 		T h1 = mock(clazz);
-		when(h1.match(uri)).thenReturn(true);
+		when(h1.match(request)).thenReturn(true);
 		T h2 = mock(clazz);
-		when(h2.match(uri)).thenReturn(true);
+		when(h2.match(request)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
 

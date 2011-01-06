@@ -1,7 +1,7 @@
 package novoda.lib.httpservice;
 
-import android.net.Uri;
 import novoda.lib.httpservice.handler.GlobalHandler;
+import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 
 /**
@@ -34,7 +34,7 @@ public class SimpleGlobalHandler implements GlobalHandler {
 	}
 
 	@Override
-	public boolean match(Uri uri) {
+	public boolean match(Request request) {
 		return true;
 	}
 

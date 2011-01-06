@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
 import novoda.lib.httpservice.processor.Processor;
+import novoda.lib.httpservice.request.Request;
 
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
@@ -15,7 +16,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.entity.HttpEntityWrapper;
 import org.apache.http.protocol.HttpContext;
 
-public abstract class GZipProcessor implements Processor {
+public class GZipProcessor implements Processor {
 	
 	private static final String HEADER_GZIP_ENCODING_VALUE = "gzip";
 	private static final String HEADER_ACCEPT_ENCODING = "Accept-Encoding";
@@ -27,13 +28,17 @@ public abstract class GZipProcessor implements Processor {
             throw new IOException("response can not be null");
         }
         final HttpEntity entity = response.getEntity();
+        if(entity == null) {
+        	return;
+        }
         final Header header = entity.getContentEncoding();
-        if (header != null) {
-            for (HeaderElement h : header.getElements()) {
-                if (h.getName().equalsIgnoreCase(HEADER_GZIP_ENCODING_VALUE)) {
-                    response.setEntity(new GZipEntity(response.getEntity()));
-                    return;
-                }
+        if (header == null) {
+        	return;
+        }
+        for (HeaderElement h : header.getElements()) {
+            if (h.getName().equalsIgnoreCase(HEADER_GZIP_ENCODING_VALUE)) {
+                response.setEntity(new GZipEntity(response.getEntity()));
+                return;
             }
         }
     }
@@ -55,5 +60,10 @@ public abstract class GZipProcessor implements Processor {
             return new GZIPInputStream(wrappedEntity.getContent());
         }
     }
+
+	@Override
+	public boolean match(Request request) {
+		return true;
+	}
     
 }
