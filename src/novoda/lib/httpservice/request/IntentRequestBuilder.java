@@ -2,6 +2,7 @@
 package novoda.lib.httpservice.request;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -21,7 +22,8 @@ public class IntentRequestBuilder {
 
     private Intent intent;
 
-    private ArrayList<ParcelableBasicNameValuePair> params = new ArrayList<ParcelableBasicNameValuePair>();
+    private ArrayList<ParcelableBasicNameValuePair> requestParameters
+                     = new ArrayList<ParcelableBasicNameValuePair>();
 
     public IntentRequestBuilder(String action, String url) {
         this(action, Uri.parse(url));
@@ -50,20 +52,23 @@ public class IntentRequestBuilder {
         return this;
     }
 
-    public IntentRequestBuilder withParams(Map<String, String> params) {
-        for (Entry<String, String> param : params.entrySet()) {
-            this.params.add(new ParcelableBasicNameValuePair(param.getKey(), param.getValue()));
+    public IntentRequestBuilder withParams(Map<String, String> parameters) {
+        for (Entry<String, String> entry : parameters.entrySet()) {
+            requestParameters
+                    .add(new ParcelableBasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         return this;
     }
 
     public IntentRequestBuilder withParam(String key, String value) {
-        params.add(new ParcelableBasicNameValuePair(key, value));
+        requestParameters
+                    .add(new ParcelableBasicNameValuePair(key, value));
         return this;
     }
 
     public IntentRequestBuilder withParams(ArrayList<ParcelableBasicNameValuePair> params) {
-        params.addAll(params);
+        requestParameters
+                    .addAll(params);
         return this;
     }
 
@@ -71,9 +76,12 @@ public class IntentRequestBuilder {
         intent.putExtra(Request.Extra.result_receiver, receiver);
         return this;
     }
-    
+
     public Intent build() {
-        intent.putParcelableArrayListExtra(Request.Extra.params, params);
+        ArrayList<ParcelableBasicNameValuePair> list = new ArrayList<ParcelableBasicNameValuePair>(
+                Collections.unmodifiableList(requestParameters
+                    ));
+        intent.putParcelableArrayListExtra(Request.Extra.params, list);
         return intent;
     }
 }
