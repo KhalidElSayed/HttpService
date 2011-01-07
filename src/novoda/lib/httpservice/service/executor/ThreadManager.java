@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.service.executor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Core.w;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.w;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +29,15 @@ public class ThreadManager implements ExecutorManager {
 
 	private CallableExecutor<Response> callableExecutor;
 
-	private EventBus handlerBus;
+	private EventBus eventBus;
 
 	private boolean runLoop = true;
 	
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus handlerBus, CallableExecutor<Response> callableExecutor) {
-		this(poolExecutor, handlerBus, callableExecutor, null);
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor) {
+		this(poolExecutor, eventBus, callableExecutor, null);
 	}
 
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus handlerBus, CallableExecutor<Response> callableExecutor,
+	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor,
 			ExecutorCompletionService<Response> completitionService) {
 		if (debugIsEnable()) {
 			d("Starting thread manager");
@@ -48,7 +48,7 @@ public class ThreadManager implements ExecutorManager {
 		this.completitionService = completitionService;
 		
 		this.poolExecutor = poolExecutor;
-		this.handlerBus = handlerBus;
+		this.eventBus = eventBus;
 		this.callableExecutor = callableExecutor;
 	}
 
@@ -124,7 +124,8 @@ public class ThreadManager implements ExecutorManager {
 						if (debugIsEnable()) {
 							d("Response received");
 						}
-						handlerBus.fireOnContentReceived(response);
+						eventBus.fireOnContentReceived(response);
+						eventBus.fireOnContentConsumed(response.getRequest());
 					} catch (InterruptedException e) {
 						w("InterruptedException", e);
 					} catch (ExecutionException e) {

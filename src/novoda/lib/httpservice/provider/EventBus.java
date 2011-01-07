@@ -1,9 +1,9 @@
 package novoda.lib.httpservice.provider;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.d;
-import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Provider.w;
-import static novoda.lib.httpservice.util.LogTag.Provider.warnIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.w;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.warnIsEnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,10 +83,6 @@ public class EventBus implements HasHandlers, HasProcessors {
     		ResultReceiver receiver = request.getResultReceiver();
     		if(receiver != null) {
     			receiver.send(ERROR, null);
-    		} else {
-    			if(debugIsEnable()) {
-    				d("Receiver is null, not sending back the result");
-    			}
     		}
     	}
     	
@@ -102,7 +98,6 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * It is propagating onContentReceived down to handlers.
 	 * 
 	 * @param request
-	 * @param t
 	 */
 	public void fireOnContentReceived(Response response) {
 		Request request = response.getRequest();
@@ -119,16 +114,39 @@ public class EventBus implements HasHandlers, HasProcessors {
 				} catch(Throwable t) {
 					receiver.send(ERROR, null);
 				}
-			} else {
-				if(debugIsEnable()) {
-					d("Receiver is null, not sending back the result");
-				}
 			}
 		}
 		
 		for(RequestHandler handler: handlers) {
     		if(handler.match(request)) {
     			handler.onContentReceived(response);
+    		}
+    	}
+	}
+	
+	/**
+	 * This event is fired when the content has been consumed. 
+	 * 
+	 * @param request
+	 */
+	public void fireOnContentConsumed(Request request) {
+		if(debugIsEnable()) {
+            d("Firing onContentConsumed");
+        }
+		if(request != null) {
+			ResultReceiver receiver = request.getResultConsumedReceiver();
+			if(receiver != null) {
+				try {
+					receiver.send(SUCCESS, null);
+				} catch(Throwable t) {
+					receiver.send(ERROR, null);
+				}
+			}
+		}
+		
+		for(RequestHandler handler: handlers) {
+    		if(handler.match(request)) {
+    			handler.onContentConsumed(request);
     		}
     	}
 	}
@@ -165,7 +183,6 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * @param context
 	 */
 	public void fireOnPostProcessRequest(Request request, HttpResponse response, HttpContext context) {
-		
 		for(ListIterator<Processor> iterator = processors.listIterator(processors.size()); iterator.hasPrevious();) {
 			final Processor processor = iterator.previous();
 			if(processor.match(request)) {
@@ -221,5 +238,5 @@ public class EventBus implements HasHandlers, HasProcessors {
 		}
 		ts.add(t);	
 	}
-	
+
 }

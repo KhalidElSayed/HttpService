@@ -1,9 +1,9 @@
 package novoda.lib.httpservice.provider.http;
 
-import static novoda.lib.httpservice.util.LogTag.Provider.d;
-import static novoda.lib.httpservice.util.LogTag.Provider.debugIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Provider.e;
-import static novoda.lib.httpservice.util.LogTag.Provider.errorIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.e;
+import static novoda.lib.httpservice.util.HttpServiceLog.Provider.errorIsEnable;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;

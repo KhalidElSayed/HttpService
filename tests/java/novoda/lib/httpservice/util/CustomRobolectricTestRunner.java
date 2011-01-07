@@ -17,6 +17,7 @@ public class CustomRobolectricTestRunner extends RobolectricTestRunner {
     @Override 
     public void beforeTest(Method method) {
         Robolectric.bindShadowClass(ShadowHttpEntityWrapper.class);
+        Robolectric.bindShadowClass(CustomShadowIntent.class);
     }
 }
 

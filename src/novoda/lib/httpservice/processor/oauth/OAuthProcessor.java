@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.processor.oauth;
 
-import static novoda.lib.httpservice.util.LogTag.Processor.e;
+import static novoda.lib.httpservice.util.HttpServiceLog.Processor.e;
 
 import java.io.IOException;
 

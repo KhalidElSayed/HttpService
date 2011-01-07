@@ -54,21 +54,18 @@ public class IntentRequestBuilder {
 
     public IntentRequestBuilder withParams(Map<String, String> parameters) {
         for (Entry<String, String> entry : parameters.entrySet()) {
-            requestParameters
-                    .add(new ParcelableBasicNameValuePair(entry.getKey(), entry.getValue()));
+            requestParameters.add(new ParcelableBasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         return this;
     }
 
     public IntentRequestBuilder withParam(String key, String value) {
-        requestParameters
-                    .add(new ParcelableBasicNameValuePair(key, value));
+        requestParameters.add(new ParcelableBasicNameValuePair(key, value));
         return this;
     }
 
     public IntentRequestBuilder withParams(ArrayList<ParcelableBasicNameValuePair> params) {
-        requestParameters
-                    .addAll(params);
+        requestParameters.addAll(params);
         return this;
     }
 
@@ -76,12 +73,18 @@ public class IntentRequestBuilder {
         intent.putExtra(Request.Extra.result_receiver, receiver);
         return this;
     }
+    
+    public IntentRequestBuilder withResultConsumedReceiver(ResultReceiver receiver) {
+        intent.putExtra(Request.Extra.result_consumed_receiver, receiver);
+        return this;
+    }
 
     public Intent build() {
         ArrayList<ParcelableBasicNameValuePair> list = new ArrayList<ParcelableBasicNameValuePair>(
-                Collections.unmodifiableList(requestParameters
-                    ));
+                Collections.unmodifiableList(requestParameters)
+        );
         intent.putParcelableArrayListExtra(Request.Extra.params, list);
+        intent.putExtra(Request.Extra.uid, System.nanoTime());
         return intent;
     }
 }

@@ -2,10 +2,13 @@ package novoda.lib.httpservice.request;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import novoda.lib.httpservice.util.CustomRobolectricTestRunner;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -15,9 +18,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.ResultReceiver;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-@RunWith(RobolectricTestRunner.class)
+@RunWith(CustomRobolectricTestRunner.class)
 public class IntentRequestBuilderTest {
 	
 	private static final String URL = "http://www.google.com";
@@ -74,7 +75,15 @@ public class IntentRequestBuilderTest {
 		assertEquals("specificHandler", handlerKey);
 	}
 	
-	@Ignore //robolectric doesn't support getParcalableArrayList TODO fix this
+	@Test
+	public void shouldIntentHaveId() {
+		Intent intent = new IntentRequestBuilder(ACTION, URL).build();
+		assertNotNull(intent);
+		long uid = intent.getLongExtra(Request.Extra.uid, 0l);
+		assertTrue(0l != uid);
+	}
+	
+	@Ignore("robolectric doesn't support getParcalableArrayList TODO fix this")
 	@Test
 	public void shouldWriteParcellOfParameters() {
 		HashMap<String,String> expectedParams = new HashMap<String,String>();

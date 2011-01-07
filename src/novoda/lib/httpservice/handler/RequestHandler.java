@@ -15,4 +15,6 @@ public interface RequestHandler {
 
 	void onContentReceived(Response response);
 	
+	void onContentConsumed(Request request);
+	
 }

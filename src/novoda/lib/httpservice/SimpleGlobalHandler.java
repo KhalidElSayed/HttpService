@@ -1,8 +1,6 @@
 package novoda.lib.httpservice;
 
 import novoda.lib.httpservice.handler.GlobalHandler;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
 
 /**
  * Empty implementation of GlobalHandler always matching.
@@ -11,31 +9,10 @@ import novoda.lib.httpservice.request.Response;
  * @author luigi@novoda.com
  *
  */
-public class SimpleGlobalHandler implements GlobalHandler {
-
-	@Override
-	public void onContentReceived(Response response) {
-	}
-
-	@Override
-	public void onHeadersReceived(String headers) {
-	}
-
-	@Override
-	public void onStatusReceived(String status) {
-	}
-
-	@Override
-	public void onThrowable(Throwable t) {
-	}
+public class SimpleGlobalHandler extends SimpleRequestHandler implements GlobalHandler {
 
 	@Override
 	public void onProgress() {
-	}
-
-	@Override
-	public boolean match(Request request) {
-		return true;
 	}
 
 }

@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.util;
 
-import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;

@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.service.monitor;
 
-import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
-import static novoda.lib.httpservice.util.LogTag.Core.w;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.w;
 
 import java.util.Timer;
 import java.util.TimerTask;

@@ -1,15 +1,18 @@
 package novoda.lib.httpservice.tester.activity;
 
+import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
+
 import java.util.ArrayList;
 
 import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
-import novoda.lib.httpservice.tester.util.AppLogger;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -38,9 +41,16 @@ public class DashboardActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				String text = edit.getText().toString();
-				AppLogger.debug("Making " + text + " calls");
+				d("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					startService(new IntentRequestBuilder(SimpleHttpService.ACTION_REQUEST, HOST).build());
+					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
+						.withResultConsumedReceiver(new ResultReceiver(new Handler()) {
+							@Override
+							protected void onReceiveResult(int resultCode, Bundle resultData) {
+								d("Service has finished to handle the result");
+							}
+						}).build();
+					startService(intent);
 					start.setEnabled(true);
 				}
 			}
@@ -53,7 +63,7 @@ public class DashboardActivity extends BaseActivity {
 		start.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AppLogger.debug("Starting monitor");
+				d("Starting monitor");
 				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
 				start.setEnabled(false);
 				stop.setEnabled(true);
@@ -64,7 +74,7 @@ public class DashboardActivity extends BaseActivity {
 		stop.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				AppLogger.debug("Stopping monitor");
+				d("Stopping monitor");
 				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
 				start.setEnabled(true);
 				stop.setEnabled(false);
@@ -75,7 +85,7 @@ public class DashboardActivity extends BaseActivity {
 	
 	@Override
 	protected void onResume() {
-		registerReceiver(monitorBroadcastReceiver, SimpleHttpService.MONITOR_INTENT_FILTER);
+		registerReceiver(monitorBroadcastReceiver, SimpleHttpService.INTENT_FILTER_MONITOR);
 		super.onResume();
 	}
 
@@ -95,7 +105,7 @@ public class DashboardActivity extends BaseActivity {
 				builder.append(key).append(":").append(intent.getStringExtra(key)).append(" | ");
 				viewBuilder.append(key).append(":").append(intent.getStringExtra(key)).append(" \n ");
 			}
-			AppLogger.debug(builder.append("]").toString());
+			d(builder.append("]").toString());
 			monitorInfo.setText(viewBuilder.toString());
 		}
 	};

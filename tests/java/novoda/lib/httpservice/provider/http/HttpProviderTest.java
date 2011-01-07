@@ -71,5 +71,4 @@ public class HttpProviderTest {
 		verify(eventBus, times(1)).fireOnThrowable(any(Request.class), any(ProviderException.class));
 	}
 	
-
 }

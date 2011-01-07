@@ -34,4 +34,8 @@ public class SimpleRequestHandler implements RequestHandler {
 		return true;
 	}
 
+	@Override
+	public void onContentConsumed(Request request) {
+	}
+
 }

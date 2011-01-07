@@ -1,7 +1,7 @@
 
 package novoda.lib.httpservice.tester;
 
-import novoda.lib.httpservice.tester.util.AppLogger;
+import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
 import android.app.Application;
 
 /**
@@ -16,28 +16,22 @@ public class HttpServiceTester extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        if (AppLogger.isInfoEnabled()) {
-            AppLogger.info("============================================");
-            AppLogger.info("Create event : Start up");
-        }
+        d("============================================");
+        d("Create event : Start up");
         instance = this;
     }
     
     @Override
     public void onLowMemory() {
         super.onLowMemory();
-        if (AppLogger.isInfoEnabled()) {
-            AppLogger.info("Low memory waring.");
-        }
+        d("Low memory waring.");
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        if (AppLogger.isInfoEnabled()) {
-            AppLogger.info("On terminate : Shutting down");
-            AppLogger.info("============================================");
-        }
+        d("On terminate : Shutting down");
+        d("============================================");
     }
 
     public static HttpServiceTester getInstance() {

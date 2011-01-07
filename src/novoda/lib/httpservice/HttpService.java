@@ -1,7 +1,7 @@
 package novoda.lib.httpservice;
 
-import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
 
 import java.util.concurrent.Callable;
 

@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.request;
 
-import static novoda.lib.httpservice.util.LogTag.Core.d;
-import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
+import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,11 +32,15 @@ public class Request {
 	
 	private static final String EMPTY = "";
 	
+	public static final long DEFAULT_UID = 0l;
+	
 	public static interface Extra {
 		String result_receiver = "novoda.lib.httpservice.extra.RESULT_RECEIVER";
 		String method = "novoda.lib.httpservice.extra.METHOD";
 		String handler_key = "novoda.lib.httpservice.extra.HANDLER_KEY";
-		String params = "novoda.lib.httpservice.extra.PARAMS";		
+		String params = "novoda.lib.httpservice.extra.PARAMS";
+		String uid = "novoda.lib.httpservice.extra.UID";
+		String result_consumed_receiver = "novoda.lib.httpservice.extra.RESULT_CONSUMED";		
 	}
 
 	public static interface Method {
@@ -52,6 +56,10 @@ public class Request {
 		}
 		this.intent = intent;
 	}
+	
+	public Intent getIntent(){
+		return intent;
+	}
 
 	public Uri getUri() {
 		Uri uri = intent.getData();
@@ -62,7 +70,15 @@ public class Request {
 	}
 
 	public ResultReceiver getResultReceiver() {
-		Object receiverObj = intent.getParcelableExtra(Extra.result_receiver);
+		return getResultReceiver(Extra.result_receiver);
+	}
+	
+	public ResultReceiver getResultConsumedReceiver() {
+		return getResultReceiver(Extra.result_consumed_receiver);
+	}
+	
+	private ResultReceiver getResultReceiver(String type) {
+		Object receiverObj = intent.getParcelableExtra(type);
 		if (receiverObj == null) {
 			if (debugIsEnable()) {
 				d("Request receiver is null!");
@@ -149,5 +165,14 @@ public class Request {
 		sb.append(" and ").append("handlerKey: ").append(getHandlerKey());
 		sb.append(" and ").append("method: ").append(getMethod());
 		return sb.toString();
+	}
+
+	public long getUid() {
+		return intent.getLongExtra(Request.Extra.uid, DEFAULT_UID);
+	}
+	
+	public boolean isGeneratedByIntent(Intent intent) {
+		long uid = intent.getLongExtra(Request.Extra.uid, DEFAULT_UID);
+		return (this.getUid() == uid);
 	}
 }

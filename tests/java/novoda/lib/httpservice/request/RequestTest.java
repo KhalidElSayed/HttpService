@@ -167,4 +167,43 @@ public class RequestTest {
 		assertNotNull(request);
 		assertEquals(list, request.getParams());
 	}
+	
+	@Test
+	public void shouldGetUid() {
+		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		
+		Request request = new Request(intent);
+		
+		assertNotNull(request);
+		assertTrue(request.getUid() > 0l);
+	}
+	
+	@Test
+	public void shouldIsGeneratedByIntentReturnTrueIfAreReallyTheSame() {
+		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		
+		Request request = new Request(intent);
+		
+		assertNotNull(request);
+		assertTrue(request.getUid() > 0l);
+		
+		assertTrue(request.isGeneratedByIntent(intent));
+	}
+	
+	@Test
+	public void shouldIsGeneratedByIntentReturnFalseWithDifferentIntent() {
+		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		
+		Request request = new Request(intent);
+		
+		assertNotNull(request);
+		assertTrue(request.getUid() > 0l);
+		
+		Intent intent2 = mock(Intent.class);
+		when(intent2.getAction()).thenReturn(ACTION);
+		when(intent2.getLongExtra(Request.Extra.uid, 0l)).thenReturn(21L);
+		
+		assertFalse(request.isGeneratedByIntent(intent2));
+	}
+	
 }

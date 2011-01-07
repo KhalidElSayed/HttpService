@@ -154,4 +154,16 @@ public abstract class EventBusTest<T extends RequestHandler> {
 		verify(h1, times(1)).onThrowable(t);
 	}
 	
+	@Test
+	public void shouldFireOnContentConsumed() {
+		T h = mock(clazz);
+		when(h.match(request)).thenReturn(true);
+		
+		eventBus.add(h);
+		
+		eventBus.fireOnContentConsumed(request);
+		
+		verify(h, times(1)).onContentConsumed(request);
+	}
+	
 }
