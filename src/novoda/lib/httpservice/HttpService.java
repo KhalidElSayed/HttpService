@@ -8,7 +8,6 @@ import java.util.concurrent.Callable;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.http.HttpProvider;
-import novoda.lib.httpservice.request.IntentRequestParser;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.LifecycleManagedExecutorService;
@@ -73,20 +72,7 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 		if (debugIsEnable()) {
 			d("Building up a callable with the provider and the request");
 		}
-		return new CallableWrapper(provider, buildRequest(intent));
+		return new CallableWrapper(provider, new Request(intent));
 	}
-	
-	/**
-	 * If you want to change the way in witch the information  
-	 * is passed from the intent to the service with the request
-	 * you need to overwrite this method.
-	 * 
-	 * @param intent
-	 * @return
-	 */
-	protected Request buildRequest(Intent intent) {
-		return (Request)IntentRequestParser.parse(intent);
-	}
-	
 	
 }

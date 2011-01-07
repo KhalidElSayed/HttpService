@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.processor;
 
-import org.apache.http.protocol.HttpProcessor;
+import novoda.lib.httpservice.request.Request;
 
-import android.net.Uri;
+import org.apache.http.protocol.HttpProcessor;
 
 /**
  * A processor is the interface to mark objects that are able
@@ -19,9 +19,9 @@ public interface Processor extends HttpProcessor {
 	 * to determine if a specific processor is suppose
 	 * to intercept request and response.
 	 * 
-	 * @param uri
+	 * @param request
 	 * @return
 	 */
-	boolean match(Uri uri);
+	boolean match(Request request);
 	
 }

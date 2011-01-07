@@ -13,6 +13,7 @@ import java.io.IOException;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 
@@ -25,8 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.net.Uri;
-
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -37,9 +36,7 @@ public class HttpProviderTest {
 	private Provider provider;
 	private EventBus eventBus;
 	private HttpClient httpClient;
-	private Request request = new Request(); {
-		request.setUri(Uri.parse(URL));
-	}
+	private Request request = new Request(new IntentRequestBuilder("action", URL).build());
 	
 	@Before
 	public void setUp() {

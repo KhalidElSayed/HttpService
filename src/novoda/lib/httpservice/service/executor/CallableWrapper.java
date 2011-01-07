@@ -28,7 +28,7 @@ public class CallableWrapper implements Callable<Response> {
 		}
 		this.provider = provider;
 		if(request == null) {
-			throw new HandlerException("Configuration problem! A request must be specified!");
+			throw new HandlerException("Configuration problem! Request must be specified!");
 		}
 		this.request = request;
 	}

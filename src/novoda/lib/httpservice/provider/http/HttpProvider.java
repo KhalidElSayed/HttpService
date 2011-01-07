@@ -54,9 +54,9 @@ public class HttpProvider implements Provider {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}
         	HttpContext context = new BasicHttpContext();
-        	eventBus.fireOnPreProcessRequest(request.getUri(), method, context);
+        	eventBus.fireOnPreProcessRequest(request, method, context);
         	final HttpResponse httpResponse = client.execute(method, context);
-        	eventBus.fireOnPostProcessRequest(request.getUri(), httpResponse, context);
+        	eventBus.fireOnPostProcessRequest(request, httpResponse, context);
             if(httpResponse == null) {
             	logAndThrow("Response from " + request.getUri() + " is null");
             }

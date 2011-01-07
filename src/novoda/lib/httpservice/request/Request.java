@@ -1,5 +1,8 @@
 package novoda.lib.httpservice.request;
 
+import static novoda.lib.httpservice.util.LogTag.Core.d;
+import static novoda.lib.httpservice.util.LogTag.Core.debugIsEnable;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -9,12 +12,12 @@ import novoda.lib.httpservice.exception.RequestException;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.ResultReceiver;
 
 /**
- * This class contains all the information necessary to the provider
- * to execute the http method.
+ * The request is just an IntentWrapper.
  * 
  * @author luigi@novoda.com
  *
@@ -41,46 +44,44 @@ public class Request {
 		int POST = 1;	
 	} 
 	
-	private String handlerKey;
+	private Intent intent;
 	
-	private Uri uri;
-	
-	private int method;
-	
-	private ResultReceiver resultReceiver;
-	
-	private List<ParcelableBasicNameValuePair> params;
-	
-	public Request() {
-	}
-	
-	public Request(String url) {
-		this(Uri.parse(url));
-	}
-	
-	public Request(Uri uri) {
-		setUri(uri);
-		setMethod(Method.GET);
-	}
-
-	public void setUri(Uri uri) {
-		this.uri = uri;
+	public Request(Intent intent) {
+		if(intent == null) {
+			throw new RequestException("Intent is null! A Intent wrapper need an intent to work properly");
+		}
+		this.intent = intent;
 	}
 
 	public Uri getUri() {
+		Uri uri = intent.getData();
+		if(uri == null) {
+			throw new RequestException("Request url and uri are not specified. Need at least one!");
+		}
 		return uri;
 	}
 
 	public ResultReceiver getResultReceiver() {
-		return resultReceiver;
-	}
-
-	public void setResultReceiver(ResultReceiver resultReceiver) {
-		this.resultReceiver = resultReceiver;
+		Object receiverObj = intent.getParcelableExtra(Extra.result_receiver);
+		if (receiverObj == null) {
+			if (debugIsEnable()) {
+				d("Request receiver is null!");
+			}
+			return null;
+		}
+		if(receiverObj instanceof ResultReceiver) {
+			ResultReceiver resultReceiver = (ResultReceiver)receiverObj;
+			if (debugIsEnable()) {
+				d("Building request for intent with request receiver");
+			}
+			return resultReceiver;
+		} else {
+			throw new RequestException("Problem generating reading the result receiver");
+		}
 	}
 
 	public String getHandlerKey() {
-		return handlerKey;
+		return intent.getStringExtra(Extra.handler_key);
 	}
 	
 	public boolean isGet() {
@@ -97,24 +98,12 @@ public class Request {
 		return false;
 	}
 
-	public void setMethod(int method) {
-		this.method = method;
-	}
-
 	public int getMethod() {
-		return method;
-	}
-
-	public void setHandlerKey(String handlerKey) {
-		this.handlerKey = handlerKey;
-	}
-
-	public void setParams(List<ParcelableBasicNameValuePair> params) {
-		this.params = params;
+		return intent.getIntExtra(Extra.method, Method.GET);
 	}
 
 	public List<ParcelableBasicNameValuePair> getParams() {
-		return params;
+		return intent.getParcelableArrayListExtra(Extra.params);
 	}
 	
 	public static final URI asURI(Uri uri, List<ParcelableBasicNameValuePair> params) {
@@ -151,15 +140,14 @@ public class Request {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("Request with URI: ");
-		sb.append(uri).append(" and ").append(" requestReceiver: ");
-		if(resultReceiver != null) {
+		sb.append(getUri()).append(" and ").append(" requestReceiver: ");
+		if(getResultReceiver() != null) {
 			sb.append(" is not null");
 		} else {
 			sb.append(" is null");
 		}
-		sb.append(" and ").append("handlerKey: ").append(handlerKey);
-		sb.append(" and ").append("method: ").append(method);
+		sb.append(" and ").append("handlerKey: ").append(getHandlerKey());
+		sb.append(" and ").append("method: ").append(getMethod());
 		return sb.toString();
 	}
-	
 }

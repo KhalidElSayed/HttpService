@@ -5,24 +5,25 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.protocol.HttpContext;
-
 import novoda.lib.httpservice.HttpService;
 import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.Processor;
 import novoda.lib.httpservice.processor.oauth.OAuthProcessor;
+import novoda.lib.httpservice.request.Request;
 import novoda.lib.httpservice.request.Response;
 import novoda.lib.httpservice.service.monitor.Monitor;
 import novoda.lib.httpservice.tester.util.AppLogger;
+
+import org.apache.http.HttpException;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.protocol.HttpContext;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 
 /**
  * Simple sample on how to use the HttpService.
@@ -48,8 +49,8 @@ public class SimpleHttpService extends HttpService {
 	
 	private RequestHandler requestHandler = new SimpleRequestHandler() {
 		@Override
-		public boolean match(Uri uri) {
-			if(PATH.equals(uri.getPath())) {
+		public boolean match(Request request) {
+			if(PATH.equals(request.getUri().getPath())) {
 				AppLogger.debug("do match!");
 				return true;
 			}
@@ -65,7 +66,7 @@ public class SimpleHttpService extends HttpService {
 	
 	private Processor logProcessor1 = new Processor() {
 		@Override
-		public boolean match(Uri uri) {
+		public boolean match(Request request) {
 			return true;
 		}
 
@@ -83,7 +84,7 @@ public class SimpleHttpService extends HttpService {
 
 	private Processor logProcessor2 = new Processor() {
 		@Override
-		public boolean match(Uri uri) {
+		public boolean match(Request request) {
 			return true;
 		}
 

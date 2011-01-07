@@ -2,6 +2,9 @@ package novoda.lib.httpservice.processor.etag;
 
 import java.io.IOException;
 
+import novoda.lib.httpservice.processor.Processor;
+import novoda.lib.httpservice.request.Request;
+
 import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -12,11 +15,10 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpProcessor;
 
 import android.content.Context;
 
-public abstract class ETagProcessor implements HttpProcessor {
+public class ETagProcessor implements Processor {
 
 	private ETagSQLiteHelper helper;
 
@@ -25,8 +27,7 @@ public abstract class ETagProcessor implements HttpProcessor {
 	}
 
 	@Override
-	public void process(HttpRequest request, HttpContext context)
-			throws HttpException, IOException {
+	public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
 		if (isGetMethod(request)) {
 			ETag etag = helper.getETag(((HttpUriRequest) request).getURI()
 					.toString());
@@ -45,8 +46,7 @@ public abstract class ETagProcessor implements HttpProcessor {
 	}
 
 	@Override
-	public void process(HttpResponse response, HttpContext context)
-			throws HttpException, IOException {
+	public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
 
 		/*
 		 * Only save if we have the ETAG in the header and the response has been
@@ -76,5 +76,10 @@ public abstract class ETagProcessor implements HttpProcessor {
 		if (((HttpUriRequest) request).getMethod().equals(HttpGet.METHOD_NAME))
 			return true;
 		return false;
+	}
+
+	@Override
+	public boolean match(Request request) {
+		return true;
 	}
 }
