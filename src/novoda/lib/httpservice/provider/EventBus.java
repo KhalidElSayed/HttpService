@@ -109,6 +109,7 @@ public class EventBus implements HasHandlers, HasProcessors {
 			if(receiver != null) {
 				try {
 					Bundle b = new Bundle();
+					b.putString(Request.SIMPLE_BUNDLE_RESULT, getContentAsString(response.getHttpResponse()));
 					receiver.send(SUCCESS, b);
 				} catch(Throwable t) {
 					receiver.send(ERROR, null);
