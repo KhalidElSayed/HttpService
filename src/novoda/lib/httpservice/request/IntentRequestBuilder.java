@@ -42,11 +42,6 @@ public class IntentRequestBuilder {
         return this;
     }
 
-    public IntentRequestBuilder attach(ResultReceiver resultReceiver) {
-        intent.putExtra(Request.Extra.result_receiver, resultReceiver);
-        return this;
-    }
-
     public IntentRequestBuilder withHandlerKey(String handlerKey) {
         intent.putExtra(Request.Extra.handler_key, handlerKey);
         return this;

@@ -48,7 +48,7 @@ public class IntentRequestBuilderTest {
 	@Test
 	public void shouldAttachResultReceiver() {
 		ResultReceiver expectedReceiver = mock(ResultReceiver.class);
-		Intent intent = new IntentRequestBuilder(ACTION, URL).attach(expectedReceiver).build();
+		Intent intent = new IntentRequestBuilder(ACTION, URL).withResultReceiver(expectedReceiver).build();
 		ResultReceiver actualReceiver = intent.getParcelableExtra(Request.Extra.result_receiver);
 		assertNotNull(actualReceiver);
 		assertEquals(expectedReceiver, actualReceiver);
