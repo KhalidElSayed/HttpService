@@ -81,14 +81,14 @@ public class Request {
 		Object receiverObj = intent.getParcelableExtra(type);
 		if (receiverObj == null) {
 			if (debugIsEnable()) {
-				d("Request receiver is null!");
+				d("Request receiver " + type + " is null, skipping it");
 			}
 			return null;
-		}
+		} 
 		if(receiverObj instanceof ResultReceiver) {
 			ResultReceiver resultReceiver = (ResultReceiver)receiverObj;
 			if (debugIsEnable()) {
-				d("Building request for intent with request receiver");
+				d("Building request for intent with receiver : " + type);
 			}
 			return resultReceiver;
 		} else {

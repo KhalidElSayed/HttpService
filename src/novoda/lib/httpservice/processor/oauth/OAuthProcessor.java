@@ -1,6 +1,8 @@
 package novoda.lib.httpservice.processor.oauth;
 
+import static novoda.lib.httpservice.util.HttpServiceLog.Processor.d;
 import static novoda.lib.httpservice.util.HttpServiceLog.Processor.e;
+import static novoda.lib.httpservice.util.HttpServiceLog.Processor.debugIsEnable;
 
 import java.io.IOException;
 
@@ -16,6 +18,7 @@ import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
+
 
 /**
  * Processor responsible implement oauth.
@@ -49,7 +52,10 @@ public class OAuthProcessor implements Processor {
 	}
 
     @Override
-    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {        
+    public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {  
+    	if(debugIsEnable()) {
+    		d("Executing OAuthProcessor : " + request.getRequestLine().getUri());
+    	}
         if (request == null) {
             throw new IllegalArgumentException("HTTP request may not be null");
         }
