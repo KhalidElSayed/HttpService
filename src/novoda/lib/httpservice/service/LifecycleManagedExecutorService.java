@@ -15,7 +15,7 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 	
 	private static final long SERVICE_LIFECYCLE = 1000 * 30;
 	
-	private static final long KEEP_ALIFE_TIME = 1000 * 60;
+	private static final long KEEP_ALIFE_TIME = 1000 * 60 * 5;
 	
 	private long lastCall;
 	
