@@ -38,7 +38,7 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 
 		public Thread newThread(Runnable r) {
 			Thread thread = new Thread(r, PREFIX + mCount.getAndIncrement());
-			thread.setPriority(android.os.Process.THREAD_PRIORITY_BACKGROUND);
+			thread.setPriority(Thread.NORM_PRIORITY-1);
 			return thread;
 		}
 	};
