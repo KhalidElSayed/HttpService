@@ -8,5 +8,6 @@ bin/
 gen/
 *.class
 *.apk
+*.settings
 tmp/
 .redcar/
