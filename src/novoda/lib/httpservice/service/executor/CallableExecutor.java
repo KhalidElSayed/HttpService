@@ -2,10 +2,10 @@ package novoda.lib.httpservice.service.executor;
 
 import java.util.concurrent.Callable;
 
-import android.content.Intent;
+import novoda.lib.httpservice.provider.IntentWrapper;
 
 public interface CallableExecutor<T> {
 
-    Callable<T> getCallable(Intent intent);
+    Callable<T> getCallable(IntentWrapper request);
     
 }

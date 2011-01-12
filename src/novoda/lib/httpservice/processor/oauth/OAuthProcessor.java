@@ -1,13 +1,13 @@
 package novoda.lib.httpservice.processor.oauth;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Processor.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Processor.e;
-import static novoda.lib.httpservice.util.HttpServiceLog.Processor.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.Processor.v;
+import static novoda.lib.httpservice.util.Log.Processor.e;
+import static novoda.lib.httpservice.util.Log.Processor.verboseLoggingEnabled;
 
 import java.io.IOException;
 
 import novoda.lib.httpservice.processor.Processor;
-import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.provider.IntentWrapper;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
@@ -53,8 +53,8 @@ public class OAuthProcessor implements Processor {
 
     @Override
     public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {  
-    	if(debugIsEnable()) {
-    		d("Executing OAuthProcessor : " + request.getRequestLine().getUri());
+    	if(verboseLoggingEnabled()) {
+    		v("Executing OAuthProcessor : " + request.getRequestLine().getUri());
     	}
         if (request == null) {
             throw new IllegalArgumentException("HTTP request may not be null");
@@ -84,7 +84,7 @@ public class OAuthProcessor implements Processor {
     }
 
     @Override
-    public boolean match(Request request) {
+    public boolean match(IntentWrapper request) {
         return true;
     }
 

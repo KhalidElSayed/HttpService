@@ -1,8 +1,9 @@
 package novoda.lib.httpservice.service.executor;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.w;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.i;
+import static novoda.lib.httpservice.util.Log.w;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +16,9 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import novoda.lib.httpservice.exception.ExecutorException;
 import novoda.lib.httpservice.provider.EventBus;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentRegistry;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 import novoda.lib.httpservice.service.monitor.Monitorable;
 import android.content.Intent;
 
@@ -33,19 +36,26 @@ public class ThreadManager implements ExecutorManager {
 
 	private boolean runLoop = true;
 	
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor) {
-		this(poolExecutor, eventBus, callableExecutor, null);
+	private IntentRegistry requestRegistry;
+	
+	public ThreadManager(IntentRegistry requestRegistry, ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor) {
+		this(requestRegistry, poolExecutor, eventBus, callableExecutor, null);
 	}
 
-	public ThreadManager(ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor,
+	public ThreadManager(IntentRegistry requestRegistry, ThreadPoolExecutor poolExecutor, EventBus eventBus, CallableExecutor<Response> callableExecutor,
 			ExecutorCompletionService<Response> completitionService) {
-		if (debugIsEnable()) {
-			d("Starting thread manager");
+		if (verboseLoggingEnabled()) {
+			v("Starting thread manager");
 		}
-		if (completitionService == null) {
-			completitionService = (ExecutorCompletionService<Response>) getCompletionService(poolExecutor);
+		if(requestRegistry == null) {
+			throw new ExecutorException("The request registry is null!");
 		}
+		this.requestRegistry = requestRegistry;
+		
 		this.completitionService = completitionService;
+		if (this.completitionService == null) {
+			this.completitionService = (ExecutorCompletionService<Response>) getCompletionService(poolExecutor);
+		}
 		
 		this.poolExecutor = poolExecutor;
 		this.eventBus = eventBus;
@@ -55,33 +65,43 @@ public class ThreadManager implements ExecutorManager {
 	@Override
 	public void shutdown() {
 		if(poolExecutor != null) {
-			if (debugIsEnable()) {
-				d("Shutting down pool executor");
+			if (verboseLoggingEnabled()) {
+				v("Shutting down pool executor");
 			}
 			poolExecutor.shutdown();
 			while(poolExecutor.isTerminating()) {
-				if (debugIsEnable()) {
-					d("Thread Manager : waiting for shut down of poolExecutor...");
+				if (verboseLoggingEnabled()) {
+					v("Thread Manager : waiting for shut down of poolExecutor...");
 				}
 			}
-			if (debugIsEnable()) {
-				d("Thread Manager : poolExecutor is terminated...");
+			if (verboseLoggingEnabled()) {
+				v("Thread Manager : poolExecutor is terminated...");
 			}
 		}
 		if(looperThread != null) {
-			if (debugIsEnable()) {
-				d("Thread Manager : Shutting down looperThread");
+			if (verboseLoggingEnabled()) {
+				v("Thread Manager : Shutting down looperThread");
 			}
 			runLoop = false;
-			if (debugIsEnable()) {
-				d("Thread Manager : looperThread is terminated");
+			if (verboseLoggingEnabled()) {
+				v("Thread Manager : looperThread is terminated");
 			}
 		}
 	}
 
 	@Override
 	public void addTask(Intent intent) {
-		Callable<Response> callable = callableExecutor.getCallable(intent);
+		IntentWrapper intentWrapper = new IntentWrapper(intent);
+		if(requestRegistry.isAlreadyInQueue(intentWrapper)) {
+			i("Thread Manager : Skipping intent a similar in being processed");
+			return;
+		}
+		if(requestRegistry.isRecentlyBeenConsumed(intentWrapper)) {
+			i("Thread Manager : Skipping intent a similar intent has being processed a few seconds ago");
+			eventBus.fireOnContentConsumed(intentWrapper);
+			return;
+		}
+		Callable<Response> callable = callableExecutor.getCallable(intentWrapper);
 		if (callable == null) {
 			throw new ExecutorException(
 					"The callable retrieve from the service to hanble the intent is null");
@@ -104,36 +124,36 @@ public class ThreadManager implements ExecutorManager {
 
 	@Override
 	public void start() {
-		if (debugIsEnable()) {
-			d("Thread Manager : Starting Thread Loop");
+		if (verboseLoggingEnabled()) {
+			v("Thread Manager : Starting Thread Loop");
 		}
 		looperThread = new Thread() {
 			public void run() {
 				Thread.currentThread().setPriority(NORM_PRIORITY-1);
-				if (debugIsEnable()) {
-					d("Thread Manager : is running now");
+				if (verboseLoggingEnabled()) {
+					v("Thread Manager : is running now");
 				}
 				while (runLoop) {
 					try {
-						if (debugIsEnable()) {
-							d("Thread Manager : new cycle");
+						if (verboseLoggingEnabled()) {
+							v("Thread Manager : new cycle");
 						}
 						Future<Response> future = completitionService.take();
 						Response response = future.get();
 						future.cancel(true);
-						if (debugIsEnable()) {
-							d("Response received");
+						if (verboseLoggingEnabled()) {
+							v("Response received");
 						}
 						eventBus.fireOnContentReceived(response);
-						eventBus.fireOnContentConsumed(response.getRequest());
+						eventBus.fireOnContentConsumed(response.getIntentWrapper());
 					} catch (InterruptedException e) {
 						w("InterruptedException", e);
 					} catch (ExecutionException e) {
 						w("ExecutionException", e);
 					}
 				}
-				if (debugIsEnable()) {
-					d("Thread Manager : ending cycle");
+				if (verboseLoggingEnabled()) {
+					v("Thread Manager : ending cycle");
 				}
 			};
 		};

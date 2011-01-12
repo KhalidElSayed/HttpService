@@ -1,8 +1,8 @@
 package novoda.lib.httpservice.service.monitor;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.w;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.w;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,8 +26,8 @@ public class MonitorManager implements Monitorable  {
 
 	@Override
 	public void startMonitoring() {	
-		if (debugIsEnable()) {
-			d("Starting monitoring the executor manager");
+		if (verboseLoggingEnabled()) {
+			v("Starting monitoring the executor manager");
 		}
 		try {
 			timer = new Timer();

@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.processor;
 
-import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.provider.IntentWrapper;
 
 import org.apache.http.protocol.HttpProcessor;
 
@@ -22,6 +22,6 @@ public interface Processor extends HttpProcessor {
 	 * @param request
 	 * @return
 	 */
-	boolean match(Request request);
+	boolean match(IntentWrapper request);
 	
 }

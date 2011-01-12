@@ -3,7 +3,7 @@ package novoda.lib.httpservice.processor.etag;
 import java.io.IOException;
 
 import novoda.lib.httpservice.processor.Processor;
-import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.provider.IntentWrapper;
 
 import org.apache.http.Header;
 import org.apache.http.HttpException;
@@ -79,7 +79,7 @@ public class ETagProcessor implements Processor {
 	}
 
 	@Override
-	public boolean match(Request request) {
+	public boolean match(IntentWrapper request) {
 		return true;
 	}
 }

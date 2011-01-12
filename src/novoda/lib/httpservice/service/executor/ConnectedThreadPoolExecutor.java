@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.service.executor;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -58,16 +58,16 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     private ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver() {
 		@Override
 		protected void onConnectionLost() {
-			if (debugIsEnable()) {
-                d("ThreadPool : Connection lost");
+			if (verboseLoggingEnabled()) {
+                v("ThreadPool : Connection lost");
             }
 			pause();
 		}
 		
 		@Override
 		protected void onConnectionResume() {
-			if (debugIsEnable()) {
-                d("ThreadPool : Connection resumed");
+			if (verboseLoggingEnabled()) {
+                v("ThreadPool : Connection resumed");
             }
 			resume();
 		}
@@ -83,8 +83,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     private void registerReceiver() {
-    	if (debugIsEnable()) {
-			d("ThreadPool : Registering receivers");
+    	if (verboseLoggingEnabled()) {
+			v("ThreadPool : Registering receivers");
 		}
     	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.CONNECTIVITY_FILTER);
     	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.SETTING_CHANGED_FILTER);
@@ -105,8 +105,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     private void removeReceiver() {
-    	if (debugIsEnable()) {
-			d("ThreadPool : unregistering receivers");
+    	if (verboseLoggingEnabled()) {
+			v("ThreadPool : unregistering receivers");
 		}
     	service.unregisterReceiver(connectivityReceiver);
     	receiverNotReady = true;
@@ -130,8 +130,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     public void pause() {
-    	if (debugIsEnable()) {
-			d("ThreadPool : Pausing");
+    	if (verboseLoggingEnabled()) {
+			v("ThreadPool : Pausing");
 		}
         pauseLock.lock();
         try {
@@ -142,8 +142,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     }
 
     public void resume() {
-    	if (debugIsEnable()) {
-			d("ThreadPool : Resuming");
+    	if (verboseLoggingEnabled()) {
+			v("ThreadPool : Resuming");
 		}
         pauseLock.lock();
         try {

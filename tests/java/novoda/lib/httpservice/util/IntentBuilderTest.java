@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.util;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -8,7 +8,9 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import novoda.lib.httpservice.util.CustomRobolectricTestRunner;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.util.IntentBuilder;
+import novoda.lib.httpservice.util.ParcelableBasicNameValuePair;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -19,7 +21,7 @@ import android.net.Uri;
 import android.os.ResultReceiver;
 
 @RunWith(CustomRobolectricTestRunner.class)
-public class IntentRequestBuilderTest {
+public class IntentBuilderTest {
 	
 	private static final String URL = "http://www.google.com";
 	private static final String ACTION = "request";
@@ -27,7 +29,7 @@ public class IntentRequestBuilderTest {
 	@Test
 	public void shouldBuildUpGetRequestFromUri() {
 		Uri uri = Uri.parse(URL);
-		Intent intent = new IntentRequestBuilder(ACTION, uri).build();
+		Intent intent = new IntentBuilder(ACTION, uri).build();
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
@@ -36,7 +38,7 @@ public class IntentRequestBuilderTest {
 	
 	@Test
 	public void shouldBuildUpGetRequestFromUrl() {
-		Intent intent = new IntentRequestBuilder(ACTION, URL).build();
+		Intent intent = new IntentBuilder(ACTION, URL).build();
 		assertNotNull(intent);
 		String action = intent.getAction();
 		assertNotNull(action);
@@ -48,38 +50,46 @@ public class IntentRequestBuilderTest {
 	@Test
 	public void shouldAttachResultReceiver() {
 		ResultReceiver expectedReceiver = mock(ResultReceiver.class);
-		Intent intent = new IntentRequestBuilder(ACTION, URL).withResultReceiver(expectedReceiver).build();
-		ResultReceiver actualReceiver = intent.getParcelableExtra(Request.Extra.result_receiver);
+		Intent intent = new IntentBuilder(ACTION, URL).withResultReceiver(expectedReceiver).build();
+		ResultReceiver actualReceiver = intent.getParcelableExtra(IntentWrapper.Extra.result_receiver);
 		assertNotNull(actualReceiver);
 		assertEquals(expectedReceiver, actualReceiver);
 	}
 	
 	@Test
 	public void shouldBuildGetByDefault() {
-		Intent intent = new IntentRequestBuilder(ACTION, URL).build();
-		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
-		assertEquals(Request.Method.GET, method);
+		Intent intent = new IntentBuilder(ACTION, URL).build();
+		int method = intent.getIntExtra(IntentWrapper.Extra.method, IntentWrapper.Method.GET);
+		assertEquals(IntentWrapper.Method.GET, method);
 	}
 	
 	@Test
 	public void shouldBuildPost() {
-		Intent intent = new IntentRequestBuilder(ACTION, URL).asPost().build();
-		int method = intent.getIntExtra(Request.Extra.method, Request.Method.GET);
-		assertEquals(Request.Method.POST, method);
+		Intent intent = new IntentBuilder(ACTION, URL).asPost().build();
+		int method = intent.getIntExtra(IntentWrapper.Extra.method, IntentWrapper.Method.GET);
+		assertEquals(IntentWrapper.Method.POST, method);
 	}
 	
 	@Test
 	public void shouldWriteHandlerInformationOnIntent() {
-		Intent intent = new IntentRequestBuilder(ACTION, URL).withHandlerKey("specificHandler").build();
-		String handlerKey = intent.getStringExtra(Request.Extra.handler_key);
+		Intent intent = new IntentBuilder(ACTION, URL).withHandlerKey("specificHandler").build();
+		String handlerKey = intent.getStringExtra(IntentWrapper.Extra.handler_key);
 		assertEquals("specificHandler", handlerKey);
 	}
 	
 	@Test
 	public void shouldIntentHaveId() {
-		Intent intent = new IntentRequestBuilder(ACTION, URL).build();
+		Intent intent = new IntentBuilder(ACTION, URL).build();
 		assertNotNull(intent);
-		long uid = intent.getLongExtra(Request.Extra.uid, 0l);
+		long uid = intent.getLongExtra(IntentWrapper.Extra.uid, 0l);
+		assertTrue(0l != uid);
+	}
+	
+	@Test
+	public void shouldIntentBeCacheDisabled() {
+		Intent intent = new IntentBuilder(ACTION, URL).withDisableCache().build();
+		assertNotNull(intent);
+		long uid = intent.getLongExtra(IntentWrapper.Extra.uid, 0l);
 		assertTrue(0l != uid);
 	}
 	
@@ -89,8 +99,8 @@ public class IntentRequestBuilderTest {
 		HashMap<String,String> expectedParams = new HashMap<String,String>();
 		expectedParams.put("key", "XXYY");
 		expectedParams.put("something", "somevalue");
-		Intent intent = new IntentRequestBuilder(ACTION, URL).withParams(expectedParams).build();
-		ArrayList<ParcelableBasicNameValuePair> actualParams = intent.getParcelableArrayListExtra(Request.Extra.params);
+		Intent intent = new IntentBuilder(ACTION, URL).withParams(expectedParams).build();
+		ArrayList<ParcelableBasicNameValuePair> actualParams = intent.getParcelableArrayListExtra(IntentWrapper.Extra.params);
 		assertNotNull(actualParams);
 		assertEquals(2, actualParams.size());
 		assertEquals("", actualParams.get(0).getName());

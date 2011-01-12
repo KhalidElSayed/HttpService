@@ -4,9 +4,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.handler.RequestHandler;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,13 +16,15 @@ public abstract class EventBusTest<T extends RequestHandler> {
 
 	private EventBus eventBus;
 	
-	private Request request;
+	private IntentWrapper mIntentWrapper;
 	
-	private Response response;
+	private Response mResponse;
 	
-	private Uri uri;
+	private Uri mUri;
 	
 	private Class<T> clazz;
+	
+	private IntentRegistry mRequestRegistry;
 	
 	public EventBusTest(Class<T> clazz) {
 		this.clazz = clazz;
@@ -31,12 +32,13 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Before
 	public void setUp() {
-		eventBus = new EventBus();
-		request = mock(Request.class);
-		uri = mock(Uri.class);
-		when(request.getUri()).thenReturn(uri);
-		response = mock(Response.class);
-		when(response.getRequest()).thenReturn(request);
+		mRequestRegistry = mock(IntentRegistry.class);
+		eventBus = new EventBus(mRequestRegistry);
+		mIntentWrapper = mock(IntentWrapper.class);
+		mUri = mock(Uri.class);
+		when(mIntentWrapper.getUri()).thenReturn(mUri);
+		mResponse = mock(Response.class);
+		when(mResponse.getIntentWrapper()).thenReturn(mIntentWrapper);
 	}
 	
 	@Test
@@ -57,52 +59,52 @@ public abstract class EventBusTest<T extends RequestHandler> {
 		
 		eventBus.add(h);
 
-		eventBus.fireOnContentReceived(response);
+		eventBus.fireOnContentReceived(mResponse);
 	}
 	
 	@Test
 	public void shouldFireOnContentReceivedOnMultipleGlobalHandler() {
 		T h1 = mock(clazz);
-		when(h1.match(request)).thenReturn(true);
+		when(h1.match(mIntentWrapper)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(request)).thenReturn(true);
+		when(h2.match(mIntentWrapper)).thenReturn(true);
 
 		eventBus.add(h1);
 		eventBus.add(h2);
 		
-		eventBus.fireOnContentReceived(response);
+		eventBus.fireOnContentReceived(mResponse);
 		
-		verify(h2).onContentReceived(response);
-		verify(h1).onContentReceived(response);
+		verify(h2).onContentReceived(mIntentWrapper, mResponse);
+		verify(h1).onContentReceived(mIntentWrapper, mResponse);
 	}
 	
 	@Test
 	public void shouldNotFireOnContentReceivedIfHasBeenRemoved() {
 		T h1 = mock(clazz);
-		when(h1.match(request)).thenReturn(true);
+		when(h1.match(mIntentWrapper)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(request)).thenReturn(true);
+		when(h2.match(mIntentWrapper)).thenReturn(true);
 
 		eventBus.add(h1);
 		eventBus.add(h2);
 		
 		eventBus.remove(h1);
 
-		eventBus.fireOnContentReceived(response);
+		eventBus.fireOnContentReceived(mResponse);
 		
-		verify(h2, times(1)).onContentReceived(response);
-		verify(h1, times(0)).onContentReceived(response);
+		verify(h2, times(1)).onContentReceived(mIntentWrapper, mResponse);
+		verify(h1, times(0)).onContentReceived(mIntentWrapper, mResponse);
 	}
 	
 	@Test
 	public void shouldGlobalRemovedWorkInEvenOnSecondCall() {
 		T h1 = mock(clazz);
-		when(h1.match(request)).thenReturn(true);
+		when(h1.match(mIntentWrapper)).thenReturn(true);
 		
 		T h2 = mock(clazz);
-		when(h2.match(request)).thenReturn(true);
+		when(h2.match(mIntentWrapper)).thenReturn(true);
 		
 		eventBus.add(h1);
 		eventBus.add(h2);
@@ -110,10 +112,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 		eventBus.remove(h1);
 		eventBus.remove(h1);
 		
-		eventBus.fireOnContentReceived(response);
+		eventBus.fireOnContentReceived(mResponse);
 		
-		verify(h2, times(1)).onContentReceived(response);
-		verify(h1, times(0)).onContentReceived(response);
+		verify(h2, times(1)).onContentReceived(mIntentWrapper, mResponse);
+		verify(h1, times(0)).onContentReceived(mIntentWrapper, mResponse);
 	}
 	
 	@Test
@@ -125,45 +127,50 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	@Test
 	public void shouldGlobalFireOnThrowable() {
 		T h = mock(clazz);
-		when(h.match(request)).thenReturn(true);
+		when(h.match(mIntentWrapper)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
 
 		eventBus.add(h);
 
-		eventBus.fireOnThrowable(request, t);
+		eventBus.fireOnThrowable(mIntentWrapper, t);
 		
-		verify(h).onThrowable(t);
+		verify(h).onThrowable(mIntentWrapper, t);
 	}
 	
 	@Test
 	public void shouldFireOnThrowableForMultipleHandler() {
 		T h1 = mock(clazz);
-		when(h1.match(request)).thenReturn(true);
+		when(h1.match(mIntentWrapper)).thenReturn(true);
 		T h2 = mock(clazz);
-		when(h2.match(request)).thenReturn(true);
+		when(h2.match(mIntentWrapper)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
 
 		eventBus.add(h1);
 		eventBus.add(h2);
 
-		eventBus.fireOnThrowable(request, t);
+		eventBus.fireOnThrowable(mIntentWrapper, t);
 		
-		verify(h2, times(1)).onThrowable(t);
-		verify(h1, times(1)).onThrowable(t);
+		verify(h2, times(1)).onThrowable(mIntentWrapper, t);
+		verify(h1, times(1)).onThrowable(mIntentWrapper, t);
 	}
 	
 	@Test
 	public void shouldFireOnContentConsumed() {
 		T h = mock(clazz);
-		when(h.match(request)).thenReturn(true);
+		when(h.match(mIntentWrapper)).thenReturn(true);
 		
 		eventBus.add(h);
 		
-		eventBus.fireOnContentConsumed(request);
+		eventBus.fireOnContentConsumed(mIntentWrapper);
 		
-		verify(h, times(1)).onContentConsumed(request);
+		verify(h, times(1)).onContentConsumed(mIntentWrapper);
+	}
+	
+	@Test(expected = ProviderException.class)
+	public void shouldThrowExceptionIfRegistryIsNull() {
+		eventBus = new EventBus(null);
 	}
 	
 }

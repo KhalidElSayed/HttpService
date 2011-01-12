@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.util;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;

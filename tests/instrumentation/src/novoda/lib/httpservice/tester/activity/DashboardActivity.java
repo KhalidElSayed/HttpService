@@ -4,9 +4,9 @@ import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
 
 import java.util.ArrayList;
 
-import novoda.lib.httpservice.request.IntentRequestBuilder;
 import novoda.lib.httpservice.tester.R;
 import novoda.lib.httpservice.tester.service.SimpleHttpService;
+import novoda.lib.httpservice.util.IntentBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,6 +34,7 @@ public class DashboardActivity extends BaseActivity {
 		setContentView(R.layout.dashboard);
 		final EditText edit = ((EditText) findViewById(R.id.requestNumber));
 		final Button call = ((Button)findViewById(R.id.start));
+		final Button callDouble = ((Button)findViewById(R.id.startDouble));
 		final Button start = ((Button)findViewById(R.id.startMonitor));
 		final Button stop = ((Button)findViewById(R.id.stopMonitor));
 		edit.setText("1");
@@ -43,15 +44,32 @@ public class DashboardActivity extends BaseActivity {
 				String text = edit.getText().toString();
 				d("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new IntentRequestBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
+					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST + "?param" + i)
 						.withResultConsumedReceiver(new ResultReceiver(new Handler()) {
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
-								d("Service has finished to handle the result");
+								d(">> Service has finished to handle the result");
 							}
 						}).build();
 					startService(intent);
 					start.setEnabled(true);
+				}
+			}
+		});
+		callDouble.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String text = edit.getText().toString();
+				d("Making all the same calls");
+				for(int i= 0; i<Integer.valueOf(text); i++) {
+					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
+						.withResultConsumedReceiver(new ResultReceiver(new Handler()) {
+							@Override
+							protected void onReceiveResult(int resultCode, Bundle resultData) {
+								d(">> Service has finished to handle the result");
+							}
+						}).build();
+						startService(intent);
 				}
 			}
 		});

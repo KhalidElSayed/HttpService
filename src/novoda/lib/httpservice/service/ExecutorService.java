@@ -1,8 +1,8 @@
 
 package novoda.lib.httpservice.service;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 
 import java.util.Map;
 
@@ -11,7 +11,8 @@ import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.HasProcessors;
 import novoda.lib.httpservice.processor.Processor;
 import novoda.lib.httpservice.provider.EventBus;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentRegistry;
+import novoda.lib.httpservice.provider.Response;
 import novoda.lib.httpservice.service.executor.CallableExecutor;
 import novoda.lib.httpservice.service.executor.ConnectedThreadPoolExecutor;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
@@ -39,24 +40,30 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     
     protected EventBus eventBus;
     
-    public ExecutorService(EventBus eventBus, ExecutorManager executorManager) {
+    protected IntentRegistry requestRegistry;
+    
+    public ExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager) {
     	super();
+    	this.requestRegistry = requestRegistry;
+    	if(this.requestRegistry == null) {
+    		this.requestRegistry = new IntentRegistry(); 
+    	}
     	this.eventBus = eventBus;
     	if(this.eventBus == null) {
-    		this.eventBus = new EventBus(); 
+    		this.eventBus = new EventBus(this.requestRegistry); 
     	}
     	this.executorManager = executorManager; 
     	if(this.executorManager == null) {
     		ConnectedThreadPoolExecutor pool = new ConnectedThreadPoolExecutor(this);
-    		this.executorManager = new ThreadManager(pool, this.eventBus, this);
+    		this.executorManager = new ThreadManager(this.requestRegistry, pool, this.eventBus, this);
     	}
     	this.monitorManager = new MonitorManager(this);
     }
 
 	@Override
     public void onCreate() {
-		if(debugIsEnable()) {
-    		d("Executor Service on Create");
+		if(verboseLoggingEnabled()) {
+    		v("Executor Service on Create");
     	}
 		executorManager.start();
         super.onCreate();
@@ -64,8 +71,8 @@ public abstract class ExecutorService extends Service implements CallableExecuto
 
     @Override
     public void onDestroy() {
-    	if(debugIsEnable()) {
-    		d("Executor Service on Destroy");
+    	if(verboseLoggingEnabled()) {
+    		v("Executor Service on Destroy");
     	}
     	stopMonitoring();
     	if(executorManager != null) {
@@ -76,8 +83,8 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-    	if(debugIsEnable()) {
-    		d("Executing intent");
+    	if(verboseLoggingEnabled()) {
+    		v("Executing intent");
     	}
         executorManager.addTask(intent);
         return START_NOT_STICKY;

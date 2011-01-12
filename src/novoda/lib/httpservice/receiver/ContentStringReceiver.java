@@ -1,14 +1,14 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.receiver;
 
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.ResultReceiver;
 
-public class RequestReceiver extends ResultReceiver {
+public class ContentStringReceiver extends ResultReceiver {
 	
 	private String contentClassSimpleName;
 	
-	public RequestReceiver(Handler handler) {
+	public ContentStringReceiver(Handler handler) {
 		super(handler);
 	}
 	

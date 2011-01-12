@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.exception;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.e;
+import static novoda.lib.httpservice.util.Log.e;
 
 public class RequestException extends RuntimeException {
 

@@ -1,13 +1,14 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.provider;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 
 import novoda.lib.httpservice.exception.RequestException;
+import novoda.lib.httpservice.util.ParcelableBasicNameValuePair;
 
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -17,12 +18,11 @@ import android.net.Uri;
 import android.os.ResultReceiver;
 
 /**
- * The request is just an IntentWrapper.
  * 
  * @author luigi@novoda.com
  *
  */
-public class Request {
+public class IntentWrapper {
 	
 	public static final String SIMPLE_BUNDLE_RESULT = "result";
 	
@@ -40,7 +40,8 @@ public class Request {
 		String handler_key = "novoda.lib.httpservice.extra.HANDLER_KEY";
 		String params = "novoda.lib.httpservice.extra.PARAMS";
 		String uid = "novoda.lib.httpservice.extra.UID";
-		String result_consumed_receiver = "novoda.lib.httpservice.extra.RESULT_CONSUMED";		
+		String result_consumed_receiver = "novoda.lib.httpservice.extra.RESULT_CONSUMED";
+		String cache_disabled = "novoda.lib.httpservice.extra.CACHE_DISABLED";
 	}
 
 	public static interface Method {
@@ -50,7 +51,7 @@ public class Request {
 	
 	private Intent intent;
 	
-	public Request(Intent intent) {
+	public IntentWrapper(Intent intent) {
 		if(intent == null) {
 			throw new RequestException("Intent is null! A Intent wrapper need an intent to work properly");
 		}
@@ -80,15 +81,15 @@ public class Request {
 	private ResultReceiver getResultReceiver(String type) {
 		Object receiverObj = intent.getParcelableExtra(type);
 		if (receiverObj == null) {
-			if (debugIsEnable()) {
-				d("Request receiver " + type + " is null, skipping it");
+			if (verboseLoggingEnabled()) {
+				v("Request receiver " + type + " is null, skipping it");
 			}
 			return null;
 		} 
 		if(receiverObj instanceof ResultReceiver) {
 			ResultReceiver resultReceiver = (ResultReceiver)receiverObj;
-			if (debugIsEnable()) {
-				d("Building request for intent with receiver : " + type);
+			if (verboseLoggingEnabled()) {
+				v("Building request for intent with receiver : " + type);
 			}
 			return resultReceiver;
 		} else {
@@ -149,7 +150,7 @@ public class Request {
         return asURI(uri, EMPTY);
     }
 	
-	public static final URI asURI(Request request) {		
+	public static final URI asURI(IntentWrapper request) {		
 		return asURI(request.getUri(), request.getParams());
 	}
 
@@ -168,11 +169,22 @@ public class Request {
 	}
 
 	public long getUid() {
-		return intent.getLongExtra(Request.Extra.uid, DEFAULT_UID);
+		return intent.getLongExtra(IntentWrapper.Extra.uid, DEFAULT_UID);
 	}
 	
 	public boolean isGeneratedByIntent(Intent intent) {
-		long uid = intent.getLongExtra(Request.Extra.uid, DEFAULT_UID);
+		long uid = intent.getLongExtra(IntentWrapper.Extra.uid, DEFAULT_UID);
 		return (this.getUid() == uid);
+	}
+	
+	public boolean sameAs(IntentWrapper request) {
+		if(getUri().compareTo(request.getUri()) == 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public boolean isCacheDisabled() {
+		return intent.getBooleanExtra(IntentWrapper.Extra.cache_disabled, true);
 	}
 }

@@ -1,20 +1,20 @@
 package novoda.lib.httpservice.handler;
 
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 
 public interface RequestHandler {
 	
-	boolean match(Request request);
+	boolean match(IntentWrapper request);
 
-	void onStatusReceived(String status);
+	void onStatusReceived(IntentWrapper intentWrapper, String status);
 
-    void onHeadersReceived(String headers);
+    void onHeadersReceived(IntentWrapper intentWrapper, String headers);
 
-    void onThrowable(Throwable t);
+    void onThrowable(IntentWrapper intentWrapper, Throwable t);
 
-	void onContentReceived(Response response);
+	void onContentReceived(IntentWrapper intentWrapper, Response response);
 	
-	void onContentConsumed(Request request);
+	void onContentConsumed(IntentWrapper request);
 	
 }

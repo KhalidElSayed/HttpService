@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.provider;
 
 import java.io.InputStream;
 
@@ -18,7 +18,7 @@ public class Response {
 
 	private HttpResponse httpResponse;
 	
-	private Request request;
+	private IntentWrapper intentWrapper;
 	
 	private InputStream content;
 	
@@ -30,12 +30,12 @@ public class Response {
 		return this.httpResponse;
 	}
 
-	public Request getRequest() {
-		return request;
+	public IntentWrapper getIntentWrapper() {
+		return intentWrapper;
 	}
 
-	public void setRequest(Request request) {
-		this.request = request;
+	public void setIntentWrapper(IntentWrapper intentWrapper) {
+		this.intentWrapper = intentWrapper;
 	}
 
 	public InputStream getContent() {

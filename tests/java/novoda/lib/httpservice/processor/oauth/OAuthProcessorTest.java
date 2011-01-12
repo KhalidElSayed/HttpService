@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import novoda.lib.httpservice.request.Request;
+import novoda.lib.httpservice.provider.IntentWrapper;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -32,12 +32,12 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 public class OAuthProcessorTest {
 	
 	private HttpContext httpContext = null;
-	private Request request;
+	private IntentWrapper request;
 	private Uri uri = Uri.parse("http://www.foofle.com");
 	
 	@Before
 	public void setup() {
-		request = mock(Request.class);
+		request = mock(IntentWrapper.class);
 		when(request.getUri()).thenReturn(uri);
 	}
 	

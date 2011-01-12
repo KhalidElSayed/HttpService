@@ -1,14 +1,14 @@
 package novoda.lib.httpservice.provider.http;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.debugIsEnable;
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.e;
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.errorIsEnable;
+import static novoda.lib.httpservice.util.Log.Provider.d;
+import static novoda.lib.httpservice.util.Log.Provider.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.Provider.e;
+import static novoda.lib.httpservice.util.Log.Provider.errorLoggingEnabled;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.provider.IntentWrapper;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.Response;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -39,36 +39,36 @@ public class HttpProvider implements Provider {
 	}
 
 	@Override
-	public Response execute(Request request) {
+	public Response execute(IntentWrapper request) {
 		Response response = new Response();
         HttpUriRequest method = null;
         try {
-        	if(debugIsEnable()) {
+        	if(verboseLoggingEnabled()) {
     			d("HttpProvider execute for : " + request.getUri());
     		}
         	if(request.isGet()) {
-        		method = new HttpGet(Request.asURI(request));
+        		method = new HttpGet(IntentWrapper.asURI(request));
         	} else if(request.isPost()) {
-        		method = new HttpPost(Request.asURI(request));
+        		method = new HttpPost(IntentWrapper.asURI(request));
         	} else {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}
         	HttpContext context = new BasicHttpContext();
-        	eventBus.fireOnPreProcessRequest(request, method, context);
+        	eventBus.fireOnPreProcess(request, method, context);
         	final HttpResponse httpResponse = client.execute(method, context);
-        	eventBus.fireOnPostProcessRequest(request, httpResponse, context);
+        	eventBus.fireOnPostProcess(request, httpResponse, context);
             if(httpResponse == null) {
             	logAndThrow("Response from " + request.getUri() + " is null");
             }
             response.setHttpResponse(httpResponse);
-            response.setRequest(request);
-            if(debugIsEnable()) {
+            response.setIntentWrapper(request);
+            if(verboseLoggingEnabled()) {
     			d("Request returning response");
     		}
             return response;
         } catch (Throwable t) {
         	eventBus.fireOnThrowable(request, t);
-        	if(errorIsEnable()) {
+        	if(errorLoggingEnabled()) {
     			e("Problems executing the request for : " + request.getUri(), t);
     		}
     		throw new ProviderException("Problems executing the request for : " + request.getUri());
@@ -76,7 +76,7 @@ public class HttpProvider implements Provider {
 	}
 	
 	private void logAndThrow(String msg) {
-		if(errorIsEnable()) {
+		if(errorLoggingEnabled()) {
 			e(msg);
 		}
 		throw new ProviderException(msg);

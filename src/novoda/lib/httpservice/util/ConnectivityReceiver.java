@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.util;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -36,8 +36,8 @@ public abstract class ConnectivityReceiver extends BroadcastReceiver {
             if (intent.hasExtra(ConnectivityManager.EXTRA_NETWORK_INFO)) {
                 NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
                 if (info.isConnectedOrConnecting()) {
-                	if (debugIsEnable()) {
-                        d("Connectivity is back, resuming for: " + info.toString());
+                	if (verboseLoggingEnabled()) {
+                        v("Connectivity is back, resuming for: " + info.toString());
                     }
                     onConnectionResume();
                 }

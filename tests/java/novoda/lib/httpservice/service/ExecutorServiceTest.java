@@ -7,7 +7,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
 import novoda.lib.httpservice.provider.EventBus;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentRegistry;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
 
 import org.junit.Before;
@@ -21,21 +23,29 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 @RunWith(RobolectricTestRunner.class)
 public class ExecutorServiceTest {
 	
-	private Intent mIntent = mock(Intent.class);
+	private Intent mIntent;
 	
 	private ExecutorService service;
 	
+	private IntentRegistry mRequestRegistry;
+	
+	private ExecutorManager mExecutorManager;
+	
+	private EventBus mEventBus;
+
 	@Before
 	public void setUp() {
+		mIntent = mock(Intent.class);
+		mRequestRegistry = mock(IntentRegistry.class);
+		mExecutorManager = mock(ExecutorManager.class);
+		mEventBus = mock(EventBus.class);
 	}
 	
     @Test
     public void shouldBeAbleToInitializeTheService() throws InterruptedException, ExecutionException {
-    	ExecutorManager mExecutorManager = mock(ExecutorManager.class);
-    	EventBus mEventBus = mock(EventBus.class);
-    	service = new ExecutorService(mEventBus, mExecutorManager) {
+    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager) {
 			@Override
-			public Callable<Response> getCallable(Intent intent) {
+			public Callable<Response> getCallable(IntentWrapper request) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
 				return null;
 			}
@@ -44,11 +54,9 @@ public class ExecutorServiceTest {
     
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
-    	ExecutorManager mExecutorManager = mock(ExecutorManager.class);
-    	EventBus mEventBus = mock(EventBus.class);
-    	service = new ExecutorService(mEventBus, mExecutorManager) {
+    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager) {
 			@Override
-			public Callable<Response> getCallable(Intent intent) {
+			public Callable<Response> getCallable(IntentWrapper request) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
 				return null;
 			}
@@ -57,7 +65,5 @@ public class ExecutorServiceTest {
     	await(100);
     	service.stopService(mIntent);
     }
-    
-    
 
 }

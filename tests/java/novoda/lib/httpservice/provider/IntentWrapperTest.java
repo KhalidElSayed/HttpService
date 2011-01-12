@@ -1,4 +1,4 @@
-package novoda.lib.httpservice.request;
+package novoda.lib.httpservice.provider;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -6,11 +6,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
 
 import java.net.URI;
 import java.util.ArrayList;
 
 import novoda.lib.httpservice.exception.RequestException;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.util.IntentBuilder;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -25,17 +28,26 @@ import android.os.ResultReceiver;
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
-public class RequestTest {
+public class IntentWrapperTest {
 
 	private static final String ACTION = "ACTION";
 	
-	private Intent intent;
+	private Intent mIntent;
+	
+	@Before
+	public void setUpValidDefaultRequest() {
+		mIntent = mock(Intent.class);
+		when(mIntent.getAction()).thenReturn(ACTION);
+		
+		Uri uri = mock(Uri.class);
+		when(mIntent.getData()).thenReturn(uri);
+	}
 	
 	@Test
 	public void shouldIsGetRespondTrueIfSettedAccondingly() {
-		Intent intent = new IntentRequestBuilder(ACTION, "http://www.google.com").build();
+		Intent intent = new IntentBuilder(ACTION, "http://www.google.com").build();
 		
-		Request r = new Request(intent);
+		IntentWrapper r = new IntentWrapper(intent);
 
 		assertTrue(r.isGet());
 		assertFalse(r.isPost());
@@ -43,9 +55,9 @@ public class RequestTest {
 	
 	@Test
 	public void shouldIsPostRespondTrueIfSettedAccondingly() {
-		Intent intent = new IntentRequestBuilder("", "").asPost().build();
+		Intent intent = new IntentBuilder("", "").asPost().build();
 		
-		Request r = new Request(intent);
+		IntentWrapper r = new IntentWrapper(intent);
 
 		assertTrue(r.isPost());
 		assertFalse(r.isGet());
@@ -61,7 +73,7 @@ public class RequestTest {
 		when(uri.getEncodedPath()).thenReturn("/relative/path");
 		when(uri.getFragment()).thenReturn("");
 		
-		URI result = Request.asURI(uri);
+		URI result = IntentWrapper.asURI(uri);
 		
 		assertNotNull(result);
 		assertEquals("http", result.getScheme());
@@ -72,41 +84,24 @@ public class RequestTest {
 		assertEquals("", uri.getFragment());
 	}
 	
-	@Before
-	public void setUpValidDefaultRequest() {
-		intent = mock(Intent.class);
-		when(intent.getAction()).thenReturn(ACTION);
-		
-		Uri uri = mock(Uri.class);
-		when(intent.getData()).thenReturn(uri);
-	}
-	
 	@Test(expected = RequestException.class)
 	public void shouldThrowRequestExceptionIfIntentIsNull() {
-		new Request(null);
+		new IntentWrapper(null);
 	}
-	
-//	@Test(expected = RequestException.class)
-//	public void shouldThrowRequestExceptionIfTheActionIsNotImplemented() {
-//		Intent intent = mock(Intent.class);
-//		when(intent.getAction()).thenReturn("action.not.implemented");
-//		
-//		IntentRequestParser.parse(intent);
-//	}
 	
 	@Test
 	public void shouldBuildSimpleHttpRequestDoesNotFailIfUrlAndUriAreNotProvided() {
 		Intent intent = mock(Intent.class);
 		
-		new Request(intent);
+		new IntentWrapper(intent);
 	}
 	
 	@Test
 	public void shoudBuildRequestFromIntentWithOnlyUri() {
 		Uri uri = mock(Uri.class);
-		when(intent.getData()).thenReturn(uri);
+		when(mIntent.getData()).thenReturn(uri);
 
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertEquals(uri, request.getUri());
@@ -115,9 +110,9 @@ public class RequestTest {
 	@Test
 	public void shouldSetTheRequestReceiverIfThere() {
 		ResultReceiver expectedReceived = mock(ResultReceiver.class);
-		when(intent.getParcelableExtra(Request.Extra.result_receiver)).thenReturn(expectedReceived);
+		when(mIntent.getParcelableExtra(IntentWrapper.Extra.result_receiver)).thenReturn(expectedReceived);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		ResultReceiver actualReceived = request.getResultReceiver();
@@ -127,10 +122,10 @@ public class RequestTest {
 	
 	@Test
 	public void shouldBuildRequestWithGetMethodByDefault() {
-		when(intent.getIntExtra(Request.Extra.method, 
-				Request.Method.GET)).thenReturn(Request.Method.GET);
+		when(mIntent.getIntExtra(IntentWrapper.Extra.method, 
+				IntentWrapper.Method.GET)).thenReturn(IntentWrapper.Method.GET);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertTrue(request.isGet());
@@ -138,10 +133,10 @@ public class RequestTest {
 	
 	@Test
 	public void shouldBuildWithPostMethod() {
-		when(intent.getIntExtra(Request.Extra.method, 
-				Request.Method.GET)).thenReturn(Request.Method.POST);
+		when(mIntent.getIntExtra(IntentWrapper.Extra.method, 
+				IntentWrapper.Method.GET)).thenReturn(IntentWrapper.Method.POST);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertTrue(request.isPost());
@@ -149,9 +144,9 @@ public class RequestTest {
 	
 	@Test
 	public void shouldReadTheHandlerKey() {
-		when(intent.getStringExtra(Request.Extra.handler_key)).thenReturn("specificHandler");
+		when(mIntent.getStringExtra(IntentWrapper.Extra.handler_key)).thenReturn("specificHandler");
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertEquals("specificHandler", request.getHandlerKey());
@@ -160,9 +155,9 @@ public class RequestTest {
 	@Test
 	public void shouldReadParams() {
 		ArrayList<Parcelable> list = new ArrayList<Parcelable>();
-		when(intent.getParcelableArrayListExtra(Request.Extra.params)).thenReturn(list);
+		when(mIntent.getParcelableArrayListExtra(IntentWrapper.Extra.params)).thenReturn(list);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertEquals(list, request.getParams());
@@ -170,9 +165,9 @@ public class RequestTest {
 	
 	@Test
 	public void shouldGetUid() {
-		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		when(mIntent.getLongExtra(IntentWrapper.Extra.uid, 0l)).thenReturn(1L);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertTrue(request.getUid() > 0l);
@@ -180,30 +175,62 @@ public class RequestTest {
 	
 	@Test
 	public void shouldIsGeneratedByIntentReturnTrueIfAreReallyTheSame() {
-		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		when(mIntent.getLongExtra(IntentWrapper.Extra.uid, 0l)).thenReturn(1L);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertTrue(request.getUid() > 0l);
 		
-		assertTrue(request.isGeneratedByIntent(intent));
+		assertTrue(request.isGeneratedByIntent(mIntent));
 	}
 	
 	@Test
 	public void shouldIsGeneratedByIntentReturnFalseWithDifferentIntent() {
-		when(intent.getLongExtra(Request.Extra.uid, 0l)).thenReturn(1L);
+		when(mIntent.getLongExtra(IntentWrapper.Extra.uid, 0l)).thenReturn(1L);
 		
-		Request request = new Request(intent);
+		IntentWrapper request = new IntentWrapper(mIntent);
 		
 		assertNotNull(request);
 		assertTrue(request.getUid() > 0l);
 		
 		Intent intent2 = mock(Intent.class);
 		when(intent2.getAction()).thenReturn(ACTION);
-		when(intent2.getLongExtra(Request.Extra.uid, 0l)).thenReturn(21L);
+		when(intent2.getLongExtra(IntentWrapper.Extra.uid, 0l)).thenReturn(21L);
 		
 		assertFalse(request.isGeneratedByIntent(intent2));
+	}
+	
+	@Test
+	public void shouldAsSameReturnTrueIfRequestHaveSameUrl() {
+		Uri uri = mock(Uri.class);
+		when(uri.compareTo(any(Uri.class))).thenReturn(0);
+		
+		IntentWrapper r1 = mock(IntentWrapper.class);
+		when(r1.getUri()).thenReturn(uri);
+		when(r1.sameAs(any(IntentWrapper.class))).thenCallRealMethod();
+		
+		IntentWrapper r2 = mock(IntentWrapper.class);
+		when(r2.getUri()).thenReturn(uri);
+		
+		assertTrue(r1.sameAs(r2));
+	}
+	
+	@Test
+	public void shouldAsSameReturnFalseIfRequestHaveDifferentUri() {
+		Uri uri2 = mock(Uri.class);
+
+		Uri uri1 = mock(Uri.class);
+		when(uri1.compareTo(uri2)).thenReturn(1);
+		
+		IntentWrapper r1 = mock(IntentWrapper.class);
+		when(r1.getUri()).thenReturn(uri1);
+		when(r1.sameAs(any(IntentWrapper.class))).thenCallRealMethod();
+		
+		IntentWrapper r2 = mock(IntentWrapper.class);
+		when(r2.getUri()).thenReturn(uri2);
+		
+		assertFalse(r1.sameAs(r2));
 	}
 	
 }

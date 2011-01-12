@@ -12,10 +12,10 @@ import java.io.IOException;
 
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.provider.IntentWrapper;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.request.IntentRequestBuilder;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.Response;
+import novoda.lib.httpservice.util.IntentBuilder;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -36,7 +36,7 @@ public class HttpProviderTest {
 	private Provider provider;
 	private EventBus eventBus;
 	private HttpClient httpClient;
-	private Request request = new Request(new IntentRequestBuilder("action", URL).build());
+	private IntentWrapper request = new IntentWrapper(new IntentBuilder("action", URL).build());
 	
 	@Before
 	public void setUp() {
@@ -68,7 +68,7 @@ public class HttpProviderTest {
 		
 		provider.execute(request);
 		
-		verify(eventBus, times(1)).fireOnThrowable(any(Request.class), any(ProviderException.class));
+		verify(eventBus, times(1)).fireOnThrowable(any(IntentWrapper.class), any(ProviderException.class));
 	}
 	
 }

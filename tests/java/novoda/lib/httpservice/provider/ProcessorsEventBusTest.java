@@ -9,8 +9,6 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 
 import novoda.lib.httpservice.processor.Processor;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
@@ -29,31 +27,34 @@ public class ProcessorsEventBusTest {
 
 	private EventBus eventBus;
 	
-	private Request request;
+	private IntentWrapper mRequest;
 	
-	private HttpRequest httpRequest;
+	private HttpRequest mHttpRequest;
 	
-	private HttpResponse httpResponse;
+	private HttpResponse mHttpResponse;
 	
-	private HttpContext httpContext;
+	private HttpContext mHttpContext;
 	
-	private Processor processor;
+	private Processor mProcessor;
 	
-	private Response response;
+	private Response mResponse;
 	
-	private Uri uri;
+	private Uri mUri;
+	
+	private IntentRegistry mRequestRegistry;
 	
 	@Before
 	public void setUp() {
-		eventBus = new EventBus();
-		request = mock(Request.class);
-		uri = mock(Uri.class);
-		when(request.getUri()).thenReturn(uri);
-		response = mock(Response.class);
-		when(response.getRequest()).thenReturn(request);
-		processor = mock(Processor.class);
-		httpContext = mock(HttpContext.class);
-		httpRequest = mock(HttpRequest.class);
+		mRequestRegistry = mock(IntentRegistry.class);
+		eventBus = new EventBus(mRequestRegistry);
+		mRequest = mock(IntentWrapper.class);
+		mUri = mock(Uri.class);
+		when(mRequest.getUri()).thenReturn(mUri);
+		mResponse = mock(Response.class);
+		when(mResponse.getIntentWrapper()).thenReturn(mRequest);
+		mProcessor = mock(Processor.class);
+		mHttpContext = mock(HttpContext.class);
+		mHttpRequest = mock(HttpRequest.class);
 	}
 	
 	@Test
@@ -70,38 +71,38 @@ public class ProcessorsEventBusTest {
 	
 	@Test
 	public void shouldFireOnPreProcessRequest() throws HttpException, IOException {
-		when(processor.match(request)).thenReturn(true);
-		eventBus.add(processor);
-		eventBus.fireOnPreProcessRequest(request, httpRequest, httpContext);
+		when(mProcessor.match(mRequest)).thenReturn(true);
+		eventBus.add(mProcessor);
+		eventBus.fireOnPreProcess(mRequest, mHttpRequest, mHttpContext);
 		
-		verify(processor, times(1)).process(any(HttpRequest.class), any(HttpContext.class));
+		verify(mProcessor, times(1)).process(any(HttpRequest.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPreProcessRequestSkipTheProcessorIfDoesntMatch() throws HttpException, IOException {
-		when(processor.match(request)).thenReturn(false);
-		eventBus.add(processor);
-		eventBus.fireOnPreProcessRequest(request, httpRequest, httpContext);
+		when(mProcessor.match(mRequest)).thenReturn(false);
+		eventBus.add(mProcessor);
+		eventBus.fireOnPreProcess(mRequest, mHttpRequest, mHttpContext);
 		
-		verify(processor, times(0)).process(any(HttpRequest.class), any(HttpContext.class));
+		verify(mProcessor, times(0)).process(any(HttpRequest.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPostProcessRequest() throws HttpException, IOException {
-		when(processor.match(request)).thenReturn(true);
-		eventBus.add(processor);
-		eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
+		when(mProcessor.match(mRequest)).thenReturn(true);
+		eventBus.add(mProcessor);
+		eventBus.fireOnPostProcess(mRequest, mHttpResponse, mHttpContext);
 		
-		verify(processor, times(1)).process(any(HttpResponse.class), any(HttpContext.class));
+		verify(mProcessor, times(1)).process(any(HttpResponse.class), any(HttpContext.class));
 	}
 	
 	@Test
 	public void shouldFireOnPostProcessRequestSkipTheProcessorIfDoesntMatch() throws HttpException, IOException {
-		when(processor.match(request)).thenReturn(false);
-		eventBus.add(processor);
-		eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
+		when(mProcessor.match(mRequest)).thenReturn(false);
+		eventBus.add(mProcessor);
+		eventBus.fireOnPostProcess(mRequest, mHttpResponse, mHttpContext);
 		
-		verify(processor, times(0)).process(any(HttpResponse.class), any(HttpContext.class));
+		verify(mProcessor, times(0)).process(any(HttpResponse.class), any(HttpContext.class));
 	}
 	
 	@Test
@@ -109,12 +110,12 @@ public class ProcessorsEventBusTest {
 		Processor processor1 = mock(Processor.class);
 		Processor processor2 = mock(Processor.class);
 		
-		when(processor1.match(request)).thenThrow(new RuntimeException());
-		when(processor2.match(request)).thenReturn(true);
+		when(processor1.match(mRequest)).thenThrow(new RuntimeException());
+		when(processor2.match(mRequest)).thenReturn(true);
 		eventBus.add(processor1);
 		eventBus.add(processor2);
 		try {
-			eventBus.fireOnPostProcessRequest(request, httpResponse, httpContext);
+			eventBus.fireOnPostProcess(mRequest, mHttpResponse, mHttpContext);
 		} catch(Exception e) {
 			//don't care in this case the exception is a trick to check the order
 		}

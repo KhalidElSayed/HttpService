@@ -1,8 +1,8 @@
 package novoda.lib.httpservice;
 
 import novoda.lib.httpservice.handler.RequestHandler;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 
 /**
  * Empty implementation of RequestHandler always matching.
@@ -14,28 +14,28 @@ import novoda.lib.httpservice.request.Response;
 public class SimpleRequestHandler implements RequestHandler {
 
 	@Override
-	public void onContentReceived(Response response) {
+	public void onContentReceived(IntentWrapper intentWrapper, Response response) {
 	}
 
 	@Override
-	public void onHeadersReceived(String headers) {
+	public void onHeadersReceived(IntentWrapper intentWrapper, String headers) {
 	}
 
 	@Override
-	public void onStatusReceived(String status) {
+	public void onStatusReceived(IntentWrapper intentWrapper, String status) {
 	}
 
 	@Override
-	public void onThrowable(Throwable t) {
+	public void onThrowable(IntentWrapper intentWrapper, Throwable t) {
 	}
 
 	@Override
-	public boolean match(Request request) {
+	public boolean match(IntentWrapper intentWrapper) {
 		return true;
 	}
 
 	@Override
-	public void onContentConsumed(Request request) {
+	public void onContentConsumed(IntentWrapper intentWrapper) {
 	}
 
 }

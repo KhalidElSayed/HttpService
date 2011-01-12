@@ -1,13 +1,14 @@
 package novoda.lib.httpservice.service;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.w;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.w;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.provider.IntentRegistry;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
 import android.content.Intent;
 
@@ -21,8 +22,8 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 	
 	private Timer timer;
 	
-	public LifecycleManagedExecutorService(EventBus eventBus, ExecutorManager executorManager) {
-		super(eventBus, executorManager);
+	public LifecycleManagedExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager) {
+		super(requestRegistry, eventBus, executorManager);
 	}
 	
 	@Override
@@ -33,8 +34,8 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 	
 	@Override
 	public void onCreate() {
-		if (debugIsEnable()) {
-			d("Lifecycle manager: Starting lifecycle");
+		if (verboseLoggingEnabled()) {
+			v("Lifecycle manager: Starting lifecycle");
 		}
 		startLifeCycle();
 		super.onCreate();
@@ -49,16 +50,16 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 				public void run() {
 					boolean working = isWorking();
 					long delta = System.currentTimeMillis() - lastCall;
-					if (debugIsEnable()) {
-						d("Lifecycle manager: working? " + working + " last execution was? " + delta);
+					if (verboseLoggingEnabled()) {
+						v("Lifecycle manager: working? " + working + " last execution was? " + delta);
 					}
 					if (working || delta < KEEP_ALIFE_TIME) {
-						if (debugIsEnable()) {
-							d("Lifecycle manager: keeping alive the service");
+						if (verboseLoggingEnabled()) {
+							v("Lifecycle manager: keeping alive the service");
 						}			
 					} else {
-						if (debugIsEnable()) {
-							d("Lifecycle manager: stoping service");
+						if (verboseLoggingEnabled()) {
+							v("Lifecycle manager: stoping service");
 						}
 						stopLifeCycle();
 						stopSelf();
@@ -73,8 +74,8 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 
 	public void stopLifeCycle() {
 		try {
-			if (debugIsEnable()) {
-				d("Lifecycle manager: removing timer");
+			if (verboseLoggingEnabled()) {
+				v("Lifecycle manager: removing timer");
 			}
 			timer.cancel();
 			timer.purge();

@@ -11,7 +11,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ThreadPoolExecutor;
 
 import novoda.lib.httpservice.provider.EventBus;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentRegistry;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 import novoda.lib.httpservice.service.executor.CallableExecutor;
 import novoda.lib.httpservice.service.executor.ThreadManager;
 
@@ -33,8 +35,9 @@ public class QueuedExecutorManagerTest {
 	private Callable<Response> mCallable;
 	private EventBus mEventBus;
 	private ThreadPoolExecutor mThreadPoolExecutor;
-
-	private int getCallableCalls = 0;
+	private IntentRegistry mRequestRegistry;
+	private int getCallableCalls;
+	private Response mResponse;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -44,32 +47,30 @@ public class QueuedExecutorManagerTest {
 		mIntent = mock(Intent.class);
 		mEventBus = mock(EventBus.class);
 		mThreadPoolExecutor = mock(ThreadPoolExecutor.class);
+		mRequestRegistry = mock(IntentRegistry.class);
 		getCallableCalls = 0;
+		mResponse = mock(Response.class);
 	}
 	
 	@Test
 	public void shouldThrowExceptionOnTheFirstExecutionIfCallableCreatedByTheServiceIsNull() {
-		ThreadManager manager = new ThreadManager(mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
+		ThreadManager manager = new ThreadManager(mRequestRegistry, mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<Response> getCallable(Intent intent) {
+			public Callable<Response> getCallable(IntentWrapper request) {
 				return null;
 			}
 		});
 		manager.start();
 	}
 	
-	
-	@SuppressWarnings("unchecked")
 	@Ignore
 	@Test
 	public void shouldStartNormalPool() throws Exception {
-		mCallable = mock(Callable.class);
-		Response response = mock(Response.class);
-		when(mCallable.call()).thenReturn(response);
+		when(mCallable.call()).thenReturn(mResponse);
 		
-		ThreadManager manager = new ThreadManager(mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
+		ThreadManager manager = new ThreadManager(mRequestRegistry, mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<Response> getCallable(Intent intent) {
+			public Callable<Response> getCallable(IntentWrapper request) {
 				getCallableCalls++;
 				return mCallable;
 			}
@@ -98,9 +99,9 @@ public class QueuedExecutorManagerTest {
 			}
 		});
 		
-		ThreadManager manager = new ThreadManager(mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
+		ThreadManager manager = new ThreadManager(mRequestRegistry, mThreadPoolExecutor, mEventBus, new CallableExecutor<Response>() {
 			@Override
-			public Callable<Response> getCallable(Intent intent) {
+			public Callable<Response> getCallable(IntentWrapper request) {
 				getCallableCalls++;
 				await(100);
 				return mCallable;

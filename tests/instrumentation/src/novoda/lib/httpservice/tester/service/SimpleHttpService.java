@@ -12,8 +12,8 @@ import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.Processor;
 import novoda.lib.httpservice.processor.oauth.OAuthProcessor;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.IntentWrapper;
+import novoda.lib.httpservice.provider.Response;
 import novoda.lib.httpservice.service.monitor.Monitor;
 
 import org.apache.http.HttpException;
@@ -54,8 +54,8 @@ public class SimpleHttpService extends HttpService {
 	
 	private RequestHandler requestHandler = new SimpleRequestHandler() {
 		@Override
-		public boolean match(Request request) {
-			if(PATH.equals(request.getUri().getPath())) {
+		public boolean match(IntentWrapper intentWrapper) {
+			if(PATH.equals(intentWrapper.getUri().getPath())) {
 				d("do match!");
 				return true;
 			}
@@ -64,14 +64,14 @@ public class SimpleHttpService extends HttpService {
 		}
 		
 		@Override
-		public void onContentReceived(Response response) {
+		public void onContentReceived(IntentWrapper intentWrapper, Response response) {
 			d("Received content for request handler : " + response.getContentAsString().length());
 		};
 	};
 	
 	private Processor logProcessor1 = new Processor() {
 		@Override
-		public boolean match(Request request) {
+		public boolean match(IntentWrapper intentWrapper) {
 			return true;
 		}
 
@@ -89,7 +89,7 @@ public class SimpleHttpService extends HttpService {
 
 	private Processor logProcessor2 = new Processor() {
 		@Override
-		public boolean match(Request request) {
+		public boolean match(IntentWrapper intentWrapper) {
 			return true;
 		}
 

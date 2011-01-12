@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.provider.local;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Provider.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.Provider.d;
+import static novoda.lib.httpservice.util.Log.Provider.verboseLoggingEnabled;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -9,9 +9,9 @@ import java.util.HashMap;
 
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
+import novoda.lib.httpservice.provider.IntentWrapper;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.Response;
 import android.net.Uri;
 
 public class LocalProvider implements Provider {
@@ -44,7 +44,7 @@ public class LocalProvider implements Provider {
 		if(map.containsKey(uri)) {			
 			return new ByteArrayInputStream(map.get(uri).getBytes());
 		} else {
-			if(debugIsEnable()) {
+			if(verboseLoggingEnabled()) {
 				d("There is no resource registered for the local provider for url : " + uri);
 			}
 			return null;
@@ -52,14 +52,14 @@ public class LocalProvider implements Provider {
 	}
 	
 	@Override
-	public Response execute(Request req) {
+	public Response execute(IntentWrapper req) {
 		InputStream content = getContent(req.getUri());
 		if(content == null) {
 			eventBus.fireOnThrowable(req, new Throwable("Content not found"));
 			throw new ProviderException("Content not found");
 		}
 		Response response = new Response();
-		response.setRequest(req);
+		response.setIntentWrapper(req);
 		response.setContent(content);
 		eventBus.fireOnContentReceived(response);
 		return response;

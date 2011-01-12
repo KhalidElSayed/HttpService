@@ -1,14 +1,14 @@
 package novoda.lib.httpservice.service.executor;
 
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.d;
-import static novoda.lib.httpservice.util.HttpServiceLog.Core.debugIsEnable;
+import static novoda.lib.httpservice.util.Log.v;
+import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 
 import java.util.concurrent.Callable;
 
 import novoda.lib.httpservice.exception.HandlerException;
+import novoda.lib.httpservice.provider.IntentWrapper;
 import novoda.lib.httpservice.provider.Provider;
-import novoda.lib.httpservice.request.Request;
-import novoda.lib.httpservice.request.Response;
+import novoda.lib.httpservice.provider.Response;
 
 /**
  * Wrapper for the callable.
@@ -20,9 +20,9 @@ public class CallableWrapper implements Callable<Response> {
 	
 	private Provider provider;
 	
-	private Request request;
+	private IntentWrapper request;
 	
-	public CallableWrapper(Provider provider, Request request) {
+	public CallableWrapper(Provider provider, IntentWrapper request) {
 		if(provider == null) {
 			throw new HandlerException("Configuration problem! A Provider must be specified!");
 		}
@@ -35,12 +35,12 @@ public class CallableWrapper implements Callable<Response> {
 	
 	@Override
 	public Response call() throws Exception {
-		if(debugIsEnable()) {
-			d("Executing request : " + request);
+		if(verboseLoggingEnabled()) {
+			v("Executing request : " + request);
 		}
 		Response response = provider.execute(request);
-		if(debugIsEnable()) {
-			d("Response received");
+		if(verboseLoggingEnabled()) {
+			v("Response received");
 		}
 		return response;
 	}
