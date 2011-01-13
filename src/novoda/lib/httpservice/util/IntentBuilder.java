@@ -65,12 +65,18 @@ public class IntentBuilder {
         return this;
     }
 
-    public IntentBuilder withResultReceiver(ResultReceiver receiver) {
+    public IntentBuilder withStringResultReceiver(ResultReceiver receiver) {
+    	if(receiver == null) {
+    		return this;
+    	}
         intent.putExtra(IntentWrapper.Extra.result_receiver, receiver);
         return this;
     }
     
-    public IntentBuilder withResultConsumedReceiver(ResultReceiver receiver) {
+    public IntentBuilder withConsumedResultReceiver(ResultReceiver receiver) {
+    	if(receiver == null) {
+    		return this;
+    	}
         intent.putExtra(IntentWrapper.Extra.result_consumed_receiver, receiver);
         return this;
     }

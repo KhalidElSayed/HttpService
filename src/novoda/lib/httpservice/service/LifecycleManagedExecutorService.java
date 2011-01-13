@@ -50,17 +50,7 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 				public void run() {
 					boolean working = isWorking();
 					long delta = System.currentTimeMillis() - lastCall;
-					if (verboseLoggingEnabled()) {
-						v("Lifecycle manager: working? " + working + " last execution was? " + delta);
-					}
-					if (working || delta < KEEP_ALIFE_TIME) {
-						if (verboseLoggingEnabled()) {
-							v("Lifecycle manager: keeping alive the service");
-						}			
-					} else {
-						if (verboseLoggingEnabled()) {
-							v("Lifecycle manager: stoping service");
-						}
+					if (!working && delta > KEEP_ALIFE_TIME) {		
 						stopLifeCycle();
 						stopSelf();
 					}
