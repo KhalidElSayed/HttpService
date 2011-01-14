@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import novoda.lib.httpservice.exception.RequestException;
@@ -202,16 +203,18 @@ public class IntentWrapperTest {
 	}
 	
 	@Test
-	public void shouldAsSameReturnTrueIfRequestHaveSameUrl() {
+	public void shouldAsSameReturnTrueIfRequestHaveSameUrl() throws URISyntaxException {
 		Uri uri = mock(Uri.class);
 		when(uri.compareTo(any(Uri.class))).thenReturn(0);
 		
 		IntentWrapper r1 = mock(IntentWrapper.class);
 		when(r1.getUri()).thenReturn(uri);
 		when(r1.sameAs(any(IntentWrapper.class))).thenCallRealMethod();
+		when(r1.asURI()).thenReturn(new URI("http://www.google.com"));
 		
 		IntentWrapper r2 = mock(IntentWrapper.class);
 		when(r2.getUri()).thenReturn(uri);
+		when(r2.asURI()).thenReturn(new URI("http://www.google.com"));
 		
 		assertTrue(r1.sameAs(r2));
 	}

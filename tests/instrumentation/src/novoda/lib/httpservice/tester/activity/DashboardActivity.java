@@ -44,7 +44,8 @@ public class DashboardActivity extends BaseActivity {
 				String text = edit.getText().toString();
 				d("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST + "?param" + i)
+					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST)
+						.withParam("param", "" + i)
 						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {

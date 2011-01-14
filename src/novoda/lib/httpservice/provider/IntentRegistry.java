@@ -23,35 +23,36 @@ public class IntentRegistry {
 	private Map<IntentWrapper,Long> recentlyConsumed = Collections.synchronizedMap(new HashMap<IntentWrapper, Long>());
 
 	public boolean isAlreadyInQueue(IntentWrapper intentWrapper) {
-		if(verboseLoggingEnabled()) {
-			v("IntentRegistry > isAlreadyInQueue : " + intentWrapper);
-		}
 		for(IntentWrapper r : registry.keySet()) {
 			if(r.sameAs(intentWrapper)) {
 				if(verboseLoggingEnabled()) {
-					v("IntentRegistry > Attaching intent with another intent");
+					v("IntentRegistry > is already in the queue, attaching intent with another intent : " + intentWrapper);
 				}
-				registry.get(r).add(intentWrapper);					
+				registry.get(r).add(intentWrapper);
 				return true;
 			}
 		}
 		registry.put(intentWrapper, new ArrayList<IntentWrapper>());
+		if(verboseLoggingEnabled()) {
+			v("IntentRegistry > is not in the queue : " + intentWrapper);
+		}
 		return false;
 	}
 	
 	public boolean isRecentlyBeenConsumed(IntentWrapper intentWrapper) {
-		if(verboseLoggingEnabled()) {
-			v("IntentRegistry > isRecentlyBeenConsumed : " + intentWrapper);
-		}
 		for(IntentWrapper r : recentlyConsumed.keySet()) {
 			if(r.sameAs(intentWrapper)) {
+				if(verboseLoggingEnabled()) {
+					v("IntentRegistry > is recently been consumed : " + intentWrapper);
+				}
 				Long time = recentlyConsumed.get(intentWrapper);
 				if(intentWrapper.isCacheDisabled()) {
 					if(verboseLoggingEnabled()) {
-						v("IntentRegistry > removing intent from cache");
+						v("IntentRegistry > removing intent from cache, is forced!");
 					}
 					recentlyConsumed.remove(intentWrapper);
-				} else if(System.currentTimeMillis() - time.longValue() < CACHE_TIME) {
+					return false;
+				} else if(time != null && System.currentTimeMillis() - time.longValue() < CACHE_TIME) {
 					if(verboseLoggingEnabled()) {
 						v("IntentRegistry > intent is cached");
 					}
@@ -61,8 +62,12 @@ public class IntentRegistry {
 						v("IntentRegistry > removing intent from cache");
 					}
 					recentlyConsumed.remove(intentWrapper);
+					return false;
 				}
 			}
+		}
+		if(verboseLoggingEnabled()) {
+			v("IntentRegistry > intent was not recently consumed");
 		}
 		return false;
 	}

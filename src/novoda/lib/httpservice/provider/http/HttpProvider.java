@@ -47,9 +47,9 @@ public class HttpProvider implements Provider {
     			v("HttpProvider execute for : " + request.getUri());
     		}
         	if(request.isGet()) {
-        		method = new HttpGet(IntentWrapper.asURI(request));
+        		method = new HttpGet(request.asURI());
         	} else if(request.isPost()) {
-        		method = new HttpPost(IntentWrapper.asURI(request));
+        		method = new HttpPost(request.asURI());
         	} else {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}

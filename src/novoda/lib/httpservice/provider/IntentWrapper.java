@@ -123,7 +123,7 @@ public class IntentWrapper {
 		return intent.getParcelableArrayListExtra(Extra.params);
 	}
 	
-	public static final URI asURI(Uri uri, List<ParcelableBasicNameValuePair> params) {
+	public URI asURI(Uri uri, List<ParcelableBasicNameValuePair> params) {
 		StringBuilder query = new StringBuilder(EMPTY);
 		if(params != null) {
 			query.append(URLEncodedUtils.format(params, ENCODING));
@@ -150,8 +150,8 @@ public class IntentWrapper {
         return asURI(uri, EMPTY);
     }
 	
-	public static final URI asURI(IntentWrapper request) {		
-		return asURI(request.getUri(), request.getParams());
+	public URI asURI() {		
+		return asURI(getUri(), getParams());
 	}
 
 	@Override
@@ -179,13 +179,16 @@ public class IntentWrapper {
 	
 	public boolean sameAs(IntentWrapper request) {
 		if(getUri().compareTo(request.getUri()) == 0) {
-			return true;
+			if(asURI().toString().compareTo(request.asURI().toString()) == 0) {
+				return true;
+			}
+			return false;
 		}
 		return false;
 	}
 
 	public boolean isCacheDisabled() {
-		return intent.getBooleanExtra(IntentWrapper.Extra.cache_disabled, true);
+		return intent.getBooleanExtra(IntentWrapper.Extra.cache_disabled, false);
 	}
 	
 	public String getDataString() {
