@@ -1,7 +1,7 @@
 
 package novoda.lib.httpservice.tester;
 
-import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
+import static novoda.lib.httpservice.tester.util.Log.d;
 import android.app.Application;
 
 /**

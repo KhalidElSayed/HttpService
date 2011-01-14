@@ -187,4 +187,16 @@ public class IntentWrapper {
 	public boolean isCacheDisabled() {
 		return intent.getBooleanExtra(IntentWrapper.Extra.cache_disabled, true);
 	}
+	
+	public String getDataString() {
+		return getIntent().getDataString();
+	}
+	
+	public int filterHashCode() {
+		return getIntent().filterHashCode();
+	}
+	
+	public String getAction() {
+		return getIntent().getAction();
+	}
 }

@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.provider;
 
-import static novoda.lib.httpservice.util.Log.v;
-import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.Registry.v;
+import static novoda.lib.httpservice.util.Log.Registry.verboseLoggingEnabled;
 
 import java.util.ArrayList;
 import java.util.Collections;

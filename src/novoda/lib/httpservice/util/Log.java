@@ -30,7 +30,7 @@ public class Log {
 	}
 	
 	public static final void v(String msg) {
-		android.util.Log.d(TAG, msg);
+		android.util.Log.v(TAG, msg);
 	}
 	
 	public static final void i(String msg) {
@@ -53,8 +53,8 @@ public class Log {
 			return android.util.Log.isLoggable(TAG, android.util.Log.WARN);
 		}
 		
-		public static final void d(String msg) {
-			android.util.Log.d(TAG, msg);
+		public static final void v(String msg) {
+			android.util.Log.v(TAG, msg);
 		}
 		
 		public static final void w(String msg) {
@@ -99,7 +99,7 @@ public class Log {
 		}
 		
 		public static final void v(String msg) {
-			android.util.Log.d(TAG, msg);
+			android.util.Log.v(TAG, msg);
 		}
 		
 		public static final void i(String msg) {
@@ -140,7 +140,7 @@ public class Log {
 		}
 		
 		public static final void v(String msg) {
-			android.util.Log.d(TAG, msg);
+			android.util.Log.v(TAG, msg);
 		}
 		
 		public static final void i(String msg) {
@@ -148,4 +148,16 @@ public class Log {
 		}
 	}
 	
+	public static class Registry {
+		
+		private static final String TAG = "HttpService-Registry";
+				
+		public static final boolean verboseLoggingEnabled() {
+			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+		}
+		
+		public static final void v(String msg) {
+			android.util.Log.v(TAG, msg);
+		}
+	}
 }

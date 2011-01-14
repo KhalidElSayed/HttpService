@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.tester.service;
 
-import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
+import static novoda.lib.httpservice.tester.util.Log.d;
 
 import java.io.IOException;
 import java.util.ArrayList;

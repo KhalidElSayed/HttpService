@@ -79,4 +79,8 @@ public class Response {
 		}
 	}
 	
+	public int getStatusCode() {
+		return getHttpResponse().getStatusLine().getStatusCode();
+	}
+	
 }

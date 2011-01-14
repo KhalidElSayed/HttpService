@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.tester.activity;
 
-import static novoda.lib.httpservice.tester.util.HttpServiceTesterLog.Default.d;
+import static novoda.lib.httpservice.tester.util.Log.d;
 
 import java.util.ArrayList;
 
@@ -45,7 +45,7 @@ public class DashboardActivity extends BaseActivity {
 				d("Making " + text + " calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST + "?param" + i)
-						.withResultConsumedReceiver(new ResultReceiver(new Handler()) {
+						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
 								d(">> Service has finished to handle the result");
@@ -63,7 +63,7 @@ public class DashboardActivity extends BaseActivity {
 				d("Making all the same calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
-						.withResultConsumedReceiver(new ResultReceiver(new Handler()) {
+						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
 								d(">> Service has finished to handle the result");

@@ -1,6 +1,6 @@
 package novoda.lib.httpservice.provider.http;
 
-import static novoda.lib.httpservice.util.Log.Provider.d;
+import static novoda.lib.httpservice.util.Log.Provider.v;
 import static novoda.lib.httpservice.util.Log.Provider.verboseLoggingEnabled;
 import static novoda.lib.httpservice.util.Log.Provider.e;
 import static novoda.lib.httpservice.util.Log.Provider.errorLoggingEnabled;
@@ -44,7 +44,7 @@ public class HttpProvider implements Provider {
         HttpUriRequest method = null;
         try {
         	if(verboseLoggingEnabled()) {
-    			d("HttpProvider execute for : " + request.getUri());
+    			v("HttpProvider execute for : " + request.getUri());
     		}
         	if(request.isGet()) {
         		method = new HttpGet(IntentWrapper.asURI(request));
@@ -63,7 +63,7 @@ public class HttpProvider implements Provider {
             response.setHttpResponse(httpResponse);
             response.setIntentWrapper(request);
             if(verboseLoggingEnabled()) {
-    			d("Request returning response");
+    			v("Request returning response");
     		}
             return response;
         } catch (Throwable t) {
