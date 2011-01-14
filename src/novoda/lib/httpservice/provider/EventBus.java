@@ -141,10 +141,12 @@ public class EventBus implements HasHandlers, HasProcessors {
         }
 		if(intentWrapper != null) {
 			sendResultConsumedReceiver(intentWrapper);
-			for(IntentWrapper similarIntent : intentRegistry.getSimilarIntents(intentWrapper)) {
-				sendResultConsumedReceiver(similarIntent);
+			List<IntentWrapper> intents = intentRegistry.getSimilarIntents(intentWrapper);
+			if(intents != null && !intents.isEmpty()) {
+				for(IntentWrapper similarIntent : intentRegistry.getSimilarIntents(intentWrapper)) {
+					sendResultConsumedReceiver(similarIntent);
+				}
 			}
-			
 		}
 		for(RequestHandler handler: handlers) {
     		if(handler.match(intentWrapper)) {

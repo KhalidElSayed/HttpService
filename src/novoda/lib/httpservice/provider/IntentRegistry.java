@@ -23,19 +23,26 @@ public class IntentRegistry {
 	private Map<IntentWrapper,Long> recentlyConsumed = Collections.synchronizedMap(new HashMap<IntentWrapper, Long>());
 
 	public boolean isAlreadyInQueue(IntentWrapper intentWrapper) {
-		for(IntentWrapper r : registry.keySet()) {
-			if(r.sameAs(intentWrapper)) {
-				if(verboseLoggingEnabled()) {
-					v("IntentRegistry > is already in the queue, attaching intent with another intent : " + intentWrapper);
+		if(intentWrapper.isCacheDisabled()) {
+			if(verboseLoggingEnabled()) {
+				v("IntentRegistry > is already in the queue, but cached is disabled : " + intentWrapper);
+			}
+			return false;
+		} else {
+			for(IntentWrapper r : registry.keySet()) {
+				if(r.sameAs(intentWrapper)) {
+					if(verboseLoggingEnabled()) {
+						v("IntentRegistry > is already in the queue, attaching intent with another intent : " + intentWrapper);
+					}
+					registry.get(r).add(intentWrapper);
+					return true;
 				}
-				registry.get(r).add(intentWrapper);
-				return true;
+			}
+			if(verboseLoggingEnabled()) {
+				v("IntentRegistry > is not in the queue : " + intentWrapper);
 			}
 		}
-		registry.put(intentWrapper, new ArrayList<IntentWrapper>());
-		if(verboseLoggingEnabled()) {
-			v("IntentRegistry > is not in the queue : " + intentWrapper);
-		}
+		//registry.put(intentWrapper, new ArrayList<IntentWrapper>());
 		return false;
 	}
 	
@@ -86,7 +93,7 @@ public class IntentRegistry {
 			v("IntentRegistry > intent consumed");
 		}
 		registry.remove(intentWrapper);
-		recentlyConsumed.put(intentWrapper, System.currentTimeMillis());
+		//recentlyConsumed.put(intentWrapper, System.currentTimeMillis());
 	}
 	
 }
