@@ -92,11 +92,11 @@ public class ThreadManager implements ExecutorManager {
 	@Override
 	public void addTask(Intent intent) {
 		IntentWrapper intentWrapper = new IntentWrapper(intent);
-		if(requestRegistry.isAlreadyInQueue(intentWrapper)) {
+		if(requestRegistry.isInQueue(intentWrapper)) {
 			i("Thread Manager : Skipping intent a similar in being processed");
 			return;
 		}
-		if(requestRegistry.isRecentlyBeenConsumed(intentWrapper)) {
+		if(requestRegistry.isInCache(intentWrapper)) {
 			i("Thread Manager : Skipping intent a similar intent has being processed a few seconds ago");
 			eventBus.fireOnContentConsumed(intentWrapper);
 			return;

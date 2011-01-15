@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Registry to keep attach together similar intent
@@ -18,19 +19,20 @@ import java.util.Map;
 public class IntentRegistry {	
 	
 	private static final long CACHE_TIME = 1000*5;
-	
-	private Map<IntentWrapper,List<IntentWrapper>> registry = Collections.synchronizedMap(new HashMap<IntentWrapper, List<IntentWrapper>>());
-	private Map<IntentWrapper,Long> recentlyConsumed = Collections.synchronizedMap(new HashMap<IntentWrapper, Long>());
+	private Map<String,List<IntentWrapper>> registry = Collections.synchronizedMap(new HashMap<String, List<IntentWrapper>>());
+	private Map<String,Long> cache = Collections.synchronizedMap(new HashMap<String, Long>());
 
-	public boolean isAlreadyInQueue(IntentWrapper intentWrapper) {
+	public synchronized boolean isInQueue(IntentWrapper intentWrapper) {
 		if(intentWrapper.isCacheDisabled()) {
 			if(verboseLoggingEnabled()) {
 				v("IntentRegistry > is already in the queue, but cached is disabled : " + intentWrapper);
+				v("IntentRegistry > Queue is : ");
+				dump(registry.keySet());
 			}
 			return false;
 		} else {
-			for(IntentWrapper r : registry.keySet()) {
-				if(r.sameAs(intentWrapper)) {
+			for(String r : registry.keySet()) {
+				if(r.equals(intentWrapper.asURI().toString())) {
 					if(verboseLoggingEnabled()) {
 						v("IntentRegistry > is already in the queue, attaching intent with another intent : " + intentWrapper);
 					}
@@ -42,22 +44,30 @@ public class IntentRegistry {
 				v("IntentRegistry > is not in the queue : " + intentWrapper);
 			}
 		}
-		//registry.put(intentWrapper, new ArrayList<IntentWrapper>());
+		registry.put(intentWrapper.asURI().toString(), new ArrayList<IntentWrapper>());
 		return false;
 	}
 	
-	public boolean isRecentlyBeenConsumed(IntentWrapper intentWrapper) {
-		for(IntentWrapper r : recentlyConsumed.keySet()) {
-			if(r.sameAs(intentWrapper)) {
+	private void dump(Set<String> keySet) {
+		for(String intent : keySet) {
+			v("IntentRegistry > Intent Wrapper " + intent);
+		}
+	}
+
+	public synchronized boolean isInCache(IntentWrapper intentWrapper) {
+		for(String r : cache.keySet()) {
+			if(r.equals(intentWrapper.asURI().toString())) {
 				if(verboseLoggingEnabled()) {
 					v("IntentRegistry > is recently been consumed : " + intentWrapper);
+					v("IntentRegistry > Cache is : ");
+					dump(cache.keySet());
 				}
-				Long time = recentlyConsumed.get(intentWrapper);
+				Long time = cache.get(intentWrapper);
 				if(intentWrapper.isCacheDisabled()) {
 					if(verboseLoggingEnabled()) {
 						v("IntentRegistry > removing intent from cache, is forced!");
 					}
-					recentlyConsumed.remove(intentWrapper);
+					removeFromCache(intentWrapper);
 					return false;
 				} else if(time != null && System.currentTimeMillis() - time.longValue() < CACHE_TIME) {
 					if(verboseLoggingEnabled()) {
@@ -68,7 +78,7 @@ public class IntentRegistry {
 					if(verboseLoggingEnabled()) {
 						v("IntentRegistry > removing intent from cache");
 					}
-					recentlyConsumed.remove(intentWrapper);
+					removeFromCache(intentWrapper);
 					return false;
 				}
 			}
@@ -79,7 +89,7 @@ public class IntentRegistry {
 		return false;
 	}
 	
-	public List<IntentWrapper> getSimilarIntents(IntentWrapper intentWrapper) {
+	public synchronized List<IntentWrapper> getSimilarIntents(IntentWrapper intentWrapper) {
 		if(verboseLoggingEnabled()) {
 			v("IntentRegistry > Gettting similar intents");
 		}
@@ -88,12 +98,34 @@ public class IntentRegistry {
 		return intents;
 	}
 	
-	public void onConsumed(IntentWrapper intentWrapper) {
+	public synchronized void onConsumed(IntentWrapper intentWrapper) {
 		if(verboseLoggingEnabled()) {
 			v("IntentRegistry > intent consumed");
 		}
-		registry.remove(intentWrapper);
-		//recentlyConsumed.put(intentWrapper, System.currentTimeMillis());
+		removeFromRegistry(intentWrapper);
+		cache.put(intentWrapper.asURI().toString(), System.currentTimeMillis());
+	}
+	
+	private synchronized void removeFromRegistry(IntentWrapper intentWrapper) {
+		String toRemove = null;
+		for(String iw : registry.keySet()) {
+			iw.equals(intentWrapper.asURI().toString());
+			toRemove = iw;
+		}
+		if(toRemove != null) {
+			registry.remove(toRemove);
+		}
+	}
+	
+	private synchronized void removeFromCache(IntentWrapper intentWrapper) {
+		String toRemove = null;
+		for(String iw : cache.keySet()) {
+			iw.equals(intentWrapper.asURI().toString());
+			toRemove = iw;
+		}
+		if(toRemove != null) {
+			registry.remove(toRemove);
+		}
 	}
 	
 }
