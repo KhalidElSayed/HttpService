@@ -71,7 +71,7 @@ public class Log {
 	}
 	
 	public static class Processor {
-
+	    
 		private static final String TAG = "HttpService-Processor";
 		
 		public static final boolean verboseLoggingEnabled() {
