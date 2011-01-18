@@ -24,6 +24,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -43,7 +44,8 @@ public class OAuthProcessorTest {
 	
 	@Test
 	public void shouldAlwaysMatch() {
-		OAuthProcessor processor = new OAuthProcessor(null, null);
+		Context context = null;
+		OAuthProcessor processor = new OAuthProcessor(context, null);
 		assertTrue(processor.match(null));
 		assertTrue(processor.match(request));
 	}
@@ -51,33 +53,19 @@ public class OAuthProcessorTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldProcessRequestThrowExceptionIfNull() throws HttpException, IOException {
 		HttpRequest httpRequest = null;
-		
-		OAuthProcessor processor = new OAuthProcessor(null, null);
+		Context context = null;
+		OAuthProcessor processor = new OAuthProcessor(context, null);
 		processor.process(httpRequest, httpContext);
 	}
 	
 	@Test
 	public void shouldProcessNormalHttpRequestButSkipTheSign() throws HttpException, IOException {
 		HttpRequest httpRequest = mock(HttpRequest.class);
-		
-		OAuthProcessor processor = new OAuthProcessor(null, null);
+		Context context = null;
+		OAuthProcessor processor = new OAuthProcessor(context, null);
 		processor.process(httpRequest, httpContext);
 		
 		verify(httpRequest, times(0)).setHeader(any(String.class), any(String.class));
-	}
-	
-	@Ignore("Too much to mockup, Should take out the CommonsHttpOAuthConsumer from OAuthProcessor")
-	@Test
-	public void shouldProcessHttpUriRequest() throws HttpException, IOException, URISyntaxException {
-		HttpUriRequest httpRequest = mock(HttpUriRequest.class);
-		when(httpRequest.getURI()).thenReturn(new URI("http://www.foofle.com"));
-		when(httpRequest.getMethod()).thenReturn("get");
-		
-		OAuthProcessor processor = new OAuthProcessor("consumerkey", "consumerSecret");
-		processor.setTokenWithSecret("token", "secret");
-		processor.process(httpRequest, httpContext);
-		
-		verify(httpRequest, times(1)).setHeader(any(String.class), any(String.class));
 	}
 
 }
