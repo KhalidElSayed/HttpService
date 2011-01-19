@@ -42,6 +42,7 @@ public class IntentWrapper {
 		String uid = "novoda.lib.httpservice.extra.UID";
 		String result_consumed_receiver = "novoda.lib.httpservice.extra.RESULT_CONSUMED";
 		String cache_disabled = "novoda.lib.httpservice.extra.CACHE_DISABLED";
+		String multipart_file = "novoda.lib.httpservice.extra.MULTIPART_FILE";
 	}
 
 	public static interface Method {
@@ -202,4 +203,9 @@ public class IntentWrapper {
 	public String getAction() {
 		return getIntent().getAction();
 	}
+
+	public String getMultipartFile() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_file);
+	}
+
 }

@@ -1,7 +1,7 @@
 package novoda.lib.httpservice.util;
 
-import static novoda.lib.httpservice.util.Log.v;
-import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static novoda.lib.httpservice.util.Log.Con.v;
+import static novoda.lib.httpservice.util.Log.Con.verboseLoggingEnabled;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,18 +29,41 @@ public abstract class ConnectivityReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		final String action = intent.getAction();
+		if(verboseLoggingEnabled()) {
+			v("Connectivity receiver : " + action);
+		}
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
             if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, true)) {
+            	if(verboseLoggingEnabled()) {
+        			v("Connectivity receiver : connection lost EXTRA_NO_CONNECTIVITY extra");
+        			v("Connectivity receiver : onConnectionLost()");
+        		}
                 onConnectionLost();
+            } else {
+            	if(verboseLoggingEnabled()) {
+        			v("Connectivity receiver : action doesn't have CONNECTIVITY_ACTION");
+        		}
             }
             if (intent.hasExtra(ConnectivityManager.EXTRA_NETWORK_INFO)) {
+            	if(verboseLoggingEnabled()) {
+        			v("Connectivity receiver : checking network info");
+        		}
                 NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
                 if (info.isConnectedOrConnecting()) {
                 	if (verboseLoggingEnabled()) {
                         v("Connectivity is back, resuming for: " + info.toString());
+                        v("Connectivity receiver : onConnectionResumed()");
                     }
                     onConnectionResume();
+                } else {
+                	if(verboseLoggingEnabled()) {
+            			v("Connectivity receiver not handle : " + info.toString());
+            		}
                 }
+            } else {
+            	if(verboseLoggingEnabled()) {
+        			v("Connectivity receiver : action doesn't have any extra information");
+        		}
             }
         }
 	}

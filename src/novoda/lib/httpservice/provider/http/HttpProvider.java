@@ -4,6 +4,10 @@ import static novoda.lib.httpservice.util.Log.Provider.v;
 import static novoda.lib.httpservice.util.Log.Provider.verboseLoggingEnabled;
 import static novoda.lib.httpservice.util.Log.Provider.e;
 import static novoda.lib.httpservice.util.Log.Provider.errorLoggingEnabled;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentWrapper;
@@ -15,8 +19,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
+
+import android.text.TextUtils;
 
 public class HttpProvider implements Provider {
 
@@ -50,6 +57,10 @@ public class HttpProvider implements Provider {
         		method = new HttpGet(request.asURI());
         	} else if(request.isPost()) {
         		method = new HttpPost(request.asURI());
+        		String fileName = request.getMultipartFile();
+        		if(!TextUtils.isEmpty(fileName)) {
+        			setMultipartBody((HttpPost)method, fileName);
+        		}
         	} else {
         		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
         	}
@@ -75,6 +86,23 @@ public class HttpProvider implements Provider {
         }
 	}
 	
+	private void setMultipartBody(HttpPost post, String fileName) {
+		if(verboseLoggingEnabled()) {
+			v("Setting Multipart body");
+		}
+		InputStreamEntity entity = null;
+		try {
+			entity = new InputStreamEntity(new FileInputStream(fileName), -1);
+			entity.setContentType("binary/octet-stream");
+			entity.setChunked(true);
+			post.setEntity(entity);
+		} catch (FileNotFoundException e) {
+			if(errorLoggingEnabled()) {
+				e("FileNotFound : " + fileName, e);
+			}
+		}		
+	}
+
 	private void logAndThrow(String msg) {
 		if(errorLoggingEnabled()) {
 			e(msg);

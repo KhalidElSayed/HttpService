@@ -64,6 +64,11 @@ public class IntentBuilder {
         requestParameters.addAll(params);
         return this;
     }
+    
+    public IntentBuilder withMiltipartFile(String fileName) {
+    	intent.putExtra(IntentWrapper.Extra.multipart_file, fileName);
+        return this;
+    }
 
     public IntentBuilder withStringResultReceiver(ResultReceiver receiver) {
     	if(receiver == null) {

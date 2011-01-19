@@ -160,4 +160,17 @@ public class Log {
 			android.util.Log.v(TAG, msg);
 		}
 	}
+	
+	public static class Con {
+		
+		private static final String TAG = "HttpService-Con";
+				
+		public static final boolean verboseLoggingEnabled() {
+			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+		}
+		
+		public static final void v(String msg) {
+			android.util.Log.v(TAG, msg);
+		}
+	}
 }
