@@ -23,6 +23,8 @@ class HttpService(info: ProjectInfo) extends ParentProject(info) {
 	val roboelectric = "org.robolectric" % "robolectric" % "0.9.4" % "test" from "http://pivotal.github.com/robolectric/downloads/robolectric-0.9.4-all.jar"
 	val mockito_io = "org.mockito" % "mockito-all" % "1.8.5" % "test"
 
+	val apache-mime4j = "org.apache.james" % "apache-mime4j" % "0.6.1" % "compile"
+	val httpmime = "org.apache.httpcomponents" % "httpmime" % "4.0.3" % "compile"
     val signpostcore = "oauth.signpost" % "signpost-core" % "1.2.1" % "compile"
     val signpostcommons = "oauth.signpost" % "signpost-commonshttp4" % "1.2.1" % "compile"
     def googleMapLocation =  androidSdkPath  / "add-ons" / "addon_google_apis_google_inc_8" / "libs" / "maps.jar" absolutePath

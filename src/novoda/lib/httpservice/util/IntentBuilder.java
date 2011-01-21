@@ -23,8 +23,7 @@ public class IntentBuilder {
 
     private Intent intent;
 
-    private ArrayList<ParcelableBasicNameValuePair> requestParameters
-                     = new ArrayList<ParcelableBasicNameValuePair>();
+    private ArrayList<ParcelableBasicNameValuePair> requestParameters = new ArrayList<ParcelableBasicNameValuePair>();
 
     public IntentBuilder(String action, String url) {
         this(action, Uri.parse(url));
@@ -64,11 +63,6 @@ public class IntentBuilder {
         requestParameters.addAll(params);
         return this;
     }
-    
-    public IntentBuilder withMiltipartFile(String fileName) {
-    	intent.putExtra(IntentWrapper.Extra.multipart_file, fileName);
-        return this;
-    }
 
     public IntentBuilder withStringResultReceiver(ResultReceiver receiver) {
     	if(receiver == null) {
@@ -99,4 +93,24 @@ public class IntentBuilder {
 		intent.putExtra(IntentWrapper.Extra.cache_disabled, true);
         return this;
 	}
+
+	public IntentBuilder withMiltipartFile(String paramName, String file) {
+		intent.putExtra(IntentWrapper.Extra.multipart_file_name, paramName);
+		intent.putExtra(IntentWrapper.Extra.multipart_file, file);		
+		return this;
+	}
+
+	public IntentBuilder withMiltipartUri(String paramName, String uri) {
+		intent.putExtra(IntentWrapper.Extra.multipart_uri_name, paramName);
+		intent.putExtra(IntentWrapper.Extra.multipart_uri, uri);
+		return this;
+	}
+	
+	public IntentBuilder withMultipartExtra(String extraParam, String extraValue) {
+		if(extraParam != null && extraValue != null) {
+			intent.putExtra(IntentWrapper.Extra.multipart_extra_value, extraValue);
+		}
+		return this;
+	}
+	
 }

@@ -43,6 +43,11 @@ public class IntentWrapper {
 		String result_consumed_receiver = "novoda.lib.httpservice.extra.RESULT_CONSUMED";
 		String cache_disabled = "novoda.lib.httpservice.extra.CACHE_DISABLED";
 		String multipart_file = "novoda.lib.httpservice.extra.MULTIPART_FILE";
+		String multipart_uri_name = "novoda.lib.httpservice.extra.MULTIPART_URI_NAME";
+		String multipart_file_name = "novoda.lib.httpservice.extra.MULTIPART_FILE_NAME";
+		String multipart_uri = "novoda.lib.httpservice.extra.MULTIPART_URI";
+		String multipart_extra_param = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_PARAM";
+		String multipart_extra_value = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_VALUE";
 	}
 
 	public static interface Method {
@@ -206,6 +211,26 @@ public class IntentWrapper {
 
 	public String getMultipartFile() {
 		return intent.getStringExtra(IntentWrapper.Extra.multipart_file);
+	}
+	
+	public String getMultipartFileParamName() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_file_name);
+	}
+	
+	public String getMultipartUri() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_uri);
+	}
+	
+	public String getMultipartUriParamName() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_uri_name);
+	}
+
+	public String getMultipartExtraParam() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_param);
+	}
+
+	public String getMultipartExtraValue() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_value);
 	}
 
 }

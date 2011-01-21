@@ -6,5 +6,7 @@
 	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-commonshttp4-1.2.1.jar"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/signpost-core-1.2.1.jar"/>
 	<classpathentry kind="src" path="HttpService_src"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/apache-mime4j-0.6.1.jar"/>
+	<classpathentry kind="lib" path="/HttpService/libs/compile/httpmime-4.0.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
