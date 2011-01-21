@@ -77,7 +77,7 @@ public class OAuthProcessor implements Processor, OnAccountsUpdateListener {
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
     }
-    
+
     public boolean shouldSignWithoutTokens() {
         return true;
     }
@@ -90,7 +90,7 @@ public class OAuthProcessor implements Processor, OnAccountsUpdateListener {
         if (request == null) {
             throw new IllegalArgumentException("HTTP request may not be null");
         }
-        if (request instanceof HttpUriRequest) {
+        if (request instanceof HttpUriRequest && isInitialized()) {
             try {
                 CommonsHttpOAuthConsumer consumer = new CommonsHttpOAuthConsumer(consumerKey,
                         consumerSecret);
@@ -105,6 +105,10 @@ public class OAuthProcessor implements Processor, OnAccountsUpdateListener {
                 e("OAuthCommunicationException", e);
             }
         }
+    }
+
+    private boolean isInitialized() {
+        return (consumerKey != null && consumerSecret != null);
     }
 
     @Override
