@@ -93,6 +93,12 @@ public class EventBus implements HasHandlers, HasProcessors {
     			receiver.send(ERROR, null);
     		}
     	}
+    	if(intentWrapper != null) {    		
+    		ResultReceiver receiver = intentWrapper.getEndResultReceiver();
+    		if(receiver != null) {
+    			receiver.send(ERROR, null);
+    		}
+    	}
     	for(RequestHandler handler: handlers) {
     		if(handler.match(intentWrapper)) {
     			handler.onThrowable(intentWrapper, t);
@@ -156,7 +162,7 @@ public class EventBus implements HasHandlers, HasProcessors {
 	}
 	
 	private void sendResultConsumedReceiver(IntentWrapper intentWrapper) {
-		ResultReceiver receiver = intentWrapper.getResultConsumedReceiver();
+		ResultReceiver receiver = intentWrapper.getEndResultReceiver();
 		if(receiver != null) {
 			try {
 				receiver.send(SUCCESS, null);

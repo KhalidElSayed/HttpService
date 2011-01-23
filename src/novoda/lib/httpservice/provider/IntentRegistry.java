@@ -18,7 +18,7 @@ import java.util.Set;
  */
 public class IntentRegistry {	
 	
-	private static final long CACHE_TIME = 1000*5;
+	private static final long CACHE_TIME = 1000*1;
 	private Map<String,List<IntentWrapper>> registry = Collections.synchronizedMap(new HashMap<String, List<IntentWrapper>>());
 	private Map<String,Long> cache = Collections.synchronizedMap(new HashMap<String, Long>());
 

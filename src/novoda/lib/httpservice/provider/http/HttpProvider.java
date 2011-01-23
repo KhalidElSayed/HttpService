@@ -85,7 +85,7 @@ public class HttpProvider implements Provider {
         	if(errorLoggingEnabled()) {
     			e("Problems executing the request for : " + request.getUri(), t);
     		}
-    		throw new ProviderException("Problems executing the request for : " + request.getUri());
+    		return null;
         }
 	}
 	

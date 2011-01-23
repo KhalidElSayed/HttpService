@@ -80,7 +80,7 @@ public class IntentWrapper {
 		return getResultReceiver(Extra.result_receiver);
 	}
 	
-	public ResultReceiver getResultConsumedReceiver() {
+	public ResultReceiver getEndResultReceiver() {
 		return getResultReceiver(Extra.result_consumed_receiver);
 	}
 	

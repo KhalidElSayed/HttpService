@@ -8,5 +8,6 @@
 	<classpathentry kind="src" path="HttpService_src"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/apache-mime4j-0.6.1.jar"/>
 	<classpathentry kind="lib" path="/HttpService/libs/compile/httpmime-4.0.3.jar"/>
+	<classpathentry kind="src" path="HttpService_tests_java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
