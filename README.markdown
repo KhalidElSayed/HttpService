@@ -1,7 +1,6 @@
 An Android library for Http calls
 =================================
 
-
 THIS IS A DUMP OF IDEAS - NOTHING IS IMPLEMENTED AT THE MOMENT
 
 
