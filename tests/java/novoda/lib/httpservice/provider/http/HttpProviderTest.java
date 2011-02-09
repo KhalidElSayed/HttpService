@@ -23,6 +23,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -61,6 +62,7 @@ public class HttpProviderTest {
 		assertEquals("", "");
 	}
 	
+	@Ignore
 	@Test(expected = ProviderException.class)
 	public void shouldHttpProviderFireOnThrowableIf() throws ClientProtocolException, IOException {
 		when(httpClient.execute(any(HttpGet.class))).thenThrow(new RuntimeException());

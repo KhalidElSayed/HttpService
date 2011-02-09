@@ -3,7 +3,7 @@ package novoda.lib.httpservice.util;
 public class Log {
 	
 	//Default
-	private static final String TAG = "HttpService";
+	private static final String TAG = "httpservice";
 	
 	public static final boolean verboseLoggingEnabled() {
 		return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
@@ -39,7 +39,7 @@ public class Log {
 	
 	public static class Provider {
 		
-		private static final String TAG = "HttpService-Provider";
+		private static final String TAG = "httpservice-provider";
 		
 		public static final boolean verboseLoggingEnabled() {
 			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
@@ -72,7 +72,7 @@ public class Log {
 	
 	public static class Processor {
 	    
-		private static final String TAG = "HttpService-Processor";
+		private static final String TAG = "httpservice-processor";
 		
 		public static final boolean verboseLoggingEnabled() {
 			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
@@ -109,7 +109,7 @@ public class Log {
 	
 	public static class Bus {
 		
-		private static final String TAG = "HttpService-Bus";
+		private static final String TAG = "httpservice-bus";
 				
 		public static final boolean verboseLoggingEnabled() {
 			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
@@ -150,7 +150,7 @@ public class Log {
 	
 	public static class Registry {
 		
-		private static final String TAG = "HttpService-Registry";
+		private static final String TAG = "httpservice-registry";
 				
 		public static final boolean verboseLoggingEnabled() {
 			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);

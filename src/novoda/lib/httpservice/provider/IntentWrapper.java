@@ -34,6 +34,8 @@ public class IntentWrapper {
 	
 	public static final long DEFAULT_UID = 0l;
 	
+	public static final int NO_RESULT = 10;
+	
 	public static interface Extra {
 		String result_receiver = "novoda.lib.httpservice.extra.RESULT_RECEIVER";
 		String method = "novoda.lib.httpservice.extra.METHOD";

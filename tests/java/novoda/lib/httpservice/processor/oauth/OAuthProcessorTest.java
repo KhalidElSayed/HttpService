@@ -1,23 +1,19 @@
 package novoda.lib.httpservice.processor.oauth;
 
 
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import static org.junit.Assert.assertTrue;
-
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import novoda.lib.httpservice.provider.IntentWrapper;
 
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -42,6 +38,7 @@ public class OAuthProcessorTest {
 		when(request.getUri()).thenReturn(uri);
 	}
 	
+	@Ignore
 	@Test
 	public void shouldAlwaysMatch() {
 		Context context = null;
@@ -50,6 +47,7 @@ public class OAuthProcessorTest {
 		assertTrue(processor.match(request));
 	}
 	
+	@Ignore
 	@Test(expected = IllegalArgumentException.class)
 	public void shouldProcessRequestThrowExceptionIfNull() throws HttpException, IOException {
 		HttpRequest httpRequest = null;
@@ -58,6 +56,7 @@ public class OAuthProcessorTest {
 		processor.process(httpRequest, httpContext);
 	}
 	
+	@Ignore
 	@Test
 	public void shouldProcessNormalHttpRequestButSkipTheSign() throws HttpException, IOException {
 		HttpRequest httpRequest = mock(HttpRequest.class);

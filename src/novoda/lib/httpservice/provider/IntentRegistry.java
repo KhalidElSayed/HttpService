@@ -18,31 +18,33 @@ import java.util.Set;
  */
 public class IntentRegistry {	
 	
+	private static final List<IntentWrapper> EMPTY_LIST = new ArrayList<IntentWrapper>();
 	private static final long CACHE_TIME = 1000*1;
 	private Map<String,List<IntentWrapper>> registry = Collections.synchronizedMap(new HashMap<String, List<IntentWrapper>>());
 	private Map<String,Long> cache = Collections.synchronizedMap(new HashMap<String, Long>());
 
 	public synchronized boolean isInQueue(IntentWrapper intentWrapper) {
-		if(intentWrapper.isCacheDisabled()) {
-			if(verboseLoggingEnabled()) {
-				v("IntentRegistry > is already in the queue, but cached is disabled : " + intentWrapper);
-				v("IntentRegistry > Queue is : ");
-				dump(registry.keySet());
-			}
-			return false;
-		} else {
-			for(String r : registry.keySet()) {
-				if(r.equals(intentWrapper.asURI().toString())) {
-					if(verboseLoggingEnabled()) {
-						v("IntentRegistry > is already in the queue, attaching intent with another intent : " + intentWrapper);
-					}
-					registry.get(r).add(intentWrapper);
-					return true;
+//		if(!intentWrapper.isCacheDisabled()) {
+//			if(verboseLoggingEnabled()) {
+//				v("IntentRegistry > is already in the queue, but cached is disabled : " + intentWrapper);
+//				v("IntentRegistry > Queue is : ");
+//				dump(registry.keySet());
+//			}
+//			return false;
+//		}
+		for(String r : registry.keySet()) {
+			if(r.equals(intentWrapper.asURI().toString())) {
+				if(verboseLoggingEnabled()) {
+					v("IntentRegistry > is already in the queue, adding to the map : " + intentWrapper);
+					v("IntentRegistry > Queue is : ");
+					dump(registry.keySet());
 				}
+				registry.get(r).add(intentWrapper);
+				return true;
 			}
-			if(verboseLoggingEnabled()) {
-				v("IntentRegistry > is not in the queue : " + intentWrapper);
-			}
+		}
+		if(verboseLoggingEnabled()) {
+			v("IntentRegistry > is not in the queue : " + intentWrapper);
 		}
 		registry.put(intentWrapper.asURI().toString(), new ArrayList<IntentWrapper>());
 		return false;
@@ -93,9 +95,18 @@ public class IntentRegistry {
 		if(verboseLoggingEnabled()) {
 			v("IntentRegistry > Gettting similar intents");
 		}
-		List<IntentWrapper> intents = registry.get(intentWrapper);
-		onConsumed(intentWrapper);
-		return intents;
+		for(String r : registry.keySet()) {
+			if(r.equals(intentWrapper.asURI().toString())) {
+				if(verboseLoggingEnabled()) {
+					v("IntentRegistry > returning list of intents");
+				}
+				return registry.get(r);
+			}
+		}
+		if(verboseLoggingEnabled()) {
+			v("IntentRegistry > no similar intents found");
+		}
+		return EMPTY_LIST;
 	}
 	
 	public synchronized void onConsumed(IntentWrapper intentWrapper) {
@@ -107,13 +118,22 @@ public class IntentRegistry {
 	}
 	
 	private synchronized void removeFromRegistry(IntentWrapper intentWrapper) {
+		if(verboseLoggingEnabled()) {
+			v("IntentRegistry > removing intent from registry");
+		}
 		String toRemove = null;
+		if(verboseLoggingEnabled()) {
+			dump(registry.keySet());
+		}
 		for(String iw : registry.keySet()) {
 			iw.equals(intentWrapper.asURI().toString());
 			toRemove = iw;
 		}
 		if(toRemove != null) {
 			registry.remove(toRemove);
+		}
+		if(verboseLoggingEnabled()) {
+			dump(registry.keySet());
 		}
 	}
 	

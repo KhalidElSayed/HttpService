@@ -113,10 +113,10 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * @param response
 	 */
 	public void fireOnContentReceived(Response response) {
-		if(verboseLoggingEnabled()) {
-			v("Firing onContentReceived");
-		}
 		IntentWrapper intentWrapper = response.getIntentWrapper();
+		if(verboseLoggingEnabled()) {
+			v("Firing onContentReceived " + intentWrapper.getUid());
+		}
 		if(intentWrapper != null) {
 			ResultReceiver receiver = intentWrapper.getResultReceiver();
 			if(receiver != null) {
@@ -142,17 +142,24 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 * @param intentWrapper
 	 */
 	public void fireOnContentConsumed(IntentWrapper intentWrapper) {
-		if(verboseLoggingEnabled()) {
-            v("Firing onContentConsumed");
-        }
 		if(intentWrapper != null) {
-			sendResultConsumedReceiver(intentWrapper);
+			if(verboseLoggingEnabled()) {
+	            v("Firing onContentConsumed " + + intentWrapper.getUid());
+	        }
 			List<IntentWrapper> intents = intentRegistry.getSimilarIntents(intentWrapper);
 			if(intents != null && !intents.isEmpty()) {
 				for(IntentWrapper similarIntent : intents) {
+					if(verboseLoggingEnabled()) {
+			            v("Firing onContentConsumed " + similarIntent.getUid());
+			        }
 					sendResultConsumedReceiver(similarIntent);
 				}
 			}
+			sendResultConsumedReceiver(intentWrapper);
+		} else {
+			if(verboseLoggingEnabled()) {
+	            v("Firing onContentConsumed but intent is null?");
+	        }
 		}
 		for(RequestHandler handler: handlers) {
     		if(handler.match(intentWrapper)) {
@@ -170,6 +177,7 @@ public class EventBus implements HasHandlers, HasProcessors {
 				receiver.send(ERROR, null);
 			}
 		}
+		intentRegistry.onConsumed(intentWrapper);
 	}
 	
 	/**
