@@ -85,8 +85,27 @@ public class EventBus implements HasHandlers, HasProcessors {
 	 */
     public void fireOnThrowable(IntentWrapper intentWrapper, Throwable t) {
     	if(verboseLoggingEnabled()) {
-			v("Firing onThrowable");
+			v("Firing onThrowable for : " + intentWrapper.getUid());
 		}
+    	fireOnThrowable(intentWrapper);
+    	List<IntentWrapper> intents = intentRegistry.getSimilarIntents(intentWrapper);
+		if(intents != null && !intents.isEmpty()) {
+			for(IntentWrapper similarIntent : intents) {
+				if(verboseLoggingEnabled()) {
+		            v("Firing onThrowable for : " + similarIntent.getUid());
+		        }
+				fireOnThrowable(intentWrapper);
+			}
+		}
+		intentRegistry.onConsumed(intentWrapper);
+    	for(RequestHandler handler: handlers) {
+    		if(handler.match(intentWrapper)) {
+    			handler.onThrowable(intentWrapper, t);
+    		}
+    	}
+    }
+    
+    private void fireOnThrowable(IntentWrapper intentWrapper) {
     	if(intentWrapper != null) {    		
     		ResultReceiver receiver = intentWrapper.getResultReceiver();
     		if(receiver != null) {
@@ -97,11 +116,6 @@ public class EventBus implements HasHandlers, HasProcessors {
     		ResultReceiver receiver = intentWrapper.getEndResultReceiver();
     		if(receiver != null) {
     			receiver.send(ERROR, null);
-    		}
-    	}
-    	for(RequestHandler handler: handlers) {
-    		if(handler.match(intentWrapper)) {
-    			handler.onThrowable(intentWrapper, t);
     		}
     	}
     }

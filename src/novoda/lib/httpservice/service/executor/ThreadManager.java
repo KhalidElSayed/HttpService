@@ -144,8 +144,17 @@ public class ThreadManager implements ExecutorManager {
 						if (verboseLoggingEnabled()) {
 							v("Response received");
 						}
-						eventBus.fireOnContentReceived(response);
-						eventBus.fireOnContentConsumed(response.getIntentWrapper());
+						if(response != null && response.getIntentWrapper() != null) {
+							if (verboseLoggingEnabled()) {
+								v("Firing content received");
+							}
+							eventBus.fireOnContentReceived(response);
+							eventBus.fireOnContentConsumed(response.getIntentWrapper());
+						} else {
+							if (verboseLoggingEnabled()) {
+								v("Response or intentWrapper are null, there must be something wrong");
+							}
+						}
 					} catch (InterruptedException e) {
 						w("InterruptedException", e);
 					} catch (ExecutionException e) {

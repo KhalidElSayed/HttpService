@@ -135,6 +135,9 @@ public class OAuthProcessor implements Processor, OnAccountsUpdateListener {
     }
 
     private void init(Account account) {
+    	if (Log.Processor.verboseLoggingEnabled()) {
+            Log.Processor.v("Inint account");
+        }
         AccountManager manager = AccountManager.get(context);
         consumerKey = manager.getUserData(account, CONSUMER_KEY);
         consumerSecret = manager.getUserData(account, CONSUMER_SECRET_KEY);

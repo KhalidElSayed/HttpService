@@ -12,6 +12,8 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+import novoda.lib.httpservice.provider.Provider;
+
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -66,10 +68,6 @@ import android.util.Log;
  * </pre>
  */
 public final class AndroidHttpClient implements HttpClient {
-
-	private static final int SOCKET_TIMEOUT = 10*1000;
-    private static final int CONNECTION_TIMEOUT = 10*1000;
-    private static final int CON_MANAGER_TIMEOUT = 10*1000;
 	
     // Gzip of data shorter than this probably won't be worthwhile
     public static long DEFAULT_SYNC_MIN_GZIP_BYTES = 256;
@@ -102,11 +100,11 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-        HttpConnectionParams.setConnectionTimeout(params, SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, CONNECTION_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Provider.SOCKET_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, Provider.CONNECTION_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
 
-        ConnManagerParams.setTimeout(params, CON_MANAGER_TIMEOUT);
+        ConnManagerParams.setTimeout(params, Provider.CON_MANAGER_TIMEOUT);
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
