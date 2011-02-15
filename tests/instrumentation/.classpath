@@ -9,6 +9,5 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/HttpService"/>
 	<classpathentry kind="src" path="HttpService_src"/>
-	<classpathentry kind="src" path="HttpService_tests_java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

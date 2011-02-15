@@ -83,7 +83,7 @@ public class HttpProvider implements Provider {
         } catch (Throwable t) {
         	eventBus.fireOnThrowable(request, t);
         	if(errorLoggingEnabled()) {
-    			e("Problems executing the request for : " + request.getUri(), t);
+    			e("Problems executing the request for : " + request.getUri() + " " + t.getMessage());
     		}
     		return null;
         }

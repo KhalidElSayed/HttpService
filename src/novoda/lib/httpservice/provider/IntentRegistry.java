@@ -24,14 +24,14 @@ public class IntentRegistry {
 	private Map<String,Long> cache = Collections.synchronizedMap(new HashMap<String, Long>());
 
 	public synchronized boolean isInQueue(IntentWrapper intentWrapper) {
-//		if(!intentWrapper.isCacheDisabled()) {
-//			if(verboseLoggingEnabled()) {
-//				v("IntentRegistry > is already in the queue, but cached is disabled : " + intentWrapper);
-//				v("IntentRegistry > Queue is : ");
-//				dump(registry.keySet());
-//			}
-//			return false;
-//		}
+		if(intentWrapper.isCacheDisabled()) {
+			if(verboseLoggingEnabled()) {
+				v("IntentRegistry > Cached is disabled : " + intentWrapper);
+				v("IntentRegistry > Queue is : ");
+				dump(registry.keySet());
+			}
+			return false;
+		}
 		for(String r : registry.keySet()) {
 			if(r.equals(intentWrapper.asURI().toString())) {
 				if(verboseLoggingEnabled()) {
@@ -114,7 +114,7 @@ public class IntentRegistry {
 			v("IntentRegistry > intent consumed");
 		}
 		removeFromRegistry(intentWrapper);
-		cache.put(intentWrapper.asURI().toString(), System.currentTimeMillis());
+		//cache.put(intentWrapper.asURI().toString(), System.currentTimeMillis());
 	}
 	
 	private synchronized void removeFromRegistry(IntentWrapper intentWrapper) {

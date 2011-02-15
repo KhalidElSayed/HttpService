@@ -163,7 +163,7 @@ public class Log {
 	
 	public static class Con {
 		
-		private static final String TAG = "HttpService-Con";
+		private static final String TAG = "httpservice-con";
 				
 		public static final boolean verboseLoggingEnabled() {
 			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
