@@ -70,9 +70,9 @@ public class ThreadManager implements ExecutorManager {
 			}
 			poolExecutor.shutdown();
 			while(poolExecutor.isTerminating()) {
-				if (verboseLoggingEnabled()) {
-					v("Thread Manager : waiting for shut down of poolExecutor...");
-				}
+//				if (verboseLoggingEnabled()) {
+//					v("Thread Manager : waiting for shut down of poolExecutor...");
+//				}
 			}
 			if (verboseLoggingEnabled()) {
 				v("Thread Manager : poolExecutor is terminated...");

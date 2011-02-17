@@ -57,7 +57,7 @@ public class ConnectivityReceiverTest {
 	@Test
 	public void shouldFireOnConnectionLost() {
 		when(mIntent.getAction()).thenReturn(ConnectivityManager.CONNECTIVITY_ACTION);
-		when(mIntent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, true)).thenReturn(true);
+		when(mIntent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)).thenReturn(true);
 		
 		connectivityReceiver.onReceive(mContext, mIntent);
 		

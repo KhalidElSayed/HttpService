@@ -33,7 +33,7 @@ public abstract class ConnectivityReceiver extends BroadcastReceiver {
 			v("Connectivity receiver : " + action);
 		}
         if (ConnectivityManager.CONNECTIVITY_ACTION.equals(action)) {
-            if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, true)) {
+            if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false)) {
             	if(verboseLoggingEnabled()) {
         			v("Connectivity receiver : connection lost EXTRA_NO_CONNECTIVITY extra");
         			v("Connectivity receiver : onConnectionLost()");
