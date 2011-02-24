@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="fill_parent" android:layout_height="fill_parent"
-	android:orientation="vertical" android:background="#fff">
-
-	<TextView android:text="@string/dashboard_title" style="@style/TitleHeader" />
-	
-	<LinearLayout style="@style/DashboardRow">
-		<TextView android:id="@+id/monitorInfo" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-	</LinearLayout>
-	
-	<LinearLayout style="@style/DashboardRow">
-		<EditText android:id="@+id/requestNumber" android:minWidth="100dip" android:layout_width="wrap_content" android:layout_height="wrap_content" />
-		<Button android:id="@+id/start" android:text="Different url" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-		<Button android:id="@+id/startDouble" android:text="Same url" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-	</LinearLayout>
-	
-	<LinearLayout style="@style/DashboardRow">
-		<Button android:id="@+id/startMonitor" android:text="Start monitor" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-		<Button android:id="@+id/stopMonitor" android:text="Stop monitor" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-		<!-- 
-		<Button android:id="@+id/log" android:text="Enable/Disable logs" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
-		 -->
-	</LinearLayout>
+<LinearLayout
+   xmlns:a="http://schemas.android.com/apk/res/android"
+   a:layout_width="fill_parent"
+   a:layout_height="fill_parent"
+   a:orientation="vertical"
+   a:background="#fff">
+   <TextView
+      a:text="@string/dashboard_title"
+      style="@style/TitleHeader" />
+   <LinearLayout
+      style="@style/DashboardRow">
+      <TextView
+         a:id="@+id/monitorInfo"
+         a:layout_width="wrap_content"
+         a:layout_height="wrap_content" />
+   </LinearLayout>
+   <LinearLayout
+      style="@style/DashboardRow">
+      <EditText
+         a:id="@+id/requestNumber"
+         a:minWidth="100dip"
+         a:layout_width="wrap_content"
+         a:layout_height="wrap_content" />
+      <Button
+         a:id="@+id/start"
+         a:text="Start"
+         a:layout_width="wrap_content"
+         a:layout_height="wrap_content" />
+      <!--
+         <Button android:id="@+id/startDouble" android:text="Same url"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"/>
+      -->
+   </LinearLayout>
+   <LinearLayout
+      style="@style/DashboardRow">
+      <Button
+         a:id="@+id/startMonitor"
+         a:text="Start monitor"
+         a:layout_width="wrap_content"
+         a:layout_height="wrap_content" />
+      <Button
+         a:id="@+id/stopMonitor"
+         a:text="Stop monitor"
+         a:layout_width="wrap_content"
+         a:layout_height="wrap_content" />
+      <!--
+         <Button android:id="@+id/log" android:text="Enable/Disable
+         logs" android:layout_width="wrap_content"
+         android:layout_height="wrap_content"/>
+      -->
+   </LinearLayout>
 </LinearLayout>

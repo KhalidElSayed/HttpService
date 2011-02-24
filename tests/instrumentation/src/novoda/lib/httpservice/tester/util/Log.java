@@ -3,7 +3,7 @@ package novoda.lib.httpservice.tester.util;
 
 public class Log {
 
-	private static final String TAG = "HttpService-Tester";
+	private static final String TAG = "httpservice-tester";
 
 	public static final void d(String msg) {
 		android.util.Log.d(TAG, msg);

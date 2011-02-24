@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import novoda.lib.httpservice.HttpService;
 import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.Processor;
@@ -32,7 +31,7 @@ import android.content.IntentFilter;
  * @author luigi
  *
  */
-public class SimpleHttpService extends HttpService {
+public class SimpleHttpService extends BaseHttpService {
 	
 	public static final String ACTION_REQUEST = "novoda.lib.httpservice.tester.action.ACTION_REQUEST";
 	
@@ -50,57 +49,24 @@ public class SimpleHttpService extends HttpService {
 	
 	public static final IntentFilter INTENT_FILTER_MONITOR = new IntentFilter(ACTION_DUMP_MONITOR);
 	
-	private static final String PATH = "/";
+	private CustomProcessor processor = new CustomProcessor();
+	private CustomRequestHandler handler = new CustomRequestHandler();
 	
-	private RequestHandler requestHandler = new SimpleRequestHandler() {
+	private Monitor monitor = new Monitor() {
 		@Override
-		public boolean match(IntentWrapper intentWrapper) {
-			if(PATH.equals(intentWrapper.getUri().getPath())) {
-				d("do match!");
-				return true;
+		public void update(Map<String, String> properties) {
+			ArrayList<String> keys = new ArrayList<String>();
+			Intent intent = new Intent(ACTION_DUMP_MONITOR);
+			for (Entry<String, String> entry: properties.entrySet()) {
+				keys.add(entry.getKey());
+				intent.putExtra(entry.getKey(), entry.getValue());
 			}
-			d("doesn't match!");
-			return false;
+			intent.putStringArrayListExtra(EXTRA_DUMP_MONITOR, keys);
+			sendBroadcast(intent);
 		}
-		
 		@Override
-		public void onContentReceived(IntentWrapper intentWrapper, Response response) {
-			d("Received content for request handler : " + response.getContentAsString().length());
-		};
-	};
-	
-	private Processor logProcessor1 = new Processor() {
-		@Override
-		public boolean match(IntentWrapper intentWrapper) {
-			return true;
-		}
-
-		@Override
-		public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-			d("Processing request 1...");
-		}
-
-		@Override
-		public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-			d("Processing response 1...");	
-		}
-		
-	};
-
-	private Processor logProcessor2 = new Processor() {
-		@Override
-		public boolean match(IntentWrapper intentWrapper) {
-			return true;
-		}
-
-		@Override
-		public void process(HttpRequest response, HttpContext context) throws HttpException, IOException {
-			d("Processing request 2...");
-		}
-
-		@Override
-		public void process(HttpResponse response, HttpContext context) throws HttpException, IOException {
-			d("Processing response 2...");	
+		public long getInterval() {
+			return 1000;
 		}
 	};
 	
@@ -108,35 +74,16 @@ public class SimpleHttpService extends HttpService {
 	public void onCreate() {
 		d("creating service");
 		super.onCreate();
-		attach(new Monitor() {
-			@Override
-			public void update(Map<String, String> properties) {
-				ArrayList<String> keys = new ArrayList<String>();
-				Intent intent = new Intent(ACTION_DUMP_MONITOR);
-				for (Entry<String, String> entry: properties.entrySet()) {
-					keys.add(entry.getKey());
-					intent.putExtra(entry.getKey(), entry.getValue());
-				}
-				intent.putStringArrayListExtra(EXTRA_DUMP_MONITOR, keys);
-				sendBroadcast(intent);
-			}
-			@Override
-			public long getInterval() {
-				return 1000;
-			}
-		});
+		attach(monitor);
 		registerReceiver(startMonitor, new IntentFilter(ACTION_START_MONITOR));
 		registerReceiver(stopMonitor, new IntentFilter(ACTION_STOP_MONITOR));
-		
 		//Adding handlers with default key
 		d("adding handlers");
-		add(requestHandler);
-		
-		add(logProcessor1);
-		add(logProcessor2);
+		add(handler);
+		add(processor);
 		add(new OAuthProcessor("test", "test"));
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		d("destroy on the service");

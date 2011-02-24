@@ -24,7 +24,7 @@ public class DashboardActivity extends BaseActivity {
 	/**
 	 * Just an site that I owned and that I can call without getting in trouble for dos
 	 */
-	private static final String HOST = "http://facebook-pipes.appspot.com/";
+	private static final String HOST = "http://httpmock.appspot.com/test/success";
 	
 	private TextView monitorInfo;
 
@@ -33,44 +33,45 @@ public class DashboardActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard);
 		final EditText edit = ((EditText) findViewById(R.id.requestNumber));
-		final Button call = ((Button)findViewById(R.id.start));
-		final Button callDouble = ((Button)findViewById(R.id.startDouble));
-		final Button start = ((Button)findViewById(R.id.startMonitor));
+//d		final Button call = ((Button)findViewById(R.id.start));
+		final Button start = ((Button)findViewById(R.id.start));
+		final Button startMonitor = ((Button)findViewById(R.id.startMonitor));
 		final Button stop = ((Button)findViewById(R.id.stopMonitor));
 		edit.setText("1");
-		call.setOnClickListener(new OnClickListener() {
+//		call.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				String text = edit.getText().toString();
+//				d("Making " + text + " calls");
+//				for(int i= 0; i<Integer.valueOf(text); i++) {
+//					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST)
+//						.withParam("param", "" + i)
+//						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
+//							@Override
+//							protected void onReceiveResult(int resultCode, Bundle resultData) {
+//								d(">> Service has finished to handle the result");
+//							}
+//						}).build();
+//					startService(intent);
+//					start.setEnabled(true);
+//				}
+//			}
+//		});
+		start.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				String text = edit.getText().toString();
-				d("Making " + text + " calls");
-				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST)
-						.withParam("param", "" + i)
-						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
-							@Override
-							protected void onReceiveResult(int resultCode, Bundle resultData) {
-								d(">> Service has finished to handle the result");
-							}
-						}).build();
-					startService(intent);
-					start.setEnabled(true);
-				}
-			}
-		});
-		callDouble.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				String text = edit.getText().toString();
-				d("Making all the same calls");
+//				d("Making all the same calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
 					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
-						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
+						.withStringResultReceiver(new ResultReceiver(new Handler()) {
 							@Override
 							protected void onReceiveResult(int resultCode, Bundle resultData) {
-								d(">> Service has finished to handle the result");
+								d(">> SUCCESS");
 							}
-						}).build();
-						startService(intent);
+						}). withDisableCache().build();
+					startService(intent);
+					startMonitor.setEnabled(true);
 				}
 			}
 		});
@@ -78,13 +79,13 @@ public class DashboardActivity extends BaseActivity {
 		monitorInfo = ((TextView)findViewById(R.id.monitorInfo));
 		monitorInfo.setText("Monitor is detach");
 		
-		start.setEnabled(false);
-		start.setOnClickListener(new OnClickListener() {
+		startMonitor.setEnabled(false);
+		startMonitor.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				d("Starting monitor");
 				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
-				start.setEnabled(false);
+				startMonitor.setEnabled(false);
 				stop.setEnabled(true);
 				monitorInfo.setText("Attaching monitor...");
 			}
@@ -95,7 +96,7 @@ public class DashboardActivity extends BaseActivity {
 			public void onClick(View v) {
 				d("Stopping monitor");
 				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
-				start.setEnabled(true);
+				startMonitor.setEnabled(true);
 				stop.setEnabled(false);
 				monitorInfo.setText("Monitor is detach");
 			}
