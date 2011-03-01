@@ -44,9 +44,6 @@
 			</intent-filter>
             <meta-data a:name="actorXmlFile" a:value="actors.xml"/>
 		</service>
-
       
-
 	</application>
-
 </manifest> 
