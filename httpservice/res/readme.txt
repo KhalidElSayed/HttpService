@@ -1,0 +1,1 @@
+At the moment this folder is necessary for the robolectric tests
