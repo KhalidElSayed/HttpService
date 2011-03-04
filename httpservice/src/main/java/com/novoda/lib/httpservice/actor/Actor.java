@@ -5,6 +5,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
 
 import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
+import com.novoda.lib.httpservice.storage.Storage;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +16,11 @@ public class Actor {
 	
 	private ContextHttpWrapper context;
 	
-	public Actor(Intent intent) {
+	private Storage storage;
+	
+	public Actor(Intent intent, Storage storage) {
 		this.intent = intent;
+		this.setStorage(storage);
 	}
 	
 	public void applayContext(ContextHttpWrapper context) {
@@ -35,27 +39,35 @@ public class Actor {
         intent = newIntent;
     }
     
-    protected void onCreate() {
+	public void setStorage(Storage storage) {
+		this.storage = storage;
+	}
+
+	public Storage getStorage() {
+		return storage;
+	}
+    
+    public void onCreate() {
     	
     }
    
-	protected void onResume() {
+    public void onResume() {
        
     }
     
-	protected void onPause() {
+    public void onPause() {
 	
 	}
 	
-    protected void onStop() {
+    public void onStop() {
 
     }
     
-    protected void onDestroy() {
+    public void onDestroy() {
     	
     }
     
-    protected void onLowMemory() {
+    public void onLowMemory() {
     	
     }
 

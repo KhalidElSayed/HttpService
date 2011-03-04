@@ -53,4 +53,10 @@ public class LocalProvider implements Provider {
 //		eventBus.fireOnContentReceived(response);
 	}
 
+	@Override
+	public void onLowMemory() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

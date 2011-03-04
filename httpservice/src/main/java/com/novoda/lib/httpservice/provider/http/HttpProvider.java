@@ -38,6 +38,7 @@ public class HttpProvider implements Provider {
 	public void execute(Actor actor) {
         HttpUriRequest method = null;
         //TODO
+        actor.onResume();
         IntentReader reader = new IntentReader(actor.getIntent());
         try {
         	if(verboseLoggingEnabled()) {
@@ -73,6 +74,8 @@ public class HttpProvider implements Provider {
     			e("Problems executing the request for : " + reader.getUri() + " " + t.getMessage());
     		}
         }
+        actor.onPause();
+        actor.onDestroy();
 	}
 	
 //	private void checkMultipartParams(HttpPost post, IntentWrapper intent) {
@@ -143,6 +146,12 @@ public class HttpProvider implements Provider {
 			e(msg);
 		}
 		throw new ProviderException(msg);
+	}
+
+	@Override
+	public void onLowMemory() {
+		// TODO Auto-generated method stub
+		// transfer on Low memory to the actor ???
 	}
 	
 }

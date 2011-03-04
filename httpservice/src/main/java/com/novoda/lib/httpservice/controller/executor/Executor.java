@@ -15,4 +15,6 @@ public interface Executor {
 	
 	void pause();
 
+	void onLowMemory();
+
 }

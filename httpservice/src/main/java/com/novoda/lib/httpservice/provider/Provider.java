@@ -18,5 +18,7 @@ public interface Provider {
     int CON_MANAGER_TIMEOUT = 25*SECOND;
 
 	void execute(Actor actor);
+
+	void onLowMemory();
 	
 }

@@ -119,4 +119,10 @@ public class ConnectedMultiThreadExecutor implements Executor {
 		looperThread.start();
 	}
 
+	@Override
+	public void onLowMemory() {
+		// TODO Auto-generated method stub
+		// how do I transfer this event to the future?
+	}
+
 }

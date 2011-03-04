@@ -9,8 +9,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.novoda.lib.httpservice.config.Config;
-import com.novoda.lib.httpservice.config.ManualConfig;
+import com.novoda.lib.httpservice.actor.ActorFactory;
+import com.novoda.lib.httpservice.actor.factory.ProgrammaticActorFactory;
 import com.novoda.lib.httpservice.controller.CallableWrapper;
 import com.novoda.lib.httpservice.controller.LifecycleManager;
 import com.novoda.lib.httpservice.controller.executor.ConnectedMultiThreadExecutor;
@@ -26,7 +26,7 @@ import com.novoda.lib.httpservice.storage.Storage;
 public class HttpService extends Service {
 	
 	private Provider provider;
-	private Config config;
+	private ActorFactory config;
 	private Storage storage;
 	private LifecycleManager lifecycleManager;
 	private Executor executor;
@@ -45,7 +45,7 @@ public class HttpService extends Service {
 	}
 	
 	protected void initConfig() {
-		this.config = new ManualConfig();
+		this.config = new ProgrammaticActorFactory();
 	}
 	
 	protected void initStorage() {
@@ -99,6 +99,13 @@ public class HttpService extends Service {
     		executor.shutdown();
     	}
 		super.onDestroy();
+	}
+	
+	@Override
+	public void onLowMemory() {
+		executor.onLowMemory();
+		provider.onLowMemory();
+		super.onLowMemory();
 	}
 	
 	private Callable<Void> getCallable(Intent intent) {

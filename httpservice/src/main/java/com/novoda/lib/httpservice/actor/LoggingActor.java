@@ -6,41 +6,42 @@ import org.apache.http.protocol.HttpContext;
 
 import android.content.Intent;
 
+import com.novoda.lib.httpservice.storage.Storage;
 import com.novoda.lib.httpservice.utils.Log;
 
 public class LoggingActor extends Actor {
 
-	public LoggingActor(Intent intent) {
-		super(intent);
+	public LoggingActor(Intent intent, Storage storage) {
+		super(intent, storage);
 	}
 
 	@Override
-	protected void onCreate() {
+	public void onCreate() {
 		Log.v("onCreate");
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		Log.v("onResume");
 	}
 
 	@Override
-	protected void onPause() {
+	public void onPause() {
 		Log.v("onPause");
 	}
 
 	@Override
-	protected void onStop() {
+	public void onStop() {
 		Log.v("onStop");
 	}
 
 	@Override
-	protected void onDestroy() {
+	public void onDestroy() {
 		Log.v("onDestroy");
 	}
 
 	@Override
-	protected void onLowMemory() {
+	public void onLowMemory() {
 		Log.v("onLowMemory");
 	}
 	
