@@ -1,78 +1,120 @@
 package com.novoda.lib.httpservice;
 
-import static com.novoda.lib.httpservice.util.Log.v;
-import static com.novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
+import static com.novoda.lib.httpservice.utils.Log.v;
+import static com.novoda.lib.httpservice.utils.Log.verboseLoggingEnabled;
 
 import java.util.concurrent.Callable;
 
-import com.novoda.lib.httpservice.provider.EventBus;
-import com.novoda.lib.httpservice.provider.IntentRegistry;
-import com.novoda.lib.httpservice.provider.IntentWrapper;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+import com.novoda.lib.httpservice.config.Config;
+import com.novoda.lib.httpservice.config.ManualConfig;
+import com.novoda.lib.httpservice.controller.CallableWrapper;
+import com.novoda.lib.httpservice.controller.LifecycleManager;
+import com.novoda.lib.httpservice.controller.executor.ConnectedMultiThreadExecutor;
+import com.novoda.lib.httpservice.controller.executor.Executor;
 import com.novoda.lib.httpservice.provider.Provider;
-import com.novoda.lib.httpservice.provider.Response;
 import com.novoda.lib.httpservice.provider.http.HttpProvider;
-import com.novoda.lib.httpservice.service.LifecycleManagedExecutorService;
-import com.novoda.lib.httpservice.service.executor.CallableWrapper;
-import com.novoda.lib.httpservice.service.executor.ExecutorManager;
+import com.novoda.lib.httpservice.storage.InMemoryStorage;
+import com.novoda.lib.httpservice.storage.Storage;
 
 /**
- * Responsibilities : transform an intent in a request, link together the request and the provider 
- * and give a clean class to extends to the users
- * 
- * It is depending on :<br>
- * - Provider : makes resources identified by uri available  (example http)
- * - EventBus : is responsible to deliver events
- * - ExecutorManager : controls the threads 
- * 
- * To intercept responsed you need to add a RequestHandler.
- * To do that is simple, implement a SimpleRequestHandler make sure to have implement at least
- * the match and the onContentReceived method.
- * 
- * Handler are very flexible. Just a simple example, if you use this body for the implementation 
- * of the match method you can intercept event made when the httpservice will handled that request.
- *  <code>
- *  if("/relative/path".equals(uri.getPath())) {
- *		return true;
- *	}
- *	return false;
- *	</code>
- * 
  * @author luigi@novoda.com
  */
-public abstract class HttpService extends LifecycleManagedExecutorService {
+public class HttpService extends Service {
 	
 	private Provider provider;
-	
+	private Config config;
+	private Storage storage;
+	private LifecycleManager lifecycleManager;
+	private Executor executor;
+
 	public HttpService() {
-		this(null, null, null, null);
+		super();
+		initProvider();
+		initConfig();
+		initStorage();
+		initLifecycleManager();
+		initExecutorManager();
+	}
+	
+	protected void initProvider() {
+		this.provider = new HttpProvider();
+	}
+	
+	protected void initConfig() {
+		this.config = new ManualConfig();
+	}
+	
+	protected void initStorage() {
+		this.storage = new InMemoryStorage();
+	}
+	
+	protected void initLifecycleManager() {
+		this.lifecycleManager = new LifecycleManager() {
+			@Override
+			protected boolean isWorking() {
+				return HttpService.this.isWorking();
+			}
+			@Override
+			protected void stop() {
+				stopSelf();
+			}			
+		};
 	}
 
-	/**
-	 * Constructor with explicit dependencies.
-	 * 
-	 * @param provider Provider
-	 * @param eventBus event bus
-	 * @param executorManager ExecutorManager
-	 */
-	public HttpService(Provider provider, IntentRegistry intentRegistry, EventBus eventBus, ExecutorManager executorManager) {
-		super(intentRegistry, eventBus, executorManager);
-		if(provider == null) {
-			this.provider = new HttpProvider(this.eventBus);
-		} else {
-			this.provider = provider;
+	protected void initExecutorManager() {
+		this.executor = new ConnectedMultiThreadExecutor(this);
+    }
+	
+	@Override
+	public void onCreate() {
+		if (verboseLoggingEnabled()) {
+			v("Starting HttpService");
 		}
+		lifecycleManager.startLifeCycle();
+		executor.start();
+		super.onCreate();
 	}
 	
-	/**
-	 * This method link the provider and the request. It is called by the
-	 * ExecutorService to get a callable to execute.
-	 */
 	@Override
-	public Callable<Response> getCallable(IntentWrapper intentWrapper) {
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		if(verboseLoggingEnabled()) {
+			v("Executing intent");
+		}
+		lifecycleManager.notifyOperation();	
+        executor.addCallable(getCallable(intent));
+        return START_NOT_STICKY;
+	}
+	
+	@Override
+	public void onDestroy() {
+		if(verboseLoggingEnabled()) {
+			v("Executor Service on Destroy");
+		}
+		lifecycleManager.stopLifeCycle();
+    	if(executor != null) {
+    		executor.shutdown();
+    	}
+		super.onDestroy();
+	}
+	
+	private Callable<Void> getCallable(Intent intent) {
 		if (verboseLoggingEnabled()) {
 			v("Building up a callable with the provider and the intentWrapper");
 		}
-		return new CallableWrapper(provider, intentWrapper);
+		return new CallableWrapper(provider, config.getActor(intent, storage));
+	}
+	
+	@Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+	
+	private boolean isWorking() {
+		return executor.isWorking();
 	}
 	
 }

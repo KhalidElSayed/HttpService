@@ -18,8 +18,6 @@ public class Response {
 
 	private HttpResponse httpResponse;
 	
-	private IntentWrapper intentWrapper;
-	
 	private InputStream content;
 	
 	public void setHttpResponse(HttpResponse httpResponse) {
@@ -28,14 +26,6 @@ public class Response {
 	
 	public HttpResponse getHttpResponse() {
 		return this.httpResponse;
-	}
-
-	public IntentWrapper getIntentWrapper() {
-		return intentWrapper;
-	}
-
-	public void setIntentWrapper(IntentWrapper intentWrapper) {
-		this.intentWrapper = intentWrapper;
 	}
 
 	public InputStream getContent() {

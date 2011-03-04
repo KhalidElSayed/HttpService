@@ -1,24 +1,15 @@
 package com.novoda.lib.httpservice.tester.activity;
 
-import static com.novoda.lib.httpservice.tester.util.Log.v;
-
-import java.util.ArrayList;
-
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.novoda.lib.httpservice.tester.R;
-import com.novoda.lib.httpservice.tester.service.SimpleHttpService;
-import com.novoda.lib.httpservice.util.IntentBuilder;
+import com.novoda.lib.httpservice.R;
+import com.novoda.lib.httpservice.utils.IntentBuilder;
 
 public class Tester extends BaseActivity {
 
@@ -64,13 +55,14 @@ public class Tester extends BaseActivity {
 				String text = edit.getText().toString();
 //				d("Making all the same calls");
 				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST, HOST)
-						.withStringResultReceiver(new ResultReceiver(new Handler()) {
-							@Override
-							protected void onReceiveResult(int resultCode, Bundle resultData) {
-								v(">> SUCCESS");
-							}
-						}). withDisableCache().build();
+					Intent intent = new IntentBuilder("com.novoda.lib.httpservice.tester.action.ACTION_REQUEST", HOST)
+//						.withStringResultReceiver(new ResultReceiver(new Handler()) {
+//							@Override
+//							protected void onReceiveResult(int resultCode, Bundle resultData) {
+//								v(">> SUCCESS");
+//							}
+//						}). withDisableCache()
+					.build();
 					startService(intent);
 					startMonitor.setEnabled(true);
 				}
@@ -80,55 +72,55 @@ public class Tester extends BaseActivity {
 		monitorInfo = ((TextView)findViewById(R.id.monitorInfo));
 		monitorInfo.setText("Monitor is detach");
 		
-		startMonitor.setEnabled(false);
-		startMonitor.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				v("Starting monitor");
-				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
-				startMonitor.setEnabled(false);
-				stop.setEnabled(true);
-				monitorInfo.setText("Attaching monitor...");
-			}
-		});
-		stop.setEnabled(false);
-		stop.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				v("Stopping monitor");
-				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
-				startMonitor.setEnabled(true);
-				stop.setEnabled(false);
-				monitorInfo.setText("Monitor is detach");
-			}
-		});
+//		startMonitor.setEnabled(false);
+//		startMonitor.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				v("Starting monitor");
+//				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
+//				startMonitor.setEnabled(false);
+//				stop.setEnabled(true);
+//				monitorInfo.setText("Attaching monitor...");
+//			}
+//		});
+//		stop.setEnabled(false);
+//		stop.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				v("Stopping monitor");
+//				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
+//				startMonitor.setEnabled(true);
+//				stop.setEnabled(false);
+//				monitorInfo.setText("Monitor is detach");
+//			}
+//		});
 	}
 	
-	@Override
-	protected void onResume() {
-		registerReceiver(monitorBroadcastReceiver, SimpleHttpService.INTENT_FILTER_MONITOR);
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		unregisterReceiver(monitorBroadcastReceiver);
-		super.onPause();
-	}
+//	@Override
+//	protected void onResume() {
+//		registerReceiver(monitorBroadcastReceiver, SimpleHttpService.INTENT_FILTER_MONITOR);
+//		super.onResume();
+//	}
+//
+//	@Override
+//	protected void onPause() {
+//		unregisterReceiver(monitorBroadcastReceiver);
+//		super.onPause();
+//	}
 	
-	private BroadcastReceiver monitorBroadcastReceiver =  new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.EXTRA_DUMP_MONITOR);
-			StringBuilder builder = new StringBuilder("Monitoring[ | ");
-			StringBuilder viewBuilder = new StringBuilder();
-			for (String key: keys) {
-				builder.append(key).append(":").append(intent.getStringExtra(key)).append(" | ");
-				viewBuilder.append(key).append(":").append(intent.getStringExtra(key)).append(" \n ");
-			}
-			v(builder.append("]").toString());
-			monitorInfo.setText(viewBuilder.toString());
-		}
-	};
+//	private BroadcastReceiver monitorBroadcastReceiver =  new BroadcastReceiver() {
+//		@Override
+//		public void onReceive(Context context, Intent intent) {
+//			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.EXTRA_DUMP_MONITOR);
+//			StringBuilder builder = new StringBuilder("Monitoring[ | ");
+//			StringBuilder viewBuilder = new StringBuilder();
+//			for (String key: keys) {
+//				builder.append(key).append(":").append(intent.getStringExtra(key)).append(" | ");
+//				viewBuilder.append(key).append(":").append(intent.getStringExtra(key)).append(" \n ");
+//			}
+//			v(builder.append("]").toString());
+//			monitorInfo.setText(viewBuilder.toString());
+//		}
+//	};
 	
 }

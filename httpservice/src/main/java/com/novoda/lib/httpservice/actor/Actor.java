@@ -1,19 +1,22 @@
 package com.novoda.lib.httpservice.actor;
 
-import android.app.Application;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.protocol.HttpContext;
+
+import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
+
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 
 public class Actor {
 
 	private Intent intent;
 	
-	private Application application;
 	private ContextHttpWrapper context;
 	
-	public Actor() {
-		
+	public Actor(Intent intent) {
+		this.intent = intent;
 	}
 	
 	public void applayContext(ContextHttpWrapper context) {
@@ -24,52 +27,20 @@ public class Actor {
 		return context;
 	}
 	
-    /** 
-     * Return the intent that started this activity. 
-     */
     public Intent getIntent() {
         return intent;
     }
-    
-    /** 
-     * Change the intent returned by {@link #getIntent}.  This holds a 
-     * reference to the given intent; it does not copy it.  Often used in 
-     * conjunction with {@link #onNewIntent}. 
-     *  
-     * @param newIntent The new Intent object to return from getIntent 
-     * 
-     * @see #getIntent
-     * @see #onNewIntent
-     */ 
+     
     public void setIntent(Intent newIntent) {
         intent = newIntent;
     }
     
-    /** 
-     * Return the application that owns this activity.
-     */
-    public final Application getApplication() {
-        return application;
-    }
-    
-    public void startActorForResult(Intent intent, int requestCode) {
+    protected void onCreate() {
     	
     }
-    
-    public void startActor(Intent intent) {
-    	
-    }
-	
-    protected void onCreate(Bundle savedInstanceState) {
-
-    }
-    
-    protected void onResume() {
+   
+	protected void onResume() {
        
-    }
-
-    protected void onPostResume() {
-
     }
     
 	protected void onPause() {
@@ -87,5 +58,25 @@ public class Actor {
     protected void onLowMemory() {
     	
     }
-    
+
+	public void onPreprocess(HttpUriRequest method, HttpContext context2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onPostprocess(HttpResponse httpResponse, HttpContext context2) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onThrowable(Throwable t) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onResponseReceived(HttpResponse httpResponse) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

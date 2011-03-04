@@ -1,5 +1,7 @@
 package com.novoda.lib.httpservice.provider;
 
+import com.novoda.lib.httpservice.actor.Actor;
+
 /**
  * Provider define the interface for every kind of
  * content provider. In 99% of the scenario the content is 
@@ -15,12 +17,6 @@ public interface Provider {
     int CONNECTION_TIMEOUT = 25*SECOND;
     int CON_MANAGER_TIMEOUT = 25*SECOND;
 
-	/**
-	 * Execute a particular http request and return the  
-	 * 
-	 * @param intentWrapper
-	 * @return
-	 */
-	Response execute(IntentWrapper intentWrapper);
+	void execute(Actor actor);
 	
 }
