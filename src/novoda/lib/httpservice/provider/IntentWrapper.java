@@ -50,6 +50,7 @@ public class IntentWrapper {
 		String multipart_uri = "novoda.lib.httpservice.extra.MULTIPART_URI";
 		String multipart_extra_param = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_PARAM";
 		String multipart_extra_value = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_VALUE";
+		String multipart_extra_body = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BODY";
 	}
 
 	public static interface Method {
@@ -233,6 +234,10 @@ public class IntentWrapper {
 
 	public String getMultipartExtraValue() {
 		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_value);
+	}
+	
+	public String getBodyEntity() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_body);
 	}
 
 }

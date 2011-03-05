@@ -6,6 +6,7 @@ import static novoda.lib.httpservice.util.Log.Provider.v;
 import static novoda.lib.httpservice.util.Log.Provider.verboseLoggingEnabled;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -14,12 +15,14 @@ import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentWrapper;
 import novoda.lib.httpservice.provider.Provider;
 import novoda.lib.httpservice.provider.Response;
+import novoda.lib.httpservice.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -32,21 +35,21 @@ import android.text.TextUtils;
 public class HttpProvider implements Provider {
 
 	private static final String ENCODING = "application/octet-stream";
-	
-	private static final String USER_AGENT = new UserAgent.Builder().with("HttpService").build();
-    
-    private HttpClient client;
-    
-    private EventBus eventBus;
 
-    public HttpProvider(EventBus eventBus) {		
+	private static final String USER_AGENT = new UserAgent.Builder().with("HttpService").build();
+
+	private HttpClient client;
+
+	private EventBus eventBus;
+
+	public HttpProvider(EventBus eventBus) {		
 		this(AndroidHttpClient.newInstance(USER_AGENT), eventBus);
 	}
-    
-    public HttpProvider(HttpClient client, EventBus eventBus) {		
-    	if(eventBus == null) {
-    		logAndThrow("EventBus is null, can't procede");
-    	}
+
+	public HttpProvider(HttpClient client, EventBus eventBus) {		
+		if(eventBus == null) {
+			logAndThrow("EventBus is null, can't procede");
+		}
 		this.eventBus = eventBus;
 		this.client = client;
 	}
@@ -54,51 +57,62 @@ public class HttpProvider implements Provider {
 	@Override
 	public Response execute(IntentWrapper request) {
 		Response response = new Response();
-        HttpUriRequest method = null;
-        try {
-        	if(verboseLoggingEnabled()) {
-    			v("HttpProvider execute for : " + request.getUri());
-    		}
-        	if(request.isGet()) {
-        		method = new HttpGet(request.asURI());
-        	} else if(request.isPost()) {
-        		method = new HttpPost(request.asURI());
-        		checkMultipartParams((HttpPost)method, request);
-        	} else {
-        		logAndThrow("Method " + request.getMethod() + " is not implemented yet");
-        	}
-        	HttpContext context = new BasicHttpContext();
-        	eventBus.fireOnPreProcess(request, method, context);
-        	final HttpResponse httpResponse = client.execute(method, context);
-        	eventBus.fireOnPostProcess(request, httpResponse, context);
-            if(httpResponse == null) {
-            	logAndThrow("Response from " + request.getUri() + " is null");
-            }
-            response.setHttpResponse(httpResponse);
-            response.setIntentWrapper(request);
-            if(verboseLoggingEnabled()) {
-    			v("Request returning response");
-    		}
-            return response;
-        } catch (Throwable t) {
-        	eventBus.fireOnThrowable(request, t);
-        	if(errorLoggingEnabled()) {
-    			e("Problems executing the request for : " + request.getUri() + " " + t.getMessage());
-    		}
-    		return null;
-        }
+		HttpUriRequest method = null;
+		try {
+			if(verboseLoggingEnabled()) {
+				v("HttpProvider execute for : " + request.getUri());
+			}
+			if(request.isGet()) {
+				method = new HttpGet(request.asURI());
+			} else if(request.isPost()) {
+				method = new HttpPost(request.asURI());
+				checkMultipartParams((HttpPost)method, request);
+			} else {
+				logAndThrow("Method " + request.getMethod() + " is not implemented yet");
+			}
+			HttpContext context = new BasicHttpContext();
+			eventBus.fireOnPreProcess(request, method, context);
+			final HttpResponse httpResponse = client.execute(method, context);
+			eventBus.fireOnPostProcess(request, httpResponse, context);
+			if(httpResponse == null) {
+				logAndThrow("Response from " + request.getUri() + " is null");
+			}
+			response.setHttpResponse(httpResponse);
+			response.setIntentWrapper(request);
+			if(verboseLoggingEnabled()) {
+				v("Request returning response");
+			}
+			return response;
+		} catch (Throwable t) {
+			eventBus.fireOnThrowable(request, t);
+			if(errorLoggingEnabled()) {
+				e("Problems executing the request for : " + request.getUri() + " " + t.getMessage());
+			}
+			return null;
+		}
 	}
-	
+
 	private void checkMultipartParams(HttpPost post, IntentWrapper intent) {
 		String fileParamName = intent.getMultipartFileParamName();
 		FileBody fileBody = getFileBodyFromFile(intent.getMultipartFile(), fileParamName);
 
 		String uriParamName = intent.getMultipartUriParamName();
 		FileBody uriBody = getFileBodyFromUri(intent.getMultipartUri(), uriParamName);
-		
+
 		String extraPram = intent.getMultipartExtraParam();
 		StringBody stringBody = getStringBody(extraPram, intent.getMultipartExtraValue());
+
 		
+
+		String bodyEntity = intent.getBodyEntity();
+		Log.i("Body Entity = " + bodyEntity);
+		if (bodyEntity!=null){
+			try {
+				post.setEntity(new StringEntity(bodyEntity, ENCODING));
+			} catch (UnsupportedEncodingException e) {
+				Log.e("Problem setting entity in the body", e);
+			}
+	} else 		
 		if(stringBody != null || fileBody != null || uriBody != null) {
 			MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 			if(stringBody != null) {
@@ -109,54 +123,55 @@ public class HttpProvider implements Provider {
 			}
 			if(fileBody != null) {
 				entity.addPart(fileParamName, fileBody);
-			}
+			}	
 			post.setEntity(entity);
 		}
+}
+
+
+private FileBody getFileBodyFromUri(String uri, String paramName) {
+	if(TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {
+		return null;
 	}
-	
-	private FileBody getFileBodyFromUri(String uri, String paramName) {
-		if(TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {
-			return null;
-		}
-		File f = null;
-		try {
-			f = new File(new URI(uri));
-		} catch (URISyntaxException e) {
-			if(verboseLoggingEnabled()) {
-				v("file not found " + uri);
-			} 
-		}
-		return new FileBody(f, ENCODING);
+	File f = null;
+	try {
+		f = new File(new URI(uri));
+	} catch (URISyntaxException e) {
+		if(verboseLoggingEnabled()) {
+			v("file not found " + uri);
+		} 
 	}
-	
-	private FileBody getFileBodyFromFile(String file, String paramName) {
-		if(TextUtils.isEmpty(file) || TextUtils.isEmpty(paramName)) {
-			return null;
-		}
-		return new FileBody(new File(file), ENCODING);
+	return new FileBody(f, ENCODING);
+}
+
+private FileBody getFileBodyFromFile(String file, String paramName) {
+	if(TextUtils.isEmpty(file) || TextUtils.isEmpty(paramName)) {
+		return null;
 	}
-	
-	private StringBody getStringBody(String param, String value) {
-		if(TextUtils.isEmpty(param)) {
-			return null;
-		}
-		if(value == null) {
-			value = "";
-		}
-		StringBody body = null;
-		try  {
-			body = new StringBody(value);
-		} catch(Throwable t) {
-			v(t.getMessage());
-		}
-		return body;
+	return new FileBody(new File(file), ENCODING);
+}
+
+private StringBody getStringBody(String param, String value) {
+	if(TextUtils.isEmpty(param)) {
+		return null;
 	}
-	
-	private void logAndThrow(String msg) {
-		if(errorLoggingEnabled()) {
-			e(msg);
-		}
-		throw new ProviderException(msg);
+	if(value == null) {
+		value = "";
 	}
-	
+	StringBody body = null;
+	try  {
+		body = new StringBody(value);
+	} catch(Throwable t) {
+		v(t.getMessage());
+	}
+	return body;
+}
+
+private void logAndThrow(String msg) {
+	if(errorLoggingEnabled()) {
+		e(msg);
+	}
+	throw new ProviderException(msg);
+}
+
 }

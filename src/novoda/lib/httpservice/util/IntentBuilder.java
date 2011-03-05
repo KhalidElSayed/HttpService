@@ -10,6 +10,7 @@ import novoda.lib.httpservice.provider.IntentWrapper;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.ResultReceiver;
+import android.text.TextUtils;
 
 /**
  * This class is responsible to help in setting all the necessary request
@@ -109,6 +110,13 @@ public class IntentBuilder {
 	public IntentBuilder withMultipartExtra(String extraParam, String extraValue) {
 		if(extraParam != null && extraValue != null) {
 			intent.putExtra(IntentWrapper.Extra.multipart_extra_value, extraValue);
+		}
+		return this;
+	}
+	
+	public IntentBuilder withBody(String body){
+		if (!TextUtils.isEmpty(body)){
+			intent.putExtra(IntentWrapper.Extra.multipart_extra_body, body);
 		}
 		return this;
 	}
