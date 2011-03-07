@@ -56,6 +56,11 @@ public class IntentBuilder {
 //        intent.putExtra(IntentReader.Extra.uid, System.nanoTime());
         return intent;
     }
+    
+    public IntentBuilder withBody(String body) {
+        intent.putExtra(IntentReader.Extra.body, body);
+        return this;
+    }
 
 //	public IntentBuilder withDisableCache() {
 //		intent.putExtra(IntentWrapper.Extra.cache_disabled, true);

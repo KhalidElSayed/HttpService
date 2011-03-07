@@ -3,6 +3,7 @@ package com.novoda.lib.httpservice.actor;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.util.EntityUtils;
 
 import android.content.Intent;
 
@@ -45,21 +46,36 @@ public class LoggingActor extends Actor {
 		Log.v("onLowMemory");
 	}
 	
-	
+	@Override
 	public void onPreprocess(HttpUriRequest method, HttpContext context) {
 		Log.v("onPreprocess");
 	}
 
+	@Override
 	public void onPostprocess(HttpResponse httpResponse, HttpContext context) {
 		Log.v("onPostprocess");
 	}
 
+	@Override
 	public void onThrowable(Throwable t) {
 		Log.v("onThrowable");
 	}
 
-	public void onResponseReceived(HttpResponse httpResponse) {
-		Log.v("onResponseReceived");
+	@Override
+	public void onResponseReceived(HttpResponse httpResponse) {		
+		try {
+			Log.v("onResponseReceived ");
+			String content = EntityUtils.toString(httpResponse.getEntity());
+			Log.v("content is : " + content);
+		} catch (Exception e) {
+			onThrowable(e);
+		}
+	}
+	
+	@Override
+	public boolean onResponseError(int statusCode) {
+		Log.v("onResponseError : " + statusCode);		
+		return false;
 	}
 
 }

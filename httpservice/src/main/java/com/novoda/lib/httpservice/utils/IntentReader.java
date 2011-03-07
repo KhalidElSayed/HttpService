@@ -23,6 +23,7 @@ public class IntentReader {
 	public static interface Extra {
 		String method = "novoda.lib.httpservice.extra.METHOD";
 		String params = "novoda.lib.httpservice.extra.PARAMS";
+		String body = "novoda.lib.httpservice.extra.BODY";
 	}
 	
 	public static interface Method {
@@ -51,6 +52,17 @@ public class IntentReader {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean hasBodyEntity() {
+		if(intent.hasExtra(Extra.body)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public String getBodyEntity() {
+		return intent.getStringExtra(Extra.body);
 	}
 
 	public int getMethod() {

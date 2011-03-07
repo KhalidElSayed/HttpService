@@ -91,4 +91,9 @@ public class Actor {
 		
 	}
 
+	public boolean onResponseError(int statusCode) {
+		// TODO Auto-generated method stub		
+		return false;
+	}
+
 }

@@ -5,11 +5,15 @@ import static com.novoda.lib.httpservice.utils.Log.Provider.errorLoggingEnabled;
 import static com.novoda.lib.httpservice.utils.Log.Provider.v;
 import static com.novoda.lib.httpservice.utils.Log.Provider.verboseLoggingEnabled;
 
+import java.io.UnsupportedEncodingException;
+
 import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
@@ -17,6 +21,7 @@ import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.exception.ProviderException;
 import com.novoda.lib.httpservice.provider.Provider;
 import com.novoda.lib.httpservice.utils.IntentReader;
+import com.novoda.lib.httpservice.utils.Log;
 
 public class HttpProvider implements Provider {
 
@@ -36,7 +41,6 @@ public class HttpProvider implements Provider {
 
 	@Override
 	public void execute(Actor actor) {
-        HttpUriRequest method = null;
         //TODO
         actor.onResume();
         IntentReader reader = new IntentReader(actor.getIntent());
@@ -44,13 +48,11 @@ public class HttpProvider implements Provider {
         	if(verboseLoggingEnabled()) {
     			v("HttpProvider execute for : " + actor.getIntent());
     		}
+        	HttpUriRequest method = null;
         	if(reader.isGet()) {
-        		method = new HttpGet(reader.asURI());
+        		method = initGet(reader);
         	} else if(reader.isPost()) {
-        		method = new HttpPost(reader.asURI());
-        		
-        		//TODO post parameters
-        		
+        		method = initPost(reader);
         	} else {
         		logAndThrow("Method " + reader.getMethod() + " is not implemented yet");
         	}
@@ -60,7 +62,7 @@ public class HttpProvider implements Provider {
         	final HttpResponse httpResponse = client.execute(method, context);
         	actor.onPostprocess(httpResponse, context);
         	
-        	actor.onResponseReceived(httpResponse);
+        	checkResponse(actor, httpResponse);
         	
             if(httpResponse == null) {
             	logAndThrow("Response from " + reader.getUri() + " is null");
@@ -76,6 +78,42 @@ public class HttpProvider implements Provider {
         }
         actor.onPause();
         actor.onDestroy();
+	}
+	
+	private void checkResponse(Actor actor, HttpResponse httpResponse) {
+		StatusLine status = httpResponse.getStatusLine();
+		if(verboseLoggingEnabled()) {
+			v("Checking response status : " + status.getStatusCode());
+		}
+		if(200 == status.getStatusCode()) {
+			actor.onResponseReceived(httpResponse);			
+		} else {
+			if(actor.onResponseError(status.getStatusCode())) {
+				actor.onResponseReceived(httpResponse);
+			}
+		}
+	}
+
+	private HttpUriRequest initGet(IntentReader reader) {
+		HttpUriRequest method = new HttpGet(reader.asURI());
+		//TODO
+		return method;
+	}
+	
+	private HttpUriRequest initPost(IntentReader reader) {
+		HttpPost method = new HttpPost(reader.asURI());
+		
+		if(reader.hasBodyEntity()) {
+			try {
+				String data = reader.getBodyEntity();
+				method.setEntity(new StringEntity(data, ENCODING));
+			} catch (UnsupportedEncodingException e) {
+				Log.e("Problem setting entity in the body", e);
+			}
+		}
+		
+		//TODO
+		return method;
 	}
 	
 //	private void checkMultipartParams(HttpPost post, IntentWrapper intent) {

@@ -2,125 +2,78 @@ package com.novoda.lib.httpservice.tester.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Spinner;
 
 import com.novoda.lib.httpservice.R;
+import com.novoda.lib.httpservice.tester.util.Log;
 import com.novoda.lib.httpservice.utils.IntentBuilder;
 
 public class Tester extends BaseActivity {
 
-	/**
-	 * Just an site that I owned and that I can call without getting in trouble for dos
-	 */
-	private static final String HOST = "http://httpmock.appspot.com/test/success";
+	private static final String HOST = "http://httpmock.appspot.com/test/";
 	
-	private TextView monitorInfo;
+	private static final String ACTION = "com.novoda.lib.httpservice.tester.action.ACTION_REQUEST";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard);
 		final EditText edit = ((EditText) findViewById(R.id.requestNumber));
-//d		final Button call = ((Button)findViewById(R.id.start));
 		final Button start = ((Button)findViewById(R.id.start));
-		final Button startMonitor = ((Button)findViewById(R.id.startMonitor));
-		final Button stop = ((Button)findViewById(R.id.stopMonitor));
-		edit.setText("1");
-//		call.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				String text = edit.getText().toString();
-//				d("Making " + text + " calls");
-//				for(int i= 0; i<Integer.valueOf(text); i++) {
-//					Intent intent = new IntentBuilder(SimpleHttpService.ACTION_REQUEST , HOST)
-//						.withParam("param", "" + i)
-//						.withConsumedResultReceiver(new ResultReceiver(new Handler()) {
-//							@Override
-//							protected void onReceiveResult(int resultCode, Bundle resultData) {
-//								d(">> Service has finished to handle the result");
-//							}
-//						}).build();
-//					startService(intent);
-//					start.setEnabled(true);
-//				}
-//			}
-//		});
+		
+		final Spinner httpMethods = (Spinner) findViewById(R.id.http_method);
+	    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+	            this, R.array.http_methods, android.R.layout.simple_spinner_item);
+	    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    httpMethods.setAdapter(adapter);
+	    
+	    final Spinner httpResponseTypes = (Spinner) findViewById(R.id.http_respose_types);
+	    ArrayAdapter<CharSequence> adapterTypes = ArrayAdapter.createFromResource(
+	            this, R.array.http_response_types, android.R.layout.simple_spinner_item);
+	    adapterTypes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+	    httpResponseTypes.setAdapter(adapterTypes);
+
 		start.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String text = edit.getText().toString();
-//				d("Making all the same calls");
-				for(int i= 0; i<Integer.valueOf(text); i++) {
-					Intent intent = new IntentBuilder("com.novoda.lib.httpservice.tester.action.ACTION_REQUEST", HOST)
-//						.withStringResultReceiver(new ResultReceiver(new Handler()) {
-//							@Override
-//							protected void onReceiveResult(int resultCode, Bundle resultData) {
-//								v(">> SUCCESS");
-//							}
-//						}). withDisableCache()
-					.build();
-					startService(intent);
-					startMonitor.setEnabled(true);
+				String method = httpMethods.getSelectedItem().toString();
+				String responseType = httpResponseTypes.getSelectedItem().toString();
+				String numberOfCalls = edit.getText().toString();
+				if(TextUtils.isEmpty(numberOfCalls)) {
+					numberOfCalls = "1";
+				}
+				Log.v("Value : " + method + ", " + responseType + ", " + numberOfCalls);
+				for(int i= 0; i<Integer.valueOf(numberOfCalls); i++) {
+					startService(buildIntent(method, responseType));
 				}
 			}
 		});
-		
-		monitorInfo = ((TextView)findViewById(R.id.monitorInfo));
-		monitorInfo.setText("Monitor is detach");
-		
-//		startMonitor.setEnabled(false);
-//		startMonitor.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				v("Starting monitor");
-//				sendBroadcast(new Intent(SimpleHttpService.ACTION_START_MONITOR));
-//				startMonitor.setEnabled(false);
-//				stop.setEnabled(true);
-//				monitorInfo.setText("Attaching monitor...");
-//			}
-//		});
-//		stop.setEnabled(false);
-//		stop.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				v("Stopping monitor");
-//				sendBroadcast(new Intent(SimpleHttpService.ACTION_STOP_MONITOR));
-//				startMonitor.setEnabled(true);
-//				stop.setEnabled(false);
-//				monitorInfo.setText("Monitor is detach");
-//			}
-//		});
 	}
 	
-//	@Override
-//	protected void onResume() {
-//		registerReceiver(monitorBroadcastReceiver, SimpleHttpService.INTENT_FILTER_MONITOR);
-//		super.onResume();
-//	}
-//
-//	@Override
-//	protected void onPause() {
-//		unregisterReceiver(monitorBroadcastReceiver);
-//		super.onPause();
-//	}
-	
-//	private BroadcastReceiver monitorBroadcastReceiver =  new BroadcastReceiver() {
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			ArrayList<String> keys = intent.getStringArrayListExtra(SimpleHttpService.EXTRA_DUMP_MONITOR);
-//			StringBuilder builder = new StringBuilder("Monitoring[ | ");
-//			StringBuilder viewBuilder = new StringBuilder();
-//			for (String key: keys) {
-//				builder.append(key).append(":").append(intent.getStringExtra(key)).append(" | ");
-//				viewBuilder.append(key).append(":").append(intent.getStringExtra(key)).append(" \n ");
-//			}
-//			v(builder.append("]").toString());
-//			monitorInfo.setText(viewBuilder.toString());
-//		}
-//	};
+	private Intent buildIntent(String method, String responseType) {
+		String relativePath;
+		if("404".equalsIgnoreCase(responseType)) {
+			relativePath = "notfound";
+		} else if("500".equalsIgnoreCase(responseType)) {
+			relativePath = "servererror";
+		} else if("external res".equalsIgnoreCase(responseType)) {
+			relativePath = "staticresource";
+		} else if("string res".equalsIgnoreCase(responseType)) {
+			relativePath = "staticresource";
+		} else {
+			relativePath = "success";
+		}
+		IntentBuilder builder = new IntentBuilder(ACTION, HOST + relativePath);
+		if("post".equalsIgnoreCase(method)) {
+			builder.withBody("{json:\"xx\"}").asPost();
+		}
+		return builder.build();
+	}
 	
 }
