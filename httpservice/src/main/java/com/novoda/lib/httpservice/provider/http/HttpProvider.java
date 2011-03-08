@@ -25,7 +25,7 @@ import com.novoda.lib.httpservice.utils.Log;
 
 public class HttpProvider implements Provider {
 
-	private static final String ENCODING = "application/octet-stream";
+	private static final String ENCODING = "UTF-8";
 	
 	private static final String USER_AGENT = new UserAgent.Builder().with("HttpService").build();
     
@@ -73,7 +73,7 @@ public class HttpProvider implements Provider {
         } catch (Throwable t) {
         	actor.onThrowable(t);
         	if(errorLoggingEnabled()) {
-    			e("Problems executing the request for : " + reader.getUri() + " " + t.getMessage());
+    			e("Problems executing the request for : " + reader.getUri() + " " , t);
     		}
         }
         actor.onPause();

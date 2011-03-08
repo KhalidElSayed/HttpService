@@ -14,12 +14,17 @@ public class IntentBuilder {
 
     private ArrayList<ParcelableBasicNameValuePair> requestParameters = new ArrayList<ParcelableBasicNameValuePair>();
 
-    public IntentBuilder(String action, String url) {
-        this(action, Uri.parse(url));
+    public IntentBuilder(String url) {
+        this(Uri.parse(url));
     }
 
-    public IntentBuilder(String action, Uri uri) {
-        intent = new Intent(action, uri);
+    public IntentBuilder(String url, String type) {
+    	intent = new Intent(Intent.ACTION_SYNC);
+    	intent.setDataAndType(Uri.parse(url), type);
+    }
+
+    public IntentBuilder(Uri uri) {
+        intent = new Intent(Intent.ACTION_SYNC, uri);
     }
 
     public IntentBuilder asPost() {

@@ -37,12 +37,29 @@
 			=====================================================
 		-->
 		<service a:name=".HttpService">
-			<intent-filter>
-				<action a:name="com.novoda.lib.httpservice.tester.action.ACTION_REQUEST" />		
-				<data a:scheme="http" />
-				<data a:scheme="https" />		
-			</intent-filter>
-            <meta-data a:name="actorXmlFile" a:value="actors.xml"/>
+            <intent-filter>
+               <action
+                  a:name="android.intent.action.SYNC" />
+               <category
+                  a:name="android.intent.category.DEFAULT" />
+               <data
+                  a:scheme="http"
+                  a:host="httpmock.appspot.com" />
+               <data
+                  a:mimeType="vnd.android.cursor.dir/vnd.httptester.actor1" />
+            </intent-filter>
+            <intent-filter>
+               <action
+                  a:name="android.intent.action.SYNC" />
+               <category
+                  a:name="android.intent.category.DEFAULT" />
+               <data
+                  a:scheme="http"
+                  a:host="httpmock.appspot.com" />
+               <data
+                  a:mimeType="vnd.android.cursor.dir/vnd.httptester.actor2" />
+            </intent-filter>
+<!--            <meta-data a:name="actorXmlFile" a:value="actors.xml"/>-->
 		</service>
       
 	</application>

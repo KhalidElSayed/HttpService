@@ -107,6 +107,31 @@ public class Log {
 		}
 	}
 	
+	public static class Storage {
+	    
+		private static final String TAG = "httpservice-starage";
+		
+		public static final boolean verboseLoggingEnabled() {
+			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+		}
+		
+		public static final boolean errorLoggingEnabled() {
+			return android.util.Log.isLoggable(TAG, android.util.Log.ERROR);
+		}
+		
+		public static final void e(String msg) {
+			android.util.Log.e(TAG, msg);
+		}
+		
+		public static final void e(String msg, Throwable t) {
+			android.util.Log.e(TAG, msg, t);
+		}
+		
+		public static final void v(String msg) {
+			android.util.Log.v(TAG, msg);
+		}
+	}
+	
 	public static class Bus {
 		
 		private static final String TAG = "httpservice-bus";

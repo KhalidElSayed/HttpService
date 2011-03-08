@@ -48,7 +48,7 @@ public class Actor {
 	}
     
     public void onCreate() {
-    	
+    	storage.queued(intent);
     }
    
     public void onResume() {
@@ -64,7 +64,7 @@ public class Actor {
     }
     
     public void onDestroy() {
-    	
+    	storage.contendConsumed(intent);
     }
     
     public void onLowMemory() {
@@ -87,8 +87,7 @@ public class Actor {
 	}
 
 	public void onResponseReceived(HttpResponse httpResponse) {
-		// TODO Auto-generated method stub
-		
+		storage.contendReceived(intent);
 	}
 
 	public boolean onResponseError(int statusCode) {

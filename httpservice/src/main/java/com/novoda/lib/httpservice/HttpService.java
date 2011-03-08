@@ -26,33 +26,33 @@ import com.novoda.lib.httpservice.storage.Storage;
 public class HttpService extends Service {
 	
 	private Provider provider;
-	private ActorFactory config;
+	private ActorFactory actorFactory;
 	private Storage storage;
 	private LifecycleManager lifecycleManager;
 	private Executor executor;
 
 	public HttpService() {
 		super();
-		initProvider();
-		initConfig();
-		initStorage();
+		this.provider = getProvider();
+		this.actorFactory = getActorFactory();
+		this.storage = getStorage();
 		initLifecycleManager();
 		initExecutorManager();
 	}
 	
-	protected void initProvider() {
-		this.provider = new HttpProvider();
+	protected ActorFactory getActorFactory() {
+		return new ProgrammaticActorFactory();
+	}
+
+	protected Provider getProvider() {
+		return new HttpProvider();
 	}
 	
-	protected void initConfig() {
-		this.config = new ProgrammaticActorFactory();
+	protected Storage getStorage() {
+		return new InMemoryStorage();
 	}
 	
-	protected void initStorage() {
-		this.storage = new InMemoryStorage();
-	}
-	
-	protected void initLifecycleManager() {
+	private void initLifecycleManager() {
 		this.lifecycleManager = new LifecycleManager() {
 			@Override
 			protected boolean isWorking() {
@@ -65,7 +65,7 @@ public class HttpService extends Service {
 		};
 	}
 
-	protected void initExecutorManager() {
+	private void initExecutorManager() {
 		this.executor = new ConnectedMultiThreadExecutor(this);
     }
 	
@@ -112,7 +112,7 @@ public class HttpService extends Service {
 		if (verboseLoggingEnabled()) {
 			v("Building up a callable with the provider and the intentWrapper");
 		}
-		return new CallableWrapper(provider, config.getActor(intent, storage));
+		return new CallableWrapper(provider, actorFactory.getActor(intent, storage));
 	}
 	
 	@Override

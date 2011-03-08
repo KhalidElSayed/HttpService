@@ -11,14 +11,13 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.novoda.lib.httpservice.R;
+import com.novoda.lib.httpservice.tester.service.AppService;
 import com.novoda.lib.httpservice.tester.util.Log;
 import com.novoda.lib.httpservice.utils.IntentBuilder;
 
 public class Tester extends BaseActivity {
 
 	private static final String HOST = "http://httpmock.appspot.com/test/";
-	
-	private static final String ACTION = "com.novoda.lib.httpservice.tester.action.ACTION_REQUEST";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +68,8 @@ public class Tester extends BaseActivity {
 		} else {
 			relativePath = "success";
 		}
-		IntentBuilder builder = new IntentBuilder(ACTION, HOST + relativePath);
+		//NOTE the type can drive the type of actor to run
+		IntentBuilder builder = new IntentBuilder(HOST + relativePath, AppService.TYPE1);
 		if("post".equalsIgnoreCase(method)) {
 			builder.withBody("{json:\"xx\"}").asPost();
 		}
