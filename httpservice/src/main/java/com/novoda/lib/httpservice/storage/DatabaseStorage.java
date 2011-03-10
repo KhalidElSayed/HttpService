@@ -8,29 +8,23 @@ import android.content.Context;
 import android.content.Intent;
 
 public class DatabaseStorage implements Storage {
-
-	private Context context;
-	
-	public DatabaseStorage(Context context) {
-		this.context = context;
-	}
 	
 	@Override
-	public void contendConsumed(Intent intent) {
+	public void contendConsumed(Context context, Intent intent) {
 		ContentValues cv = asValues(intent, false);
 		cv.put(IntentModel.Column.status, IntentModel.Status.consumed);
-		context.getContentResolver().insert(IntentModel.URI, cv);
+		context.getContentResolver().update(IntentModel.URI, cv, "_id=?", new String[]{"" + intent.filterHashCode()});
 	}
 
 	@Override
-	public void contendReceived(Intent intent) {
+	public void contendReceived(Context context, Intent intent) {
 		ContentValues cv = asValues(intent, false);
 		cv.put(IntentModel.Column.status, IntentModel.Status.received);
-		context.getContentResolver().insert(IntentModel.URI, cv);
+		context.getContentResolver().update(IntentModel.URI, cv, "_id=?", new String[]{"" + intent.filterHashCode()});
 	}
 
 	@Override
-	public void queued(Intent intent) {
+	public void queued(Context context, Intent intent) {
 		ContentValues cv = asValues(intent, true);
 		cv.put(IntentModel.Column.status, IntentModel.Status.queued);
 		context.getContentResolver().insert(IntentModel.URI, cv);

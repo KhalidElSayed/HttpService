@@ -118,7 +118,7 @@ public class StorageProvider extends ContentProvider {
 			case StorageUriMatcher.INTENT_INCOMING_COLLECTION: {
 				rowUpdated = getDataBase().update(IntentModel.NAME,
 						values, selection, selectionArgs);
-				getContext().getContentResolver().notifyChange(uri, null);
+				getContext().getContentResolver().notifyChange(Uri.withAppendedPath(uri, values.get(IntentModel.Column.status) + "/" + selectionArgs[0]), null);
 				break;
 			}
 			default: {

@@ -1,23 +1,24 @@
 package com.novoda.lib.httpservice.storage;
 
+import android.content.Context;
 import android.content.Intent;
 
 public class InMemoryStorage implements Storage {
 
 	@Override
-	public void contendConsumed(Intent intet) {
+	public void contendConsumed(Context context, Intent intet) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void contendReceived(Intent intet) {
+	public void contendReceived(Context context, Intent intet) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void queued(Intent intent) {
+	public void queued(Context context, Intent intent) {
 		// TODO Auto-generated method stub
 		
 	}

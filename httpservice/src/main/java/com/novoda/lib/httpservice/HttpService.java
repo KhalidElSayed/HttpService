@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.factory.ProgrammaticActorFactory;
 import com.novoda.lib.httpservice.controller.CallableWrapper;
@@ -112,7 +113,9 @@ public class HttpService extends Service {
 		if (verboseLoggingEnabled()) {
 			v("Building up a callable with the provider and the intentWrapper");
 		}
-		return new CallableWrapper(provider, actorFactory.getActor(intent, storage));
+		Actor actor = actorFactory.getActor(intent, storage);
+		actor.onCreate();
+		return new CallableWrapper(provider, actor);
 	}
 	
 	@Override
