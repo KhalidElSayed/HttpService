@@ -12,8 +12,6 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import com.novoda.lib.httpservice.provider.Provider;
-
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -31,6 +29,8 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -53,6 +53,8 @@ import android.content.Context;
 import android.os.Looper;
 import android.util.Log;
 
+import com.novoda.lib.httpservice.Settings;
+
 /**
  * Subclass of the Apache {@link DefaultHttpClient} that is configured with
  * reasonable default settings and registered schemes for Android, and also lets
@@ -68,6 +70,15 @@ import android.util.Log;
  * </pre>
  */
 public final class AndroidHttpClient implements HttpClient {
+	
+	private static final int HTTP_PORT = 80;
+	private static final String HTTP_SCHEMA = "http";
+    private static final String HTTPS_SCHEMA = "https";
+    private static final int HTTPS_PORT = 443;
+    
+    private static final String GZIP = "gzip";
+    private static final String ACCEPTED_ENCODIN_KEY = "Accept-Encoding";
+    
 	
     // Gzip of data shorter than this probably won't be worthwhile
     public static long DEFAULT_SYNC_MIN_GZIP_BYTES = 256;
@@ -100,11 +111,15 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-        HttpConnectionParams.setConnectionTimeout(params, Provider.SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, Provider.CONNECTION_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Settings.SOCKET_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, Settings.CONNECTION_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
+        
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(Settings.CONNECTION_PER_ROUTE); 
+        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
+        ConnManagerParams.setMaxTotalConnections(params, Settings.MAX_TOTAL_CONNECTION); 
 
-        ConnManagerParams.setTimeout(params, Provider.CON_MANAGER_TIMEOUT);
+        ConnManagerParams.setTimeout(params, Settings.CON_MANAGER_TIMEOUT);
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
@@ -117,10 +132,10 @@ public final class AndroidHttpClient implements HttpClient {
         // Set the specified user agent and register standard protocols.
         HttpProtocolParams.setUserAgent(params, userAgent);
         SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
+        schemeRegistry.register(new Scheme(HTTP_SCHEMA, PlainSocketFactory.getSocketFactory(), HTTP_PORT));
 
         // Changed from android.net to Apache to fit versions prior to 2.2
-        schemeRegistry.register(new Scheme("https", SSLSocketFactory.getSocketFactory(), 443));
+        schemeRegistry.register(new Scheme(HTTPS_SCHEMA, SSLSocketFactory.getSocketFactory(), HTTPS_PORT));
 
         ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
 
@@ -186,9 +201,9 @@ public final class AndroidHttpClient implements HttpClient {
      * @see #getUngzippedContent
      */
     public static void modifyRequestToAcceptGzipResponse(HttpRequest request) {
-        request.addHeader("Accept-Encoding", "gzip");
+        request.addHeader(ACCEPTED_ENCODIN_KEY, GZIP);
     }
-
+    
     /**
      * Gets the input stream from a response entity. If the entity is gzipped
      * then this will get a stream over the uncompressed data.
@@ -207,7 +222,7 @@ public final class AndroidHttpClient implements HttpClient {
         String contentEncoding = header.getValue();
         if (contentEncoding == null)
             return responseStream;
-        if (contentEncoding.contains("gzip"))
+        if (contentEncoding.contains(GZIP))
             responseStream = new GZIPInputStream(responseStream);
         return responseStream;
     }
@@ -312,7 +327,7 @@ public final class AndroidHttpClient implements HttpClient {
             zipper.write(data);
             zipper.close();
             entity = new ByteArrayEntity(arr.toByteArray());
-            entity.setContentEncoding("gzip");
+            entity.setContentEncoding(GZIP);
         }
         return entity;
     }

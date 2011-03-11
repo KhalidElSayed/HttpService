@@ -1,4 +1,4 @@
-package com.novoda.lib.httpservice.provider;
+package com.novoda.lib.httpservice.provider.local;
 
 import static com.novoda.lib.httpservice.utils.Log.Provider.v;
 import static com.novoda.lib.httpservice.utils.Log.Provider.verboseLoggingEnabled;
@@ -10,6 +10,7 @@ import java.util.HashMap;
 import android.net.Uri;
 
 import com.novoda.lib.httpservice.actor.Actor;
+import com.novoda.lib.httpservice.provider.Provider;
 
 public class LocalProvider implements Provider {
 	

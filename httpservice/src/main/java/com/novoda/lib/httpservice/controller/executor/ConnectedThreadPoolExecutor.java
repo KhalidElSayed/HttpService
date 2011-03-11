@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.novoda.lib.httpservice.Settings;
 import com.novoda.lib.httpservice.utils.ConnectivityReceiver;
 
 import android.app.Service;
@@ -26,12 +27,6 @@ import android.app.Service;
  */
 public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 	
-	private static final int CORE_POOL_SIZE = 5;
-
-	private static final int MAXIMUM_POOL_SIZE = 5;
-
-	private static final int KEEP_ALIVE = 5;
-	
 	private static final String PREFIX = "HttpService #";
 	
 	private static final ThreadFactory THREAD_FACTORY = new ThreadFactory() {
@@ -44,7 +39,7 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 		}
 	};
 	
-	private static LinkedBlockingQueue<Runnable> BLOCKING_QUEUE = new LinkedBlockingQueue<Runnable>(100);
+	private static LinkedBlockingQueue<Runnable> BLOCKING_QUEUE = new LinkedBlockingQueue<Runnable>(Settings.BLOCKING_QUEUE);
 
     private boolean isPaused;
     
@@ -75,7 +70,7 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     };
 
     public ConnectedThreadPoolExecutor(Service service) {
-        super(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
+        super(Settings.CORE_POOL_SIZE, Settings.MAXIMUM_POOL_SIZE, Settings.KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
         this.service = service;
     }
 

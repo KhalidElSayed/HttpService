@@ -11,11 +11,6 @@ import com.novoda.lib.httpservice.actor.Actor;
  *
  */
 public interface Provider {
-	
-	int SECOND = 1000;
-	int SOCKET_TIMEOUT = 60*SECOND;
-    int CONNECTION_TIMEOUT = 60*SECOND;
-    int CON_MANAGER_TIMEOUT = 60*SECOND;
 
 	void execute(Actor actor);
 
