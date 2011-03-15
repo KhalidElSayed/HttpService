@@ -18,12 +18,15 @@ public class Actor {
 	
 	private Storage storage;
 	
+	public Actor() {
+	}
+	
 	public Actor(Intent intent, Storage storage) {
 		this.intent = intent;
 		this.setStorage(storage);
 	}
 	
-	public void applayContext(ContextHttpWrapper context) {
+	public void applyContext(ContextHttpWrapper context) {
 		this.context = context;
 	}
 	

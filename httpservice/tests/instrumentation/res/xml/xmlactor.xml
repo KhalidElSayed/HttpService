@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<actor xmlns:android="http://schemas.android.com/apk/res/android"
+	android:name="com.novoda.lib.httpservice.actor.LoggingActor">
+	<intent-filter>
+		<action name="GET" />
+		<data android:scheme="http" android:host="www.example.com" />
+	</intent-filter>
+</actor>

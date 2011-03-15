@@ -12,6 +12,9 @@ import com.novoda.lib.httpservice.utils.Log;
 
 public class LoggingActor extends Actor {
 
+    public LoggingActor() {
+    }
+    
 	public LoggingActor(Intent intent, Storage storage) {
 		super(intent, storage);
 	}

@@ -34,7 +34,7 @@ public class AppService extends HttpService {
 					Log.v("No actor defined for intent : " + intent.toString() + ", " + intent.getType());
 					actor =  new LoggingActor(intent, storage);
 				}
-				actor.applayContext(new ContextHttpWrapper(AppService.this.getApplicationContext()));
+				actor.applyContext(new ContextHttpWrapper(AppService.this.getApplicationContext()));
 				return actor;
 			}
 		};
