@@ -198,4 +198,5 @@ public class Log {
 			android.util.Log.v(TAG, msg);
 		}
 	}
+	
 }
