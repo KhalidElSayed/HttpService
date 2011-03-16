@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -38,10 +39,13 @@ public class HttpProvider implements Provider {
     public HttpProvider(HttpClient client) {
 		this.client = client;
 	}
+    
+    //Due to multithread activity actor should be used carefully
+    private Actor actor;
 
 	@Override
 	public void execute(Actor actor) {
-        //TODO
+		this.actor = actor;
         actor.onResume();
         IntentReader reader = new IntentReader(actor.getIntent());
         try {
@@ -51,6 +55,8 @@ public class HttpProvider implements Provider {
         	HttpUriRequest method = null;
         	if(reader.isGet()) {
         		method = initGet(reader);
+        	} else if(reader.isDelete()) {
+            	method = initDelete(reader);
         	} else if(reader.isPost()) {
         		method = initPost(reader);
         	} else {
@@ -78,6 +84,17 @@ public class HttpProvider implements Provider {
         }
         actor.onPause();
         actor.onDestroy();
+	}
+
+	@Override
+	public void onLowMemory() {
+		if(actor != null) {
+			try {
+				actor.onLowMemory();
+			} catch(Throwable t) {
+				Log.v("Problem calling on low memory on the current actor");
+			}
+		}
 	}
 	
 	private void checkResponse(Actor actor, HttpResponse httpResponse) {
@@ -112,6 +129,12 @@ public class HttpProvider implements Provider {
 			}
 		}
 		
+		//TODO
+		return method;
+	}
+	
+	private HttpUriRequest initDelete(IntentReader reader) {
+		HttpUriRequest method = new HttpDelete(reader.asURI());
 		//TODO
 		return method;
 	}
@@ -184,12 +207,6 @@ public class HttpProvider implements Provider {
 			e(msg);
 		}
 		throw new ProviderException(msg);
-	}
-
-	@Override
-	public void onLowMemory() {
-		// TODO Auto-generated method stub
-		// transfer on Low memory to the actor ???
 	}
 	
 }

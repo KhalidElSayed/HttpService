@@ -22,7 +22,7 @@ public class Tester extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.dashboard);
+		setContentView(R.layout.tester);
 		final EditText edit = ((EditText) findViewById(R.id.requestNumber));
 		final Button start = ((Button)findViewById(R.id.start));
 		
@@ -37,7 +37,7 @@ public class Tester extends BaseActivity {
 	            this, R.array.http_response_types, android.R.layout.simple_spinner_item);
 	    adapterTypes.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 	    httpResponseTypes.setAdapter(adapterTypes);
-
+	    
 		start.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {

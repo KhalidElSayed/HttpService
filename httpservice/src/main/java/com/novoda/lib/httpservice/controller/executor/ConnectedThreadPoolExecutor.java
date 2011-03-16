@@ -34,7 +34,7 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 
 		public Thread newThread(Runnable r) {
 			Thread thread = new Thread(r, PREFIX + mCount.getAndIncrement());
-			thread.setPriority(Thread.NORM_PRIORITY-1);
+			thread.setPriority(Settings.THREAD_PRIORITY);
 			return thread;
 		}
 	};

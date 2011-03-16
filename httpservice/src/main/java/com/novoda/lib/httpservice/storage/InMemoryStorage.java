@@ -1,5 +1,6 @@
 package com.novoda.lib.httpservice.storage;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 
@@ -19,6 +20,18 @@ public class InMemoryStorage implements Storage {
 
 	@Override
 	public void queued(Context context, Intent intent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ContentValues getIntent(Context context, Intent intent) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void updateDownload(Context context, Intent intent, String filename) {
 		// TODO Auto-generated method stub
 		
 	}
