@@ -24,6 +24,8 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String consumed = "consumed";
 			String received = "received";
 			String queued = "queued";
+			String started = "started";
+			String interrupted = "interrupted";
 		}
 		
 		public static interface Column {
@@ -32,11 +34,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String id = "_id";
 			String modified = "modified";
 			String created = "created";
+			String filename = "filename";
 		}
 		
 		Uri URI = Uri.parse("content://" + StorageUriMatcher.AUTHORITY + "/" + NAME);
-		String CREATE_STM = "create table if not exists intent(_id integer primary key on conflict replace, "
-				+ "uri text, status text, modified integer, created integer);";
+		String CREATE_STM = "create table if not exists intent(" +
+				"_id integer primary key on conflict replace, " + 
+				"uri text, " +
+				"status text, " +
+				"modified integer, " +
+				"filename text, " +
+				"created integer);";
 		String DROP_STM = "drop table if exists intent;";		
 	}
 	

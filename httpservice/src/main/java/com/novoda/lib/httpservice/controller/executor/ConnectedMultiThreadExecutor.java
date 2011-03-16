@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
+import com.novoda.lib.httpservice.Settings;
+
 import android.app.Service;
 
 public class ConnectedMultiThreadExecutor implements Executor {
@@ -90,7 +92,7 @@ public class ConnectedMultiThreadExecutor implements Executor {
 		}
 		looperThread = new Thread() {
 			public void run() {
-				Thread.currentThread().setPriority(NORM_PRIORITY-1);
+				Thread.currentThread().setPriority(Settings.THREAD_PRIORITY);
 				if (verboseLoggingEnabled()) {
 					v("Thread Manager : is running now");
 				}

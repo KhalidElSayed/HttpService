@@ -29,6 +29,7 @@ public class IntentReader {
 	public static interface Method {
 		int GET = 0;
 		int POST = 1;	
+		int DELETE = 2;
 	} 
 	
 	private Intent intent;
@@ -41,14 +42,19 @@ public class IntentReader {
 	}
 	
 	public boolean isGet() {
-		if(Method.GET == getMethod()) {
-			return true;
-		}
-		return false;
+		return isMethod(Method.GET);
 	}
 
 	public boolean isPost() {
-		if(Method.POST == getMethod()) {
+		return isMethod(Method.POST);
+	}
+	
+	public boolean isDelete() {
+		return isMethod(Method.DELETE);
+	}
+	
+	private boolean isMethod(int method) {
+		if(method == getMethod()) {
 			return true;
 		}
 		return false;
