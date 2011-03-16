@@ -8,6 +8,7 @@ import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
 import com.novoda.lib.httpservice.actor.factory.ProgrammaticActorFactory;
+import com.novoda.lib.httpservice.actor.factory.XmlActorFactory;
 import com.novoda.lib.httpservice.controller.CallableWrapper;
 import com.novoda.lib.httpservice.controller.LifecycleManager;
 import com.novoda.lib.httpservice.controller.executor.ConnectedMultiThreadExecutor;
@@ -97,9 +98,10 @@ public class HttpService extends Service {
                     PackageManager.GET_META_DATA);
             Bundle bundle = serviceInfo.metaData;
             if (bundle != null && bundle.containsKey(META_DATA_KEY)) {
-                String value = (String) bundle.get("org.android.androidapp.webURL");
-                Log.i("TEST", value);
-                // getBaseContext().getResources().getXml(id)
+                String value = (String) bundle.get("com.novoda.lib.httpservice");
+                int id = getResources().getIdentifier(value, "xml", this.getPackageName());
+                Log.i("TEST", value + " " + id);
+                actorFactory = new XmlActorFactory(getResources().getXml(id), getApplicationContext());
             }
         } catch (Exception e) {
             e.printStackTrace();
