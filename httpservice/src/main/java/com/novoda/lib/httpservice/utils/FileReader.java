@@ -14,31 +14,34 @@ public class FileReader {
 	private static final int DEFAULT_BUFFER_SIZE = 8*1024;
 	
 	private long threshold;
+	private int bufferSize;
 	
 	public FileReader() {
 		setThreshold(THRESHOLD);
+		setBufferSize(DEFAULT_BUFFER_SIZE);
 	}
 
 	public void setThreshold(long threshold) {
 		this.threshold = threshold;
 	}
 	
+	public void setBufferSize(int bufferSize) {
+		this.bufferSize = bufferSize;
+	}
+	
 	public void addToFile(String filepath, InputStream is) throws FileNotFinished {
 		try {
-			long offset = 0l;
 			File file = new File(filepath);
-			FileOutputStream os = new FileOutputStream(file);
-			
-			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+			long offset = file.length();
+			FileOutputStream os = new FileOutputStream(file, true);
+			byte[] buffer = new byte[bufferSize];
 			long count = 0;
 			int n = 0;
 			is.skip(offset);
-			os.getChannel();
 			while (-1 != (n = is.read(buffer))) {
 				os.write(buffer, 0, n);
 				count += n;
-				if(count > threshold) {
-					os.flush();
+				if(count >= threshold) {
 					os.close();
 					is.close();
 					throw new FileNotFinished(file.getAbsolutePath());

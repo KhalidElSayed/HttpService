@@ -11,6 +11,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,6 +29,12 @@ public class FileManagerTest {
 	@Before
 	public void setUp() {
 		reader = new FileReader();
+		clean();
+	}
+	
+	@After
+	public void after() {
+		clean();
 	}
 	
 	@Test
@@ -36,52 +43,59 @@ public class FileManagerTest {
 
 		reader.addToFile(FILE_PATH, stream);
 		
-		assertFileAndCleanUp(CONTENT);
+		assertFile(CONTENT);
 	}
 	
 	@Test
-	public void shouldAddToExistingFile() throws FileNotFinished {
+	public void shouldThrowFileNotFinishedFile() {
 		InputStream stream = getInputStream(CONTENT);
 		
-		reader.addToFile(FILE_PATH, stream);		
-		//TODO
-		assertFileAndCleanUp(CONTENT);
+		reader.setBufferSize(4);
+		reader.setThreshold(4);
+		try {
+			reader.addToFile(FILE_PATH, stream);
+		} catch (FileNotFinished fnf) {
+		}
+		
+		assertFile("1234");
 	}
 	
-	@Test(expected = FileNotFinished.class)
-	public void shouldThrowFileNotFinishedFile() throws FileNotFinished {
+	@Test
+	public void shouldReadOneByte() {
 		InputStream stream = getInputStream(CONTENT);
+		reader.setBufferSize(1);
+		reader.setThreshold(1);		
+		try {
+			reader.addToFile(FILE_PATH, stream);
+		} catch (FileNotFinished fnf) {
+		}
 		
-		reader.setThreshold(4);
-		reader.addToFile(FILE_PATH, stream);		
-		//TODO
-		assertFileAndCleanUp(CONTENT);	
+		assertFile("1");
 	}
 	
 	@Test
 	public void shouldSumUpStream() {
-		InputStream stream = getInputStream(CONTENT);
-		reader.setThreshold(4);
+		InputStream stream = getInputStream("12345xxxxxxxxxxxxxxxxxx");
+		reader.setBufferSize(5);
+		reader.setThreshold(5);
 		try {
 			reader.addToFile(FILE_PATH, stream);
 		} catch (FileNotFinished fnf) {
 		}
-		stream = getInputStream(CONTENT);
+		stream = getInputStream("yyyyy67890yyyyyyyyyyy");
 		try {
 			reader.addToFile(FILE_PATH, stream);
 		} catch (FileNotFinished fnf) {
 		}
 
-		assertFileAndCleanUp(CONTENT);	
+		assertFile("1234567890");	
 	}
 
-	private void assertFileAndCleanUp(String content) {
+	private void assertFile(String content) {
 		File file = new File(FILE_PATH);
 		Assert.assertTrue(file.exists());
 		
 		Assert.assertEquals(content, covertFileToString(file));
-		
-		deleteFile();
 	}
 
 	public InputStream getInputStream(String convert) {
@@ -104,7 +118,7 @@ public class FileManagerTest {
 		try {
 			if (is != null) {
 				Writer writer = new StringWriter();
-				char[] buffer = new char[1024];
+				char[] buffer = new char[1];
 				try {
 					Reader reader = new BufferedReader(new InputStreamReader(is, ENCODING));
 					int n;
@@ -122,10 +136,12 @@ public class FileManagerTest {
 			throw new RuntimeException("Problem reading stream");
 		}
 	}
-
-	private void deleteFile() {
+	
+	private void clean() {
 		File file = new File(FILE_PATH);
 		file.delete();
+		file = new File(FILE_PATH);
 		Assert.assertFalse(file.exists());
 	}
+
 }
