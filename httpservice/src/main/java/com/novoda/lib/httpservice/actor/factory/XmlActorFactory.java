@@ -44,7 +44,10 @@ public class XmlActorFactory implements ActorFactory {
             if (entry.getKey().match(intent.getAction(), intent.getType(), intent.getScheme(),
                     intent.getData(), intent.getCategories(), Log.TAG) > 0) {
                 try {
-                    return entry.getValue().newInstance();
+                    Actor actor =  entry.getValue().newInstance();
+                    actor.setIntent(intent);
+                    actor.setStorage(storage);
+                    return actor;
                 } catch (InstantiationException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {

@@ -4,6 +4,7 @@ package com.novoda.lib.httpservice.actor.factory;
 import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
 import com.novoda.lib.httpservice.actor.LoggingActor;
+import com.novoda.lib.httpservice.actor.SimpleActor1;
 import com.novoda.lib.httpservice.tests.R;
 
 import android.content.Intent;
@@ -15,6 +16,7 @@ import android.test.MoreAsserts;
 public class XmlActorFactoryTest extends InstrumentationTestCase {
 
     public static Intent GET_EXAMPLE = new Intent("GET", Uri.parse("http://www.example.com"));
+    public static Intent GET_EXAMPLE_2 = new Intent("GET", Uri.parse("http://www.another.com/path/1"));
 
     public static Intent GET_FAILURE_HOST = new Intent("GET",
             Uri.parse("http://www.example_typo.com"));
@@ -25,8 +27,11 @@ public class XmlActorFactoryTest extends InstrumentationTestCase {
         XmlActorFactory factory = new XmlActorFactory(xml, getInstrumentation().getTargetContext());
         Actor actor = factory.getActor(GET_EXAMPLE, null);
         MoreAsserts.assertAssignableFrom(LoggingActor.class, actor);
+        
+        Actor actor_1 = factory.getActor(GET_EXAMPLE_2, null);
+        MoreAsserts.assertAssignableFrom(SimpleActor1.class, actor_1);
     }
-
+    
     public void testGettingExceptionIfNoActorPresents() throws Exception {
         try {
             XmlResourceParser xml = getInstrumentation().getContext().getResources()

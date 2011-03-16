@@ -11,9 +11,6 @@ import com.novoda.lib.httpservice.actor.Actor;
  *
  */
 public interface Provider {
-
 	void execute(Actor actor);
-
 	void onLowMemory();
-	
 }
