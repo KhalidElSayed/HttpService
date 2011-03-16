@@ -11,7 +11,9 @@ import com.novoda.lib.httpservice.utils.IntentBuilder;
 
 public class Downloader extends BaseActivity {
 
-	private static final String HOST = "http://httpmock.appspot.com/test.zip";
+//	private static final String HOST = "http://httpmock.appspot.com/test.zip";
+	
+	private static final String HOST = "http://httpmock.appspot.com/test/success";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
