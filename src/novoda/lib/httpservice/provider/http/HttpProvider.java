@@ -19,6 +19,7 @@ import novoda.lib.httpservice.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -64,6 +65,8 @@ public class HttpProvider implements Provider {
 			}
 			if(request.isGet()) {
 				method = new HttpGet(request.asURI());
+			} else if(request.isDelete()) {
+				method = new HttpDelete(request.asURI());
 			} else if(request.isPost()) {
 				method = new HttpPost(request.asURI());
 				checkMultipartParams((HttpPost)method, request);

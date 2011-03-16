@@ -56,6 +56,7 @@ public class IntentWrapper {
 	public static interface Method {
 		int GET = 0;
 		int POST = 1;	
+		int DELETE = 2;
 	} 
 	
 	private Intent intent;
@@ -119,6 +120,13 @@ public class IntentWrapper {
 
 	public boolean isPost() {
 		if(Method.POST == getMethod()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isDelete() {
+		if(Method.DELETE == getMethod()) {
 			return true;
 		}
 		return false;
