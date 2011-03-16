@@ -37,10 +37,12 @@ public class XmlActorFactory implements ActorFactory {
     @Override
     public Actor getActor(Intent intent, Storage storage) throws ActorNotFoundException {
         for (Entry<IntentFilter, Class<? extends Actor>> entry : registry.entrySet()) {
-            Log.i(intent + " "
-                    + entry.getKey().match(intent.getAction(), intent.getType(), intent.getScheme(), intent.getData(), intent.getCategories(), Log.TAG));
-            ; 
-            if (entry.getKey().match(intent.getAction(), intent.getType(), intent.getScheme(), intent.getData(), intent.getCategories(), Log.TAG) > 0) {
+
+            Log.i(intent + " " + intent.getData().getAuthority() + " "
+                    + entry.getKey().authoritiesIterator().next().match(intent.getData()));
+
+            if (entry.getKey().match(intent.getAction(), intent.getType(), intent.getScheme(),
+                    intent.getData(), intent.getCategories(), Log.TAG) > 0) {
                 try {
                     return entry.getValue().newInstance();
                 } catch (InstantiationException e) {
@@ -50,9 +52,11 @@ public class XmlActorFactory implements ActorFactory {
                 }
             }
         }
+
         throw new ActorNotFoundException("No actor found for intent: " + intent);
     }
 
+    @SuppressWarnings("unchecked")
     private void init(XmlResourceParser xpp) throws XmlPullParserException, IOException,
             ClassNotFoundException {
         xpp.next();
@@ -74,7 +78,8 @@ public class XmlActorFactory implements ActorFactory {
             } else if (eventType == XmlPullParser.END_TAG) {
                 if ("actor".equals(xpp.getName())) {
                     if (Log.infoLoggingEnabled()) {
-                        Log.i("Adding " + Log.filterToString(filter) + " with " + klass + " to registry");
+                        Log.i("Adding " + Log.filterToString(filter) + " with " + klass
+                                + " to registry");
                     }
                     if (filter != null && klass != null) {
                         registry.put(filter, klass);

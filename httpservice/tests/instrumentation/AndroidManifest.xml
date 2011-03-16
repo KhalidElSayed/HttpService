@@ -12,5 +12,5 @@
 		
 	</application>
 	<instrumentation a:name="android.test.InstrumentationTestRunner"
-		a:targetPackage="com.novoda.lib.httpservice" a:label="Tests for com.novoda.lib.httpservice" />
+		a:targetPackage="com.novoda.lib.httpservice.tests" a:label="Tests for com.novoda.lib.httpservice" />
 </manifest>

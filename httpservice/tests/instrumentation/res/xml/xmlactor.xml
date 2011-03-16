@@ -3,6 +3,7 @@
 	android:name="com.novoda.lib.httpservice.actor.LoggingActor">
 	<intent-filter>
 		<action name="GET" />
-		<data android:scheme="http" android:host="www.example.com" />
+		<scheme name="http" />
+		<auth host="www.example.com" />
 	</intent-filter>
 </actor>

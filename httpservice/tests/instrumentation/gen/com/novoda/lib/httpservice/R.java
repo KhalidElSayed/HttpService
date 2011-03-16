@@ -9,9 +9,229 @@ package com.novoda.lib.httpservice;
 
 public final class R {
     public static final class attr {
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int action=0x7f010002;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int data=0x7f010003;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int mimeType=0x7f010004;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int name=0x7f010000;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int targetClass=0x7f010006;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int targetPackage=0x7f010005;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int value=0x7f010001;
     }
     public static final class xml {
         public static final int intentfiltertest=0x7f020000;
         public static final int xmlactor=0x7f020001;
     }
+    public static final class styleable {
+        /** Attributes that can be used with a Extra.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #Extra_name com.novoda.lib.httpservice.tests:name}</code></td><td></td></tr>
+           <tr><td><code>{@link #Extra_value com.novoda.lib.httpservice.tests:value}</code></td><td></td></tr>
+           </table>
+           @see #Extra_name
+           @see #Extra_value
+         */
+        public static final int[] Extra = {
+            0x7f010000, 0x7f010001
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#name}
+          attribute's value can be found in the {@link #Extra} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:name
+        */
+        public static final int Extra_name = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#value}
+          attribute's value can be found in the {@link #Extra} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:value
+        */
+        public static final int Extra_value = 1;
+        /** Attributes that can be used with a Intent.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #Intent_action com.novoda.lib.httpservice.tests:action}</code></td><td></td></tr>
+           <tr><td><code>{@link #Intent_data com.novoda.lib.httpservice.tests:data}</code></td><td></td></tr>
+           <tr><td><code>{@link #Intent_mimeType com.novoda.lib.httpservice.tests:mimeType}</code></td><td></td></tr>
+           <tr><td><code>{@link #Intent_targetClass com.novoda.lib.httpservice.tests:targetClass}</code></td><td></td></tr>
+           <tr><td><code>{@link #Intent_targetPackage com.novoda.lib.httpservice.tests:targetPackage}</code></td><td></td></tr>
+           </table>
+           @see #Intent_action
+           @see #Intent_data
+           @see #Intent_mimeType
+           @see #Intent_targetClass
+           @see #Intent_targetPackage
+         */
+        public static final int[] Intent = {
+            0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005,
+            0x7f010006
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#action}
+          attribute's value can be found in the {@link #Intent} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:action
+        */
+        public static final int Intent_action = 0;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#data}
+          attribute's value can be found in the {@link #Intent} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:data
+        */
+        public static final int Intent_data = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#mimeType}
+          attribute's value can be found in the {@link #Intent} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:mimeType
+        */
+        public static final int Intent_mimeType = 2;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#targetClass}
+          attribute's value can be found in the {@link #Intent} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:targetClass
+        */
+        public static final int Intent_targetClass = 4;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#targetPackage}
+          attribute's value can be found in the {@link #Intent} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:targetPackage
+        */
+        public static final int Intent_targetPackage = 3;
+        /** Attributes that can be used with a IntentCategory.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #IntentCategory_name com.novoda.lib.httpservice.tests:name}</code></td><td></td></tr>
+           </table>
+           @see #IntentCategory_name
+         */
+        public static final int[] IntentCategory = {
+            0x7f010000
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.tests.R.attr#name}
+          attribute's value can be found in the {@link #IntentCategory} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:name
+        */
+        public static final int IntentCategory_name = 0;
+    };
 }

@@ -220,7 +220,8 @@ public class Log {
         builder.append(";auth: ");
         Iterator<AuthorityEntry> auth = filter.authoritiesIterator();
         while (auth != null && auth.hasNext()) {
-            builder.append(auth.next().getHost()).append(",");
+            AuthorityEntry e = auth.next();
+            builder.append(e.getHost()).append(",");
         }
         builder.append("]");
         return builder.toString();
