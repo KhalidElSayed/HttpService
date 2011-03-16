@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import novoda.lib.httpservice.provider.Provider;
+import novoda.lib.httpservice.HttpService;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -31,6 +31,8 @@ import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.params.ConnManagerParams;
+import org.apache.http.conn.params.ConnPerRoute;
+import org.apache.http.conn.params.ConnPerRouteBean;
 import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
@@ -100,11 +102,15 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-        HttpConnectionParams.setConnectionTimeout(params, Provider.SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, Provider.CONNECTION_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, HttpService.SOCKET_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, HttpService.CONNECTION_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
+        
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(HttpService.CONNECTION_PER_ROUTE); 
+        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
+        ConnManagerParams.setMaxTotalConnections(params, HttpService.MAX_TOTAL_CONNECTION); 
 
-        ConnManagerParams.setTimeout(params, Provider.CON_MANAGER_TIMEOUT);
+        ConnManagerParams.setTimeout(params, HttpService.CON_MANAGER_TIMEOUT);
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
