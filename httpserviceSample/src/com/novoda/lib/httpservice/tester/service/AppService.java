@@ -21,6 +21,7 @@ import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.LoggingActor;
 import com.novoda.lib.httpservice.actor.ZipActor;
 import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
+import com.novoda.lib.httpservice.exception.FileNotFinished;
 import com.novoda.lib.httpservice.storage.DatabaseStorage;
 import com.novoda.lib.httpservice.storage.Storage;
 import com.novoda.lib.httpservice.storage.provider.DatabaseManager.IntentModel;
