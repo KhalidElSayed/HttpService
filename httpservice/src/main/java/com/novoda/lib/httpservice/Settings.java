@@ -17,5 +17,6 @@ public interface Settings {
 
 	int BLOCKING_QUEUE = 100;
 	
+	int THREAD_PRIORITY = Thread.NORM_PRIORITY-1;
 
 }

@@ -30,6 +30,10 @@ public class IntentBuilder {
     public IntentBuilder asPost() {
         return method(IntentReader.Method.POST);
     }
+    
+    public IntentBuilder asDelete() {	
+        return method(IntentReader.Method.DELETE);
+    }
 
     private IntentBuilder method(int method) {
         intent.putExtra(IntentReader.Extra.method, method);
