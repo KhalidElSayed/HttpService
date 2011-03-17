@@ -7,6 +7,7 @@ import static novoda.lib.httpservice.util.Log.w;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentRegistry;
 import novoda.lib.httpservice.service.executor.ExecutorManager;
@@ -22,8 +23,8 @@ public abstract class LifecycleManagedExecutorService extends ExecutorService {
 	
 	private Timer timer;
 	
-	public LifecycleManagedExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager) {
-		super(requestRegistry, eventBus, executorManager);
+	public LifecycleManagedExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager, Settings settings) {
+		super(requestRegistry, eventBus, executorManager, settings);
 	}
 	
 	@Override

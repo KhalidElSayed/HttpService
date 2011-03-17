@@ -12,7 +12,7 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import novoda.lib.httpservice.HttpService;
+import novoda.lib.httpservice.Settings;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -94,7 +94,7 @@ public final class AndroidHttpClient implements HttpClient {
      *            caching)
      * @return AndroidHttpClient for you to use for all your requests.
      */
-    public static AndroidHttpClient newInstance(String userAgent, Context context) {
+    public static AndroidHttpClient newInstance(String userAgent, Context context, Settings settings) {
         HttpParams params = new BasicHttpParams();
 
         // Turn off stale checking. Our connections break all the time anyway,
@@ -102,15 +102,15 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-        HttpConnectionParams.setConnectionTimeout(params, HttpService.SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, HttpService.CONNECTION_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, settings.socketTimeout);
+        HttpConnectionParams.setSoTimeout(params, settings.connectionTimeout);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
         
-        ConnPerRoute connPerRoute = new ConnPerRouteBean(HttpService.CONNECTION_PER_ROUTE); 
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(settings.connectionPerRoute); 
         ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
-        ConnManagerParams.setMaxTotalConnections(params, HttpService.MAX_TOTAL_CONNECTION); 
+        ConnManagerParams.setMaxTotalConnections(params, settings.maxTotalConnection); 
 
-        ConnManagerParams.setTimeout(params, HttpService.CON_MANAGER_TIMEOUT);
+        ConnManagerParams.setTimeout(params, settings.connectionManagerTimeout);
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
@@ -141,8 +141,8 @@ public final class AndroidHttpClient implements HttpClient {
      * @param userAgent to report in your HTTP requests.
      * @return AndroidHttpClient for you to use for all your requests.
      */
-    public static AndroidHttpClient newInstance(String userAgent) {
-        return newInstance(userAgent, null /* session cache */);
+    public static AndroidHttpClient newInstance(String userAgent, Settings settings) {
+        return newInstance(userAgent, null /* session cache */, settings);
     }
 
     private final DefaultHttpClient delegate;

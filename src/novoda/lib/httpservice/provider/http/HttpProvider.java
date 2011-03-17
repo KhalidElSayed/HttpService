@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentWrapper;
@@ -43,8 +44,8 @@ public class HttpProvider implements Provider {
 
 	private EventBus eventBus;
 
-	public HttpProvider(EventBus eventBus) {		
-		this(AndroidHttpClient.newInstance(USER_AGENT), eventBus);
+	public HttpProvider(EventBus eventBus, Settings settings) {
+		this(AndroidHttpClient.newInstance(USER_AGENT, settings), eventBus);
 	}
 
 	public HttpProvider(HttpClient client, EventBus eventBus) {		

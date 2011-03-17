@@ -5,6 +5,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.handler.GlobalHandler;
 import novoda.lib.httpservice.provider.EventBus;
@@ -44,7 +45,7 @@ public class LocalProviderTest {
 	
 	@Test(expected = ProviderException.class)
 	public void shouldThrowExceptionIfEventBusIsNull() {
-		new HttpProvider(null);
+		new HttpProvider(null, new Settings());
 	}
 
 	@Test

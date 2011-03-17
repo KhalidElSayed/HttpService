@@ -41,31 +41,14 @@ import novoda.lib.httpservice.service.executor.ExecutorManager;
  */
 public abstract class HttpService extends LifecycleManagedExecutorService {
 	
-	public static final int SECOND = 1000;
-
-	public static final int SOCKET_TIMEOUT = 20*SECOND;
-	public static final int CONNECTION_TIMEOUT = 20*SECOND;
-	public static final int CON_MANAGER_TIMEOUT = 20*SECOND;
-    
-	public static int CORE_POOL_SIZE = 5;	
-	public static int MAXIMUM_POOL_SIZE = 5;
-	public static final int KEEP_ALIVE = 0;
-	public static int CONNECTION_PER_ROUTE = 5;
-	public static int MAX_TOTAL_CONNECTION = 5;
-
-	public static final int BLOCKING_QUEUE = 100;
-	
 	private Provider provider;
 	
 	public HttpService() {
-		this(null, null, null, null);
+		this(null, null, null, null, new Settings());
 	}
 	
-	public void setMaxConnectionNumber(int number) {
-		CORE_POOL_SIZE = number;	
-		MAXIMUM_POOL_SIZE = number;
-		CONNECTION_PER_ROUTE = number;
-		MAX_TOTAL_CONNECTION = number;
+	public HttpService(Settings settings) {
+		this(null, null, null, null, settings);
 	}
 
 	/**
@@ -75,10 +58,10 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 	 * @param eventBus event bus
 	 * @param executorManager ExecutorManager
 	 */
-	public HttpService(Provider provider, IntentRegistry intentRegistry, EventBus eventBus, ExecutorManager executorManager) {
-		super(intentRegistry, eventBus, executorManager);
+	public HttpService(Provider provider, IntentRegistry intentRegistry, EventBus eventBus, ExecutorManager executorManager, Settings settings) {
+		super(intentRegistry, eventBus, executorManager, settings);
 		if(provider == null) {
-			this.provider = new HttpProvider(this.eventBus);
+			this.provider = new HttpProvider(this.eventBus, settings);
 		} else {
 			this.provider = provider;
 		}

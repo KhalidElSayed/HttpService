@@ -6,6 +6,7 @@ import static novoda.lib.httpservice.util.Log.verboseLoggingEnabled;
 
 import java.util.Map;
 
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.handler.HasHandlers;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.HasProcessors;
@@ -42,7 +43,7 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     
     protected IntentRegistry requestRegistry;
     
-    public ExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager) {
+    public ExecutorService(IntentRegistry requestRegistry, EventBus eventBus, ExecutorManager executorManager, Settings settings) {
     	super();
     	this.requestRegistry = requestRegistry;
     	if(this.requestRegistry == null) {
@@ -54,7 +55,7 @@ public abstract class ExecutorService extends Service implements CallableExecuto
     	}
     	this.executorManager = executorManager; 
     	if(this.executorManager == null) {
-    		ConnectedThreadPoolExecutor pool = new ConnectedThreadPoolExecutor(this);
+    		ConnectedThreadPoolExecutor pool = new ConnectedThreadPoolExecutor(this, settings);
     		this.executorManager = new ThreadManager(this.requestRegistry, pool, this.eventBus, this);
     	}
     	this.monitorManager = new MonitorManager(this);

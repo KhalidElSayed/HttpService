@@ -4,6 +4,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.util.ConnectivityReceiver;
 
 import org.junit.Before;
@@ -25,7 +26,7 @@ public class ConnectedThreadPoolExecutorTest {
 	@Before
 	public void setup() {
 		mService = mock(Service.class);
-		pool = new ConnectedThreadPoolExecutor(mService);
+		pool = new ConnectedThreadPoolExecutor(mService, new Settings());
 	}
 	
 	@Test
