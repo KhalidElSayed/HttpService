@@ -4,6 +4,7 @@ package com.novoda.lib.httpservice.actor.factory;
 import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
+import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
 import com.novoda.lib.httpservice.storage.Storage;
 import com.novoda.lib.httpservice.utils.Log;
 
@@ -47,6 +48,7 @@ public class XmlActorFactory implements ActorFactory {
                     Actor actor =  entry.getValue().newInstance();
                     actor.setIntent(intent);
                     actor.setStorage(storage);
+                    actor.applyContext(new ContextHttpWrapper(context));
                     return actor;
                 } catch (InstantiationException e) {
                     e.printStackTrace();
