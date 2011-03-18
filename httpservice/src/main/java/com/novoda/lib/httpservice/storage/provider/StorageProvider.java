@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.novoda.lib.httpservice.storage.provider.DatabaseManager.IntentModel;
+import com.novoda.lib.httpservice.utils.Log;
 
 public class StorageProvider extends ContentProvider {
 
@@ -118,7 +119,9 @@ public class StorageProvider extends ContentProvider {
 			case StorageUriMatcher.INTENT_INCOMING_COLLECTION: {
 				rowUpdated = getDataBase().update(IntentModel.NAME,
 						values, selection, selectionArgs);
-				getContext().getContentResolver().notifyChange(Uri.withAppendedPath(uri, values.get(IntentModel.Column.status) + "/" + selectionArgs[0]), null);
+				Log.v("XXXX : setting values for intent : " + selectionArgs[0] + " : " + values);
+				getContext().getContentResolver().notifyChange(Uri.withAppendedPath(uri, 
+						selectionArgs[0] + "/" + values.get(IntentModel.Column.status)), null);
 				break;
 			}
 			default: {

@@ -67,7 +67,7 @@ public class HttpProvider implements Provider {
         	actor.onPreprocess(method, context);
         	final HttpResponse httpResponse = client.execute(method, context);
         	actor.onPostprocess(httpResponse, context);
-        	
+        	actor.onHeaderReceived(httpResponse);
         	checkResponse(actor, httpResponse);
         	
             if(httpResponse == null) {
@@ -102,7 +102,7 @@ public class HttpProvider implements Provider {
 		if(verboseLoggingEnabled()) {
 			v("Checking response status : " + status.getStatusCode());
 		}
-		if(200 == status.getStatusCode()) {
+		if(200 == status.getStatusCode() || 206 == status.getStatusCode()) {
 			actor.onResponseReceived(httpResponse);			
 		} else {
 			if(actor.onResponseError(status.getStatusCode())) {

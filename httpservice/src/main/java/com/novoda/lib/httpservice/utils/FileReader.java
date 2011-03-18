@@ -6,11 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.junit.Assert;
+
 import com.novoda.lib.httpservice.exception.FileNotFinished;
 
 public class FileReader {
 
-	private static final long THRESHOLD = 1024l*1024l;
+	private static final long THRESHOLD = 512l*1024l;
 	private static final int DEFAULT_BUFFER_SIZE = 8*1024;
 	
 	private long threshold;
@@ -29,22 +31,27 @@ public class FileReader {
 		this.bufferSize = bufferSize;
 	}
 	
+	public long getThreshold() {
+		return this.threshold;
+	}
+	
 	public void addToFile(String filepath, InputStream is) throws FileNotFinished {
 		try {
 			File file = new File(filepath);
-			long offset = file.length();
 			FileOutputStream os = new FileOutputStream(file, true);
 			byte[] buffer = new byte[bufferSize];
 			long count = 0;
 			int n = 0;
-			is.skip(offset);
 			while (-1 != (n = is.read(buffer))) {
+				Log.v("n is : " + n);
 				os.write(buffer, 0, n);
 				count += n;
 				if(count >= threshold) {
-					os.close();
+					Log.v("count is : " + count);
 					is.close();
-					throw new FileNotFinished(file.getAbsolutePath());
+					os.flush();
+					os.close();
+					throw new FileNotFinished(file.getAbsolutePath(), new File(filepath).length());
 				}
 			}
 			os.close();
@@ -61,6 +68,11 @@ public class FileReader {
 	public boolean exists(String filepath) {
 		File file = new File(filepath);
 		return file.exists();
+	}
+	
+	public void delete(String filename) {
+		File file = new File(filename);
+		file.delete();
 	}
 
 }

@@ -31,7 +31,7 @@ public class InMemoryStorage implements Storage {
 	}
 
 	@Override
-	public void updateDownload(Context context, Intent intent, String filename) {
+	public void updateDownload(Context context, Intent intent, String fileName, long fileLength) {
 		// TODO Auto-generated method stub
 		
 	}

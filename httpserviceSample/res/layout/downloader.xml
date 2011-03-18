@@ -21,6 +21,10 @@
         a:id="@+id/download"
         style="@style/Fill_horizontally"
         a:text="download" />
+      <Button
+        a:id="@+id/delete"
+        style="@style/Fill_horizontally"
+        a:text="delete" />
       <TextView
         a:id="@+id/progress"
         style="@style/Fill_horizontally"

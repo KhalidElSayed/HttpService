@@ -33,7 +33,6 @@ public class AppService extends HttpService {
 			@Override
 			public Actor getActor(Intent intent, Storage storage) {
 				Actor actor = null;
-				Log.dev("intent type : " + intent.getType());
 				if(TYPE1.equals(intent.getType())) {
 					Log.v("Actor1 defined for intent : " + intent.toString());
 					actor = new LoggingActor(intent, storage);

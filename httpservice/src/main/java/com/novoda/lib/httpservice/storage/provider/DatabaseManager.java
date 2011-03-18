@@ -15,7 +15,7 @@ import android.net.Uri;
 public class DatabaseManager extends SQLiteOpenHelper {
 	
 	private static final String DATABASE_NAME = "com.novoda.lib.httpservice.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	public static interface IntentModel {
 		String NAME = "intent";
@@ -35,6 +35,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 			String modified = "modified";
 			String created = "created";
 			String filename = "filename";
+			String filelength = "filelength";
 		}
 		
 		Uri URI = Uri.parse("content://" + StorageUriMatcher.AUTHORITY + "/" + NAME);
@@ -44,6 +45,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
 				"status text, " +
 				"modified integer, " +
 				"filename text, " +
+				"filelength integer, " +
 				"created integer);";
 		String DROP_STM = "drop table if exists intent;";		
 	}

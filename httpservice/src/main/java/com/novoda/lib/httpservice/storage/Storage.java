@@ -14,6 +14,6 @@ public interface Storage {
 	
 	ContentValues getIntent(Context context, Intent intent);
 	
-	void updateDownload(Context context, Intent intent, String filename);
+	void updateDownload(Context context, Intent intent, String filename, long currentSize);
 	
 }

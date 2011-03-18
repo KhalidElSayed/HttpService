@@ -4,11 +4,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
 
-import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
-import com.novoda.lib.httpservice.storage.Storage;
-
 import android.content.Context;
 import android.content.Intent;
+
+import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
+import com.novoda.lib.httpservice.storage.Storage;
 
 public class Actor {
 
@@ -96,6 +96,11 @@ public class Actor {
 	public boolean onResponseError(int statusCode) {
 		// TODO Auto-generated method stub		
 		return false;
+	}
+
+	public void onHeaderReceived(HttpResponse httpResponse) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

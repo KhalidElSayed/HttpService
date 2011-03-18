@@ -68,10 +68,11 @@ public class DatabaseStorage implements Storage {
 	}
 
 	@Override
-	public void updateDownload(Context context, Intent intent, String filename) {
+	public void updateDownload(Context context, Intent intent, String fileName, long fileLength) {
 		ContentValues cv = new ContentValues();
 		cv.put(IntentModel.Column.modified, System.currentTimeMillis());
-		cv.put(IntentModel.Column.filename, filename);
+		cv.put(IntentModel.Column.filelength, fileLength);
+		cv.put(IntentModel.Column.filename, fileName);
 		context.getContentResolver().update(IntentModel.URI, cv, IntentModel.Column.id + "=?", new String[]{"" + intent.filterHashCode()});
 	}
 	
