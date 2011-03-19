@@ -72,7 +72,7 @@ public class XmlActorFactory implements ActorFactory {
             if (eventType == XmlPullParser.START_DOCUMENT) {
 
             } else if (eventType == XmlPullParser.START_TAG) {
-                if ("actor".equals(xpp.getName())) {
+                if ("Actor".equals(xpp.getName())) {
                     String cls = xpp.getAttributeValue(
                             "http://schemas.android.com/apk/res/android", "name");
                     klass = (Class<? extends Actor>) Class.forName(cls);
@@ -81,7 +81,7 @@ public class XmlActorFactory implements ActorFactory {
                     filter.readFromXml(xpp);
                 }
             } else if (eventType == XmlPullParser.END_TAG) {
-                if ("actor".equals(xpp.getName())) {
+                if ("Actor".equals(xpp.getName())) {
                     if (Log.infoLoggingEnabled()) {
                         Log.i("Adding " + Log.filterToString(filter) + " with " + klass
                                 + " to registry");

@@ -1,26 +1,18 @@
 
 package com.novoda.lib.httpservice.actor.factory;
 
-import com.novoda.lib.httpservice.actor.factory.IntentFilterTest2.MatchCondition;
-import com.novoda.lib.httpservice.tests.R;
+import com.novoda.lib.httpservice.R;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
-import android.content.res.TypedArray;
 import android.content.res.XmlResourceParser;
 import android.net.Uri;
 import android.test.InstrumentationTestCase;
 import android.test.MoreAsserts;
-import android.util.AttributeSet;
-import android.util.Log;
 import android.util.StringBuilderPrinter;
-import android.util.Xml;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 

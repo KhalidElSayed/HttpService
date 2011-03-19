@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:a="http://schemas.android.com/apk/res/android"
-	package="com.novoda.lib.httpservice.tests" a:versionCode="1"
+	package="com.novoda.lib.httpservice" a:versionCode="1"
 	a:versionName="1.0">
 
 	<application>
 		<uses-library a:name="android.test.runner" />
-		
 		<service a:name="com.novoda.lib.httpservice.HttpService">
-			<meta-data a:name="com.novoda.lib.httpservice" a:value="xmlactor.xml" />
+			<meta-data a:name="com.novoda.lib.httpservice" a:value="xmlactor" />
 		</service>
-		
 	</application>
-	<instrumentation a:name="android.test.InstrumentationTestRunner"
-		a:targetPackage="com.novoda.lib.httpservice.tests" a:label="Tests for com.novoda.lib.httpservice" />
+	
+	<instrumentation 
+		a:name="android.test.InstrumentationTestRunner"
+		a:targetPackage="com.novoda.lib.httpservice"
+		a:label="Tests for com.novoda.lib.httpservice" />
+			
+	<uses-permission a:name="android.permission.INTERNET" />
+	<uses-permission a:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission a:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 </manifest>

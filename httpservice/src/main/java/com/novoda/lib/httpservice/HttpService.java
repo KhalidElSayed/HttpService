@@ -9,6 +9,8 @@ import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
 import com.novoda.lib.httpservice.actor.factory.ProgrammaticActorFactory;
 import com.novoda.lib.httpservice.actor.factory.XmlActorFactory;
+import com.novoda.lib.httpservice.configuration.HttpServiceComponent;
+import com.novoda.lib.httpservice.configuration.ProcessorComponent;
 import com.novoda.lib.httpservice.controller.CallableWrapper;
 import com.novoda.lib.httpservice.controller.LifecycleManager;
 import com.novoda.lib.httpservice.controller.executor.ConnectedMultiThreadExecutor;
@@ -17,6 +19,9 @@ import com.novoda.lib.httpservice.provider.Provider;
 import com.novoda.lib.httpservice.provider.http.HttpProvider;
 import com.novoda.lib.httpservice.storage.InMemoryStorage;
 import com.novoda.lib.httpservice.storage.Storage;
+import com.novoda.lib.httpservice.utils.Log;
+
+import org.apache.http.protocol.HttpProcessor;
 
 import android.app.Service;
 import android.content.ComponentName;
@@ -25,7 +30,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 import java.util.concurrent.Callable;
 
@@ -87,30 +91,47 @@ public class HttpService extends Service {
 
     @Override
     public void onCreate() {
-
         if (verboseLoggingEnabled()) {
             v("Starting HttpService");
         }
+        tryConfigureViaMetaData();
+        lifecycleManager.startLifeCycle();
+        executor.start();
+        super.onCreate();
+    }
 
+    private void tryConfigureViaMetaData() {
         try {
             ComponentName cn = new ComponentName(getBaseContext(), this.getClass());
             ServiceInfo serviceInfo = getBaseContext().getPackageManager().getServiceInfo(cn,
                     PackageManager.GET_META_DATA);
             Bundle bundle = serviceInfo.metaData;
+
             if (bundle != null && bundle.containsKey(META_DATA_KEY)) {
-                String value = (String) bundle.get("com.novoda.lib.httpservice");
+                String value = (String) bundle.get(META_DATA_KEY);
                 int id = getResources().getIdentifier(value, "xml", this.getPackageName());
-                Log.i("TEST", value + " " + id);
-                actorFactory = new XmlActorFactory(getResources().getXml(id), getApplicationContext());
+                actorFactory = new XmlActorFactory(getResources().getXml(id),
+                        getApplicationContext());
+
+                HttpServiceComponent config = HttpServiceComponent.fromXml(getResources()
+                        .getXml(id), getApplicationContext());
+
+                for (ProcessorComponent comp : config.processors) {
+                    HttpProcessor processor = (HttpProcessor) Class.forName(comp.name)
+                            .newInstance();
+                    Provider provider = getProvider();
+                    if (provider instanceof HttpProvider) {
+                        if (Log.infoLoggingEnabled()) {
+                            Log.i("Adding: " + comp.name + " to list of processors " + processor);
+                        }
+                        ((HttpProvider) provider).setHttpProcessor(processor);
+                    }
+                }
+
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        lifecycleManager.startLifeCycle();
-        executor.start();
-
-        super.onCreate();
     }
 
     @Override

@@ -115,7 +115,7 @@ public class Log {
 
     public static class Storage {
 
-        private static final String TAG = "httpservice-starage";
+        private static final String TAG = "httpservice-storage";
 
         public static final boolean verboseLoggingEnabled() {
             return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);

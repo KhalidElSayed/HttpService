@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Assert;
+//import org.junit.Assert;
 
 import com.novoda.lib.httpservice.exception.FileNotFinished;
 

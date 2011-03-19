@@ -1,11 +1,11 @@
 
 package com.novoda.lib.httpservice.actor.factory;
 
+import com.novoda.lib.httpservice.R;
 import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
 import com.novoda.lib.httpservice.actor.LoggingActor;
 import com.novoda.lib.httpservice.actor.SimpleActor1;
-import com.novoda.lib.httpservice.tests.R;
 
 import android.content.Intent;
 import android.content.res.XmlResourceParser;

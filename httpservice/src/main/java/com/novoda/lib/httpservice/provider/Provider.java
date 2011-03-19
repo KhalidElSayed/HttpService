@@ -2,6 +2,8 @@ package com.novoda.lib.httpservice.provider;
 
 import com.novoda.lib.httpservice.actor.Actor;
 
+import org.apache.http.protocol.HttpProcessor;
+
 /**
  * Provider define the interface for every kind of
  * content provider. In 99% of the scenario the content is 
