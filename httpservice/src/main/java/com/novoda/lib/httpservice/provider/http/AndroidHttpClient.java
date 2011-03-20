@@ -1,3 +1,4 @@
+
 package com.novoda.lib.httpservice.provider.http;
 
 /*
@@ -12,11 +13,6 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
-=======
-import novoda.lib.httpservice.Settings;
-
->>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -75,16 +71,19 @@ import com.novoda.lib.httpservice.Settings;
  * </pre>
  */
 public final class AndroidHttpClient implements HttpClient {
-	
-	private static final int HTTP_PORT = 80;
-	private static final String HTTP_SCHEMA = "http";
+
+    private static final int HTTP_PORT = 80;
+
+    private static final String HTTP_SCHEMA = "http";
+
     private static final String HTTPS_SCHEMA = "https";
+
     private static final int HTTPS_PORT = 443;
-    
+
     private static final String GZIP = "gzip";
+
     private static final String ACCEPTED_ENCODIN_KEY = "Accept-Encoding";
-    
-	
+
     // Gzip of data shorter than this probably won't be worthwhile
     public static long DEFAULT_SYNC_MIN_GZIP_BYTES = 256;
 
@@ -116,43 +115,43 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
         HttpConnectionParams.setConnectionTimeout(params, Settings.SOCKET_TIMEOUT);
         HttpConnectionParams.setSoTimeout(params, Settings.CONNECTION_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
-        
-        ConnPerRoute connPerRoute = new ConnPerRouteBean(Settings.CONNECTION_PER_ROUTE); 
-        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
-        ConnManagerParams.setMaxTotalConnections(params, Settings.MAX_TOTAL_CONNECTION); 
+
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(Settings.CONNECTION_PER_ROUTE);
+        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
+        ConnManagerParams.setMaxTotalConnections(params, Settings.MAX_TOTAL_CONNECTION);
 
         ConnManagerParams.setTimeout(params, Settings.CON_MANAGER_TIMEOUT);
-=======
         HttpConnectionParams.setConnectionTimeout(params, settings.socketTimeout);
         HttpConnectionParams.setSoTimeout(params, settings.connectionTimeout);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
-        
-        ConnPerRoute connPerRoute = new ConnPerRouteBean(settings.connectionPerRoute); 
-        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
-        ConnManagerParams.setMaxTotalConnections(params, settings.maxTotalConnection); 
+
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(settings.connectionPerRoute);
+        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute);
+        ConnManagerParams.setMaxTotalConnections(params, settings.maxTotalConnection);
 
         ConnManagerParams.setTimeout(params, settings.connectionManagerTimeout);
->>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
         HttpClientParams.setRedirecting(params, false);
 
         // Use a session cache for SSL sockets
-        //Commented out because is not used
-        //SSLSessionCache sessionCache = context == null ? null : new SSLSessionCache(context);
+        // Commented out because is not used
+        // SSLSessionCache sessionCache = context == null ? null : new
+        // SSLSessionCache(context);
 
         // Set the specified user agent and register standard protocols.
         HttpProtocolParams.setUserAgent(params, userAgent);
         SchemeRegistry schemeRegistry = new SchemeRegistry();
-        schemeRegistry.register(new Scheme(HTTP_SCHEMA, PlainSocketFactory.getSocketFactory(), HTTP_PORT));
+        schemeRegistry.register(new Scheme(HTTP_SCHEMA, PlainSocketFactory.getSocketFactory(),
+                HTTP_PORT));
 
         // Changed from android.net to Apache to fit versions prior to 2.2
-        schemeRegistry.register(new Scheme(HTTPS_SCHEMA, SSLSocketFactory.getSocketFactory(), HTTPS_PORT));
+        schemeRegistry.register(new Scheme(HTTPS_SCHEMA, SSLSocketFactory.getSocketFactory(),
+                HTTPS_PORT));
 
         ClientConnectionManager manager = new ThreadSafeClientConnManager(params, schemeRegistry);
 
@@ -220,7 +219,7 @@ public final class AndroidHttpClient implements HttpClient {
     public static void modifyRequestToAcceptGzipResponse(HttpRequest request) {
         request.addHeader(ACCEPTED_ENCODIN_KEY, GZIP);
     }
-    
+
     /**
      * Gets the input stream from a response entity. If the entity is gzipped
      * then this will get a stream over the uncompressed data.
