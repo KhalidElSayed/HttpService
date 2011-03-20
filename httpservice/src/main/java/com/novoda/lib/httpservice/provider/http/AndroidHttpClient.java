@@ -12,11 +12,7 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
-=======
-import novoda.lib.httpservice.Settings;
 
->>>>>>> 4dc03d6... added settings to the constructor becase the httpclient is instantiate at the construction time:src/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
