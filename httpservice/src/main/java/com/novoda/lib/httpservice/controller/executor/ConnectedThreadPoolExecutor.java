@@ -12,14 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/controller/executor/ConnectedThreadPoolExecutor.java
 import com.novoda.lib.httpservice.Settings;
 import com.novoda.lib.httpservice.utils.ConnectivityReceiver;
 
-=======
-import novoda.lib.httpservice.Settings;
-import novoda.lib.httpservice.util.ConnectivityReceiver;
->>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/service/executor/ConnectedThreadPoolExecutor.java
 import android.app.Service;
 
 /**
@@ -74,14 +69,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
 		}
     };
 
-<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/controller/executor/ConnectedThreadPoolExecutor.java
     public ConnectedThreadPoolExecutor(Service service) {
         super(Settings.CORE_POOL_SIZE, Settings.MAXIMUM_POOL_SIZE, Settings.KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
-=======
-    public ConnectedThreadPoolExecutor(Service service, Settings settings) {
-        super(settings.corePoolSize, settings.maximunPoolSize, 
-        		settings.keepAlive, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
->>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/service/executor/ConnectedThreadPoolExecutor.java
         this.service = service;
     }
 
