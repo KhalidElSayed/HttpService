@@ -64,7 +64,9 @@ public class HttpService extends Service {
     }
 
     protected Provider getProvider() {
-        return new HttpProvider();
+        if (provider == null)
+            provider = new HttpProvider();
+        return provider;
     }
 
     protected Storage getStorage() {

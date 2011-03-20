@@ -12,6 +12,11 @@ import java.net.URI;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
+=======
+import novoda.lib.httpservice.Settings;
+
+>>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpEntityEnclosingRequest;
@@ -103,7 +108,7 @@ public final class AndroidHttpClient implements HttpClient {
      *            caching)
      * @return AndroidHttpClient for you to use for all your requests.
      */
-    public static AndroidHttpClient newInstance(String userAgent, Context context) {
+    public static AndroidHttpClient newInstance(String userAgent, Context context, Settings settings) {
         HttpParams params = new BasicHttpParams();
 
         // Turn off stale checking. Our connections break all the time anyway,
@@ -111,6 +116,7 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
+<<<<<<< HEAD:httpservice/src/main/java/com/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
         HttpConnectionParams.setConnectionTimeout(params, Settings.SOCKET_TIMEOUT);
         HttpConnectionParams.setSoTimeout(params, Settings.CONNECTION_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
@@ -120,6 +126,17 @@ public final class AndroidHttpClient implements HttpClient {
         ConnManagerParams.setMaxTotalConnections(params, Settings.MAX_TOTAL_CONNECTION); 
 
         ConnManagerParams.setTimeout(params, Settings.CON_MANAGER_TIMEOUT);
+=======
+        HttpConnectionParams.setConnectionTimeout(params, settings.socketTimeout);
+        HttpConnectionParams.setSoTimeout(params, settings.connectionTimeout);
+        HttpConnectionParams.setSocketBufferSize(params, 8192);
+        
+        ConnPerRoute connPerRoute = new ConnPerRouteBean(settings.connectionPerRoute); 
+        ConnManagerParams.setMaxConnectionsPerRoute(params, connPerRoute); 
+        ConnManagerParams.setMaxTotalConnections(params, settings.maxTotalConnection); 
+
+        ConnManagerParams.setTimeout(params, settings.connectionManagerTimeout);
+>>>>>>> 4dc03d6d784dfcf9a7ae2f39b2754102fab5eb0a:src/novoda/lib/httpservice/provider/http/AndroidHttpClient.java
 
         // Don't handle redirects -- return them to the caller. Our code
         // often wants to re-POST after a redirect, which we must do ourselves.
@@ -150,8 +167,8 @@ public final class AndroidHttpClient implements HttpClient {
      * @param userAgent to report in your HTTP requests.
      * @return AndroidHttpClient for you to use for all your requests.
      */
-    public static AndroidHttpClient newInstance(String userAgent) {
-        return newInstance(userAgent, null /* session cache */);
+    public static AndroidHttpClient newInstance(String userAgent, Settings settings) {
+        return newInstance(userAgent, null /* session cache */, settings);
     }
 
     private final DefaultHttpClient delegate;

@@ -6,15 +6,14 @@ import static com.novoda.lib.httpservice.utils.Log.Provider.errorLoggingEnabled;
 import static com.novoda.lib.httpservice.utils.Log.Provider.v;
 import static com.novoda.lib.httpservice.utils.Log.Provider.verboseLoggingEnabled;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import com.novoda.lib.httpservice.actor.Actor;
+import com.novoda.lib.httpservice.exception.ProviderException;
+import com.novoda.lib.httpservice.provider.Provider;
+import com.novoda.lib.httpservice.utils.IntentReader;
+import com.novoda.lib.httpservice.utils.Log;
 
-import org.apache.http.HttpException;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -24,11 +23,7 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 
-import com.novoda.lib.httpservice.actor.Actor;
-import com.novoda.lib.httpservice.exception.ProviderException;
-import com.novoda.lib.httpservice.provider.Provider;
-import com.novoda.lib.httpservice.utils.IntentReader;
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.UnsupportedEncodingException;
 
 public class HttpProvider implements Provider {
 
@@ -73,8 +68,11 @@ public class HttpProvider implements Provider {
             HttpContext context = new BasicHttpContext();
 
             actor.onPreprocess(method, context);
+
             final HttpResponse httpResponse = client.execute(method, context);
+
             actor.onPostprocess(httpResponse, context);
+
             actor.onHeaderReceived(httpResponse);
             checkResponse(actor, httpResponse);
 
@@ -222,17 +220,9 @@ public class HttpProvider implements Provider {
     }
 
     public void setHttpProcessor(HttpProcessor httpProcessor) {
-        Log.i("TESTESTE");
         this.httpProcessor = httpProcessor;
-        ((AndroidHttpClient)client).addRequestInterceptor(httpProcessor);
-        ((AndroidHttpClient)client).addRequestInterceptor(new HttpRequestInterceptor() {
-            
-            @Override
-            public void process(HttpRequest request, HttpContext context) throws HttpException, IOException {
-                Log.i("GFEREGERGR");
-            }
-        });
-        ((AndroidHttpClient)client).addResponseInterceptor(httpProcessor);
+        ((AndroidHttpClient) client).addRequestInterceptor(httpProcessor);
+        ((AndroidHttpClient) client).addResponseInterceptor(httpProcessor);
     }
 
     public HttpProcessor getHttpProcessor() {

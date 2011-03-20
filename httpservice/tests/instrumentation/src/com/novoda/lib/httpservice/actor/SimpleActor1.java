@@ -7,10 +7,4 @@ import com.novoda.lib.httpservice.utils.Log;
 import org.apache.http.HttpResponse;
 
 public class SimpleActor1 extends Actor {
-    
-    @Override
-    public void onResponseReceived(HttpResponse httpResponse) {
-        Log.i("RESO");
-    }
-
 }
