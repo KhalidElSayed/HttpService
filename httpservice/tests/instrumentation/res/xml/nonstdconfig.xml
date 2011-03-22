@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <HttpService xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:hs="http://schemas.android.com/apk/res/com.novoda.lib.httpservice">
+	xmlns:hs="http://schemas.android.com/apk/res/com.novoda.lib.httpservice"
+	xmlns:testattr="http://schemas.android.com/apk/res/com.novoda.lib.httpservice"
+	android:name="TESTE">
 
-	<Processor hs:name="com.novoda.lib.httpservice.processor.LoggableProcessor" />
+	<Processor hs:name="com.novoda.lib.httpservice.processor.BasicOAuthProcessor" />
 
-	<Processor hs:name="com.novoda.lib.httpservice.processor.BasicOAuthProcessor"
-		android:accountType="novoda.test.httpservice" />
+	<MyOwnProcessor
+		android:name="com.novoda.lib.httpservice.example.processor.MyOwnProcessor"
+		testattr:myvalue="helloWorld" />
 
 	<Actor android:name="com.novoda.lib.httpservice.actor.LoggingActor">
 		<intent-filter>
@@ -24,14 +26,4 @@
 			<path name="jsonpath" literal="/path/1" />
 		</intent-filter>
 	</Actor>
-
-	<Actor android:name="com.novoda.lib.httpservice.actor.SimpleActor1">
-		<intent-filter>
-			<action name="GET" />
-			<scheme name="http" />
-			<auth host="api.twitter.com" />
-			<path name="trends" literal="/1/trends.json" />
-		</intent-filter>
-	</Actor>
-
 </HttpService>

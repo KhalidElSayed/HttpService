@@ -15,6 +15,7 @@ import com.novoda.lib.httpservice.controller.CallableWrapper;
 import com.novoda.lib.httpservice.controller.LifecycleManager;
 import com.novoda.lib.httpservice.controller.executor.ConnectedMultiThreadExecutor;
 import com.novoda.lib.httpservice.controller.executor.Executor;
+import com.novoda.lib.httpservice.processor.Processor;
 import com.novoda.lib.httpservice.provider.Provider;
 import com.novoda.lib.httpservice.provider.http.HttpProvider;
 import com.novoda.lib.httpservice.storage.InMemoryStorage;
@@ -119,8 +120,9 @@ public class HttpService extends Service {
                         .getXml(id), getApplicationContext());
 
                 for (ProcessorComponent comp : config.processors) {
-                    HttpProcessor processor = (HttpProcessor) Class.forName(comp.name)
-                            .newInstance();
+                    Processor processor = (Processor) Class.forName(comp.name).newInstance();
+                    processor.attach(getApplicationContext());
+                    processor.onCreate(comp.bundle);
                     Provider provider = getProvider();
                     if (provider instanceof HttpProvider) {
                         if (Log.infoLoggingEnabled()) {

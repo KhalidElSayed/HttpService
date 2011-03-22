@@ -2,6 +2,7 @@
 package com.novoda.lib.httpservice.configuration;
 
 import com.novoda.lib.httpservice.R;
+import com.novoda.lib.httpservice.utils.BundleUtils;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -73,6 +74,7 @@ public class HttpServiceComponent implements Parcelable {
                 ProcessorComponent processor = new ProcessorComponent();
                 processor.name = ta.getString(R.styleable.Processor_name);
 
+                processor.bundle = BundleUtils.fromXml(parser);
                 component.processors.add(processor);
                 ta.recycle();
             }

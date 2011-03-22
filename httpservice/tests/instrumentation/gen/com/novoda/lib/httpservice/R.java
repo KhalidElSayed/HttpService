@@ -9,6 +9,22 @@ package com.novoda.lib.httpservice;
 
 public final class R {
     public static final class attr {
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int an_intvalue=0x7f010002;
+        /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int myvalue=0x7f010001;
         /** <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -19,9 +35,11 @@ containing a value of this type.
         public static final int name=0x7f010000;
     }
     public static final class xml {
-        public static final int intentfiltertest=0x7f020000;
-        public static final int stdconfig=0x7f020001;
-        public static final int xmlactor=0x7f020002;
+        public static final int authenticator=0x7f020000;
+        public static final int intentfiltertest=0x7f020001;
+        public static final int nonstdconfig=0x7f020002;
+        public static final int stdconfig=0x7f020003;
+        public static final int xmlactor=0x7f020004;
     }
     public static final class styleable {
         /** Attributes that can be used with a Actor.
@@ -70,6 +88,49 @@ containing a value of this type.
           @attr name android:android_name
         */
         public static final int HttpService_android_name = 0;
+        /** Attributes that can be used with a MyOwnProcessor.
+           <p>Includes the following attributes:</p>
+           <table>
+           <colgroup align="left" />
+           <colgroup align="left" />
+           <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #MyOwnProcessor_an_intvalue com.novoda.lib.httpservice:an_intvalue}</code></td><td></td></tr>
+           <tr><td><code>{@link #MyOwnProcessor_myvalue com.novoda.lib.httpservice:myvalue}</code></td><td></td></tr>
+           </table>
+           @see #MyOwnProcessor_an_intvalue
+           @see #MyOwnProcessor_myvalue
+         */
+        public static final int[] MyOwnProcessor = {
+            0x7f010001, 0x7f010002
+        };
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.R.attr#an_intvalue}
+          attribute's value can be found in the {@link #MyOwnProcessor} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:an_intvalue
+        */
+        public static final int MyOwnProcessor_an_intvalue = 1;
+        /**
+          <p>This symbol is the offset where the {@link com.novoda.lib.httpservice.R.attr#myvalue}
+          attribute's value can be found in the {@link #MyOwnProcessor} array.
+
+
+          <p>Must be a string value, using '\\;' to escape characters such as '\\n' or '\\uxxxx' for a unicode character.
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name android:myvalue
+        */
+        public static final int MyOwnProcessor_myvalue = 0;
         /** Attributes that can be used with a Processor.
            <p>Includes the following attributes:</p>
            <table>
