@@ -26,6 +26,9 @@ public class BasicOAuthProcessor extends Processor implements OnAccountsUpdateLi
     @Override
     public void onCreate(Bundle fromXml) {
         accountType = fromXml.getString(ACCOUNT_TYPE);
+        if (Log.infoLoggingEnabled()) {
+            Log.i("BasicOAuthProcessor: setup against type " + accountType);
+        }
         accountManager = AccountManager.get(getContext());
         Account[] accountsByType = accountManager.getAccountsByType(accountType);
         accountManager.addOnAccountsUpdatedListener(this, null, true);
@@ -36,7 +39,10 @@ public class BasicOAuthProcessor extends Processor implements OnAccountsUpdateLi
     private void initOAuth(Account[] accounts) {
         for (Account account : accounts) {
             if (account.type.equalsIgnoreCase(accountType)) {
-                Log.i("TEST");
+                if (Log.infoLoggingEnabled()) {
+                    Log.i("BasicOAuthProcessor: Account found for type " + accountType + ", "
+                            + account.name);
+                }
                 accountManager.getAuthToken(account, accountType, true, null, null);
             }
         }

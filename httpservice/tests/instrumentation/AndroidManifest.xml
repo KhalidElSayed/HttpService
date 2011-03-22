@@ -4,23 +4,25 @@
 
 	<application>
 		<uses-library a:name="android.test.runner" />
+		
 		<service a:name="com.novoda.lib.httpservice.HttpService">
 			<meta-data a:name="com.novoda.lib.httpservice" a:value="xmlactor" />
 		</service>
+
+		<service
+			a:name="com.novoda.lib.httpservice.example.auth.AuthenticationService"
+			a:exported="true">
+			<intent-filter>
+				<action a:name="android.accounts.AccountAuthenticator" />
+			</intent-filter>
+			<meta-data a:name="android.accounts.AccountAuthenticator"
+				a:resource="@xml/authenticator" />
+		</service>
+		
 	</application>
 
 	<instrumentation a:name="android.test.InstrumentationTestRunner"
 		a:targetPackage="com.novoda.lib.httpservice" a:label="Tests for com.novoda.lib.httpservice" />
-
-	<!-- The authenticator service -->
-	<service a:name=".authenticator.AuthenticationService"
-		a:exported="true">
-		<intent-filter>
-			<action a:name="android.accounts.AccountAuthenticator" />
-		</intent-filter>
-		<meta-data a:name="android.accounts.AccountAuthenticator"
-			a:resource="@xml/authenticator" />
-	</service>
 
 	<uses-permission a:name="android.permission.INTERNET" />
 	<uses-permission a:name="android.permission.ACCESS_NETWORK_STATE" />

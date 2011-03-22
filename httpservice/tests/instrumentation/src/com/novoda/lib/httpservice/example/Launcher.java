@@ -2,13 +2,10 @@
 package com.novoda.lib.httpservice.example;
 
 import com.novoda.lib.httpservice.example.auth.AuthenticationService;
-import com.novoda.lib.httpservice.utils.Log;
 
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
-import android.accounts.AuthenticatorException;
-import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,7 +14,7 @@ import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.Smoke;
 
-import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 @Smoke
 public class Launcher extends InstrumentationTestCase {
@@ -53,18 +50,12 @@ public class Launcher extends InstrumentationTestCase {
     }
 
     public void testOAuthProcessor() throws Exception {
-        Intent intent = new Intent("GET", Uri.parse("http://api.twitter.com/1/trends.json"));
-
-        intent.setClass(getInstrumentation().getContext(),
-                com.novoda.lib.httpservice.HttpService.class);
-
-        assertNotNull(getInstrumentation().getContext().startService(intent));
-        Thread.sleep(3000);
-
+        // Activating the callback on the processor...
+        // this should log `BasicOAuthProcessor: Account found for type novoda.test.httpservice, account_test`
         AccountManager accountManager = AccountManager.get(getInstrumentation().getContext());
-        String token = accountManager.blockingGetAuthToken(AuthenticationService.TEST_ACCOUNT,
-                "test", true);
-        Log.i("TEST" + token);
+        AccountManagerFuture<Bundle> addAccount = accountManager.addAccount(
+                AuthenticationService.TEST_ACCOUNT.type, "test", null, null, null, null,
+                new Handler());
+        addAccount.getResult();
     }
-
 }
