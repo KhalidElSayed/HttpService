@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import novoda.lib.httpservice.provider.IntentWrapper;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 import android.text.TextUtils;
 
@@ -36,6 +37,10 @@ public class IntentBuilder {
 
     public IntentBuilder asPost() {
         return method(IntentWrapper.Method.POST);
+    }
+    
+    public IntentBuilder asDelete() {
+        return method(IntentWrapper.Method.DELETE);
     }
 
     private IntentBuilder method(int method) {
@@ -117,6 +122,20 @@ public class IntentBuilder {
 	public IntentBuilder withBody(String body){
 		if (!TextUtils.isEmpty(body)){
 			intent.putExtra(IntentWrapper.Extra.multipart_extra_body, body);
+		}
+		return this;
+	}
+
+	public IntentBuilder withBundledExtras(Bundle extras) {
+		if (extras!=null&&!extras.isEmpty()){
+			intent.putExtra(IntentWrapper.Extra.multipart_extra_bundle, extras);
+		}
+		return this;
+	}
+
+	public IntentBuilder withLoginExtras(Bundle extras) {
+		if (extras!=null&&!extras.isEmpty()){
+			intent.putExtra(IntentWrapper.Extra.multipart_extra_bundle_for_login, extras);
 		}
 		return this;
 	}

@@ -9,11 +9,6 @@ package novoda.lib.httpservice.provider;
  *
  */
 public interface Provider {
-	
-	int SECOND = 1000;
-	int SOCKET_TIMEOUT = 25*SECOND;
-    int CONNECTION_TIMEOUT = 25*SECOND;
-    int CON_MANAGER_TIMEOUT = 25*SECOND;
 
 	/**
 	 * Execute a particular http request and return the  

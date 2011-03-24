@@ -44,7 +44,11 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 	private Provider provider;
 	
 	public HttpService() {
-		this(null, null, null, null);
+		this(null, null, null, null, new Settings());
+	}
+	
+	public HttpService(Settings settings) {
+		this(null, null, null, null, settings);
 	}
 
 	/**
@@ -54,10 +58,10 @@ public abstract class HttpService extends LifecycleManagedExecutorService {
 	 * @param eventBus event bus
 	 * @param executorManager ExecutorManager
 	 */
-	public HttpService(Provider provider, IntentRegistry intentRegistry, EventBus eventBus, ExecutorManager executorManager) {
-		super(intentRegistry, eventBus, executorManager);
+	public HttpService(Provider provider, IntentRegistry intentRegistry, EventBus eventBus, ExecutorManager executorManager, Settings settings) {
+		super(intentRegistry, eventBus, executorManager, settings);
 		if(provider == null) {
-			this.provider = new HttpProvider(this.eventBus);
+			this.provider = new HttpProvider(this.eventBus, settings);
 		} else {
 			this.provider = provider;
 		}

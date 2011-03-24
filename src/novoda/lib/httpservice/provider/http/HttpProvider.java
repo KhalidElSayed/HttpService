@@ -10,6 +10,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.exception.ProviderException;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentWrapper;
@@ -19,6 +20,7 @@ import novoda.lib.httpservice.util.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -42,8 +44,8 @@ public class HttpProvider implements Provider {
 
 	private EventBus eventBus;
 
-	public HttpProvider(EventBus eventBus) {		
-		this(AndroidHttpClient.newInstance(USER_AGENT), eventBus);
+	public HttpProvider(EventBus eventBus, Settings settings) {
+		this(AndroidHttpClient.newInstance(USER_AGENT, settings), eventBus);
 	}
 
 	public HttpProvider(HttpClient client, EventBus eventBus) {		
@@ -64,6 +66,8 @@ public class HttpProvider implements Provider {
 			}
 			if(request.isGet()) {
 				method = new HttpGet(request.asURI());
+			} else if(request.isDelete()) {
+				method = new HttpDelete(request.asURI());
 			} else if(request.isPost()) {
 				method = new HttpPost(request.asURI());
 				checkMultipartParams((HttpPost)method, request);
@@ -125,52 +129,52 @@ public class HttpProvider implements Provider {
 			}	
 			post.setEntity(entity);
 		}
-}
-
-
-private FileBody getFileBodyFromUri(String uri, String paramName) {
-	if(TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {
-		return null;
 	}
-	File f = null;
-	try {
-		f = new File(new URI(uri));
-	} catch (URISyntaxException e) {
-		if(verboseLoggingEnabled()) {
-			v("file not found " + uri);
-		} 
+	
+	
+	private FileBody getFileBodyFromUri(String uri, String paramName) {
+		if(TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {
+			return null;
+		}
+		File f = null;
+		try {
+			f = new File(new URI(uri));
+		} catch (URISyntaxException e) {
+			if(verboseLoggingEnabled()) {
+				v("file not found " + uri);
+			} 
+		}
+		return new FileBody(f, ENCODING);
 	}
-	return new FileBody(f, ENCODING);
-}
-
-private FileBody getFileBodyFromFile(String file, String paramName) {
-	if(TextUtils.isEmpty(file) || TextUtils.isEmpty(paramName)) {
-		return null;
+	
+	private FileBody getFileBodyFromFile(String file, String paramName) {
+		if(TextUtils.isEmpty(file) || TextUtils.isEmpty(paramName)) {
+			return null;
+		}
+		return new FileBody(new File(file), ENCODING);
 	}
-	return new FileBody(new File(file), ENCODING);
-}
-
-private StringBody getStringBody(String param, String value) {
-	if(TextUtils.isEmpty(param)) {
-		return null;
+	
+	private StringBody getStringBody(String param, String value) {
+		if(TextUtils.isEmpty(param)) {
+			return null;
+		}
+		if(value == null) {
+			value = "";
+		}
+		StringBody body = null;
+		try  {
+			body = new StringBody(value);
+		} catch(Throwable t) {
+			v(t.getMessage());
+		}
+		return body;
 	}
-	if(value == null) {
-		value = "";
+	
+	private void logAndThrow(String msg) {
+		if(errorLoggingEnabled()) {
+			e(msg);
+		}
+		throw new ProviderException(msg);
 	}
-	StringBody body = null;
-	try  {
-		body = new StringBody(value);
-	} catch(Throwable t) {
-		v(t.getMessage());
-	}
-	return body;
-}
-
-private void logAndThrow(String msg) {
-	if(errorLoggingEnabled()) {
-		e(msg);
-	}
-	throw new ProviderException(msg);
-}
 
 }
