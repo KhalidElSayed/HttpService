@@ -15,6 +15,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 
 /**
@@ -51,6 +52,8 @@ public class IntentWrapper {
 		String multipart_extra_param = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_PARAM";
 		String multipart_extra_value = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_VALUE";
 		String multipart_extra_body = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BODY";
+		String multipart_extra_bundle = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BUNDLE";
+		String multipart_extra_bundle_for_login = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_LOGIN_BUNDLE";
 	}
 
 	public static interface Method {
@@ -246,6 +249,14 @@ public class IntentWrapper {
 	
 	public String getBodyEntity() {
 		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_body);
+	}
+
+	public Bundle getBundledExtras() {
+		return intent.getBundleExtra(IntentWrapper.Extra.multipart_extra_bundle);
+	}
+
+	public Bundle getLoginExtras() {
+		return intent.getBundleExtra(IntentWrapper.Extra.multipart_extra_bundle_for_login);
 	}
 
 }
