@@ -1,3 +1,4 @@
+
 package com.novoda.lib.httpservice.actor;
 
 import org.apache.http.HttpResponse;
@@ -12,95 +13,97 @@ import com.novoda.lib.httpservice.storage.Storage;
 
 public class Actor {
 
-	private Intent intent;
-	
-	private ContextHttpWrapper context;
-	
-	private Storage storage;
-	
-	public Actor() {
-	}
-	
-	public Actor(Intent intent, Storage storage) {
-		this.intent = intent;
-		this.setStorage(storage);
-	}
-	
-	public void applyContext(ContextHttpWrapper context) {
-		this.context = context;
-	}
-	
-	public Context getHttpContext() {
-		return context;
-	}
-	
+    private Intent intent;
+
+    private ContextHttpWrapper context;
+
+    private Storage storage;
+
+    public Actor() {
+    }
+
+    public Actor(Intent intent, Storage storage) {
+        this.intent = intent;
+        this.setStorage(storage);
+    }
+
+    public void applyContext(ContextHttpWrapper context) {
+        this.context = context;
+    }
+
+    public Context getHttpContext() {
+        return context;
+    }
+
     public Intent getIntent() {
         return intent;
     }
-     
+
     public void setIntent(Intent newIntent) {
         intent = newIntent;
     }
-    
-	public void setStorage(Storage storage) {
-		this.storage = storage;
-	}
 
-	public Storage getStorage() {
-		return storage;
-	}
-    
+    public void setStorage(Storage storage) {
+        this.storage = storage;
+    }
+
+    public Storage getStorage() {
+        return storage;
+    }
+
     public void onCreate() {
-    	storage.queued(context, intent);
+        storage.queued(context, intent);
     }
-   
+
     public void onResume() {
-       
+
     }
-    
+
     public void onPause() {
-	
-	}
-	
+
+    }
+
     public void onStop() {
 
     }
-    
+
     public void onDestroy() {
-    	storage.contendConsumed(context, intent);
+        storage.contendConsumed(context, intent);
     }
-    
+
     public void onLowMemory() {
-    	
+
     }
 
-	public void onPreprocess(HttpUriRequest method, HttpContext context2) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void onPreprocess(HttpUriRequest method, HttpContext context2) {
+        // TODO Auto-generated method stub
 
-	public void onPostprocess(HttpResponse httpResponse, HttpContext context2) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
 
-	public void onThrowable(Throwable t) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void onPostprocess(HttpResponse httpResponse, HttpContext context2) {
+        // TODO Auto-generated method stub
 
-	public void onResponseReceived(HttpResponse httpResponse) {
-		storage.contendReceived(context, intent);
-	}
+    }
 
-	public boolean onResponseError(int statusCode) {
-		// TODO Auto-generated method stub		
-		return false;
-	}
+    public void onThrowable(Throwable t) {
+        // TODO Auto-generated method stub
 
-	public void onHeaderReceived(HttpResponse httpResponse) {
-		// TODO Auto-generated method stub
-		
-	}
+    }
+
+    public void onResponseReceived(HttpResponse httpResponse) {
+        if (storage != null) {
+            storage.contendReceived(context, intent);
+        }
+    }
+
+    public boolean onResponseError(int statusCode) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public void onHeaderReceived(HttpResponse httpResponse) {
+        // TODO Auto-generated method stub
+
+    }
 
 }
