@@ -60,12 +60,15 @@ public class Actor extends Handler {
     }
 
     public void onResume() {
+
     }
 
     public void onPause() {
+
     }
 
     public void onStop() {
+
     }
 
     public void onDestroy() {
@@ -73,22 +76,28 @@ public class Actor extends Handler {
     }
 
     public void onLowMemory() {
+
     }
 
     public void onPreprocess(HttpUriRequest method, HttpContext context) {
         // TODO Auto-generated method stub
+
     }
 
-    public void onPostprocess(HttpResponse httpResponse, HttpContext context) {
+    public void onPostprocess(HttpResponse httpResponse, HttpContext context2) {
         // TODO Auto-generated method stub
+
     }
 
     public void onThrowable(Throwable t) {
         // TODO Auto-generated method stub
+
     }
 
     public void onResponseReceived(HttpResponse httpResponse) {
-        storage.contendReceived(context, intent);
+        if (storage != null) {
+            storage.contendReceived(context, intent);
+        }
     }
 
     public boolean onResponseError(int statusCode) {

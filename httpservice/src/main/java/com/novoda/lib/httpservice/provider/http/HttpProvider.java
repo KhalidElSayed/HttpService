@@ -6,11 +6,8 @@ import static com.novoda.lib.httpservice.utils.Log.Provider.errorLoggingEnabled;
 import static com.novoda.lib.httpservice.utils.Log.Provider.v;
 import static com.novoda.lib.httpservice.utils.Log.Provider.verboseLoggingEnabled;
 
-import com.novoda.lib.httpservice.actor.Actor;
-import com.novoda.lib.httpservice.exception.ProviderException;
-import com.novoda.lib.httpservice.provider.Provider;
-import com.novoda.lib.httpservice.utils.IntentReader;
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -18,12 +15,17 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.utils.URIUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 
-import java.io.UnsupportedEncodingException;
+import com.novoda.lib.httpservice.actor.Actor;
+import com.novoda.lib.httpservice.exception.ProviderException;
+import com.novoda.lib.httpservice.provider.Provider;
+import com.novoda.lib.httpservice.utils.IntentReader;
+import com.novoda.lib.httpservice.utils.Log;
 
 public class HttpProvider implements Provider {
 
@@ -119,7 +121,6 @@ public class HttpProvider implements Provider {
 
     private HttpUriRequest initGet(IntentReader reader) {
         HttpUriRequest method = new HttpGet(reader.asURI());
-        // TODO
         return method;
     }
 
