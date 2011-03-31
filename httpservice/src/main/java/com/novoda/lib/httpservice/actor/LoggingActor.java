@@ -1,14 +1,15 @@
 package com.novoda.lib.httpservice.actor;
 
+import com.novoda.lib.httpservice.storage.Storage;
+import com.novoda.lib.httpservice.utils.Log;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Intent;
-
-import com.novoda.lib.httpservice.storage.Storage;
-import com.novoda.lib.httpservice.utils.Log;
+import android.os.Bundle;
 
 public class LoggingActor extends Actor {
 
@@ -20,7 +21,7 @@ public class LoggingActor extends Actor {
 	}
 
 	@Override
-	public void onCreate() {
+	public void onCreate(Bundle bundle) {
 		Log.v("onCreate");
 	}
 

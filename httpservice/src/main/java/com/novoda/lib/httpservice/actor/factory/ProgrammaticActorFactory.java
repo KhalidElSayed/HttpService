@@ -13,7 +13,7 @@ public class ProgrammaticActorFactory implements ActorFactory {
 	@Override
 	public Actor getActor(Intent intent, Storage storage) {
 		Actor actor = new LoggingActor(intent, storage);
-		actor.onCreate();
+		actor.onCreate(null);
 		return actor;
 	}
 

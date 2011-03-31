@@ -33,5 +33,14 @@
 			<path name="trends" literal="/1/trends.json" />
 		</intent-filter>
 	</Actor>
+	
+	<Actor android:name="com.novoda.lib.httpservice.actor.DownloadActor">
+		<intent-filter>
+			<action name="GET" />
+			<scheme name="http" />
+			<auth host="github.com" />
+			<path name="trends" literal="/novoda/HttpService/zipball/0.1.0" />
+		</intent-filter>
+	</Actor>
 
 </HttpService>

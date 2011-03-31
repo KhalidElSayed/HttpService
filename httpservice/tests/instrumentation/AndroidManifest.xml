@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:a="http://schemas.android.com/apk/res/android"
 	package="com.novoda.lib.httpservice" a:versionCode="1" a:versionName="1.0">
-
 	<application>
 		<uses-library a:name="android.test.runner" />
-		
+
+		<activity a:name=".example.PausableFileDownload">
+			<intent-filter>
+				<action a:name="android.intent.action.MAIN" />
+				<category a:name="android.intent.category.DEFAULT" />
+			</intent-filter>
+		</activity>
+
 		<service a:name="com.novoda.lib.httpservice.HttpService">
 			<meta-data a:name="com.novoda.lib.httpservice" a:value="xmlactor" />
 		</service>
@@ -18,7 +24,7 @@
 			<meta-data a:name="android.accounts.AccountAuthenticator"
 				a:resource="@xml/authenticator" />
 		</service>
-		
+
 	</application>
 
 	<instrumentation a:name="android.test.InstrumentationTestRunner"

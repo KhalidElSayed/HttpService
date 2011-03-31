@@ -114,7 +114,6 @@
 				<action a:name="GET" />
 				<data a:scheme="http" a:host="httpmock.appspot.com" a:path="test/simplejson" />
 			</intent-filter>
-			<meta-data a:name="com.novoda.lib.httpservice" a:value="xmlactor" />
 		</service>
       <provider
          a:name="com.novoda.lib.httpservice.storage.provider.StorageProvider"

@@ -37,12 +37,24 @@ containing a value of this type.
     public static final class drawable {
         public static final int icon=0x7f020000;
     }
+    public static final class id {
+        public static final int download=0x7f060000;
+        public static final int pause=0x7f060001;
+        public static final int progress_bar=0x7f060002;
+    }
+    public static final class layout {
+        public static final int pausable_file_download=0x7f030000;
+    }
+    public static final class string {
+        public static final int download=0x7f050000;
+        public static final int pause=0x7f050001;
+    }
     public static final class xml {
-        public static final int authenticator=0x7f030000;
-        public static final int intentfiltertest=0x7f030001;
-        public static final int nonstdconfig=0x7f030002;
-        public static final int stdconfig=0x7f030003;
-        public static final int xmlactor=0x7f030004;
+        public static final int authenticator=0x7f040000;
+        public static final int intentfiltertest=0x7f040001;
+        public static final int nonstdconfig=0x7f040002;
+        public static final int stdconfig=0x7f040003;
+        public static final int xmlactor=0x7f040004;
     }
     public static final class styleable {
         /** Attributes that can be used with a Actor.
