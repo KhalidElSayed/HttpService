@@ -1,7 +1,6 @@
 
 package com.novoda.lib.httpservice.actor;
 
-import com.novoda.lib.httpservice.net.ProgressableEntityWrapper;
 import com.novoda.lib.httpservice.receiver.ProgressableReceiver;
 import com.novoda.lib.httpservice.utils.Log;
 

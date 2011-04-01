@@ -2,7 +2,6 @@
 package com.novoda.lib.httpservice.net;
 
 import com.novoda.lib.httpservice.receiver.ProgressableReceiver;
-import com.novoda.lib.httpservice.utils.Log;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.entity.HttpEntityWrapper;
@@ -53,7 +52,6 @@ public class ProgressableEntityWrapper extends HttpEntityWrapper {
 
         @Override
         public int read(byte[] b) throws IOException {
-            Log.i("tests ");
             currentProgress += b.length;
             Bundle bundle = new Bundle();
             bundle.putLong(ProgressableReceiver.CONTENT_LENGHT_BUNDLE_KEY, currentProgress);
