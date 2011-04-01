@@ -12,8 +12,36 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 
 public class Actor extends Handler {
+
+    public static final int ON_CREATE = 1;
+
+    public static final int ON_PAUSE = 2;
+
+    public static final int ON_DESTROY = 3;
+
+    public static final int ON_RESUME = 4;
+
+    @Override
+    public void handleMessage(Message msg) {
+        switch (msg.what) {
+            case ON_CREATE:
+                onCreate(msg.getData());
+                break;
+            case ON_RESUME:
+                onResume();
+                break;
+            case ON_PAUSE:
+                onPause();
+                break;
+            case ON_DESTROY:
+                onDestroy();
+                break;
+        }
+        super.handleMessage(msg);
+    }
 
     private Intent intent;
 
@@ -53,7 +81,7 @@ public class Actor extends Handler {
         return storage;
     }
 
-    public void onCreate(Bundle bundle) {
+    protected void onCreate(Bundle bundle) {
         if (storage != null) {
             storage.queued(context, intent);
         }

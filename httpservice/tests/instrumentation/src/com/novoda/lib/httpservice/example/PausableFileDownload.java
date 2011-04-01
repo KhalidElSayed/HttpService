@@ -3,7 +3,7 @@ package com.novoda.lib.httpservice.example;
 
 import com.novoda.lib.httpservice.HttpService;
 import com.novoda.lib.httpservice.R;
-import com.novoda.lib.httpservice.receiver.ProgressableView;
+import com.novoda.lib.httpservice.receiver.ProgressableReceiver;
 import com.novoda.lib.httpservice.utils.Log;
 
 import android.app.Activity;
@@ -45,7 +45,7 @@ public class PausableFileDownload extends Activity {
         setContentView(R.layout.pausable_file_download);
         msg = new Messenger(handler);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        final ProgressableView pv = new ProgressableView(new Handler(), progressBar);
+        final ProgressableReceiver pv = new ProgressableReceiver(new Handler(), progressBar);
         pause = (Button) findViewById(R.id.pause);
         pause.setOnClickListener(pauseListener);
         start = (Button) findViewById(R.id.download);
@@ -54,7 +54,7 @@ public class PausableFileDownload extends Activity {
             public void onClick(View v) {
                 v.setEnabled(false);
                 Intent intent = new Intent("GET", Uri
-                        .parse("http://github.com/novoda/HttpService/zipball/0.1.0"));
+                        .parse("http://dl.dropbox.com/u/615212/novoda-HttpService-0.1.0-0-g6e51d8b.zip"));
                 intent.setClass(PausableFileDownload.this, HttpService.class);
                 intent.putExtra("test", pv);
                 intent.putExtra("handler", msg);

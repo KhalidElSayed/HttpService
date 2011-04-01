@@ -38,9 +38,9 @@ containing a value of this type.
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int download=0x7f060000;
-        public static final int pause=0x7f060001;
-        public static final int progress_bar=0x7f060002;
+        public static final int download=0x7f070000;
+        public static final int pause=0x7f070001;
+        public static final int progress_bar=0x7f070002;
     }
     public static final class layout {
         public static final int pausable_file_download=0x7f030000;
@@ -48,6 +48,9 @@ containing a value of this type.
     public static final class string {
         public static final int download=0x7f050000;
         public static final int pause=0x7f050001;
+    }
+    public static final class style {
+        public static final int NovodaTheme=0x7f060000;
     }
     public static final class xml {
         public static final int authenticator=0x7f040000;

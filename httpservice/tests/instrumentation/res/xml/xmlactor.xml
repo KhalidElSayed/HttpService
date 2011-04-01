@@ -38,9 +38,8 @@
 		<intent-filter>
 			<action name="GET" />
 			<scheme name="http" />
-			<auth host="github.com" />
-			<path name="trends" literal="/novoda/HttpService/zipball/0.1.0" />
+			<auth host="dl.dropbox.com" />
+			<path name="trends" literal="/u/615212/novoda-HttpService-0.1.0-0-g6e51d8b.zip" />
 		</intent-filter>
 	</Actor>
-
 </HttpService>

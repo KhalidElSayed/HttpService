@@ -174,7 +174,7 @@ public class HttpService extends Service {
         Actor actor;
         try {
             actor = actorFactory.getActor(intent, storage);
-            actor.onCreate(null);
+            actor.sendEmptyMessage(Actor.ON_CREATE);
             return new CallableWrapper(provider, actor);
         } catch (ActorNotFoundException e) {
             e.printStackTrace();

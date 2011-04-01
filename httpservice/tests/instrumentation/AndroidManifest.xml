@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:a="http://schemas.android.com/apk/res/android"
 	package="com.novoda.lib.httpservice" a:versionCode="1" a:versionName="1.0">
-	<application>
+	<application a:theme="@style/NovodaTheme">
 		<uses-library a:name="android.test.runner" />
 
 		<activity a:name=".example.PausableFileDownload">
