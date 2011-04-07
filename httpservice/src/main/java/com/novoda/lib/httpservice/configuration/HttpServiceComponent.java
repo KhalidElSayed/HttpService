@@ -1,8 +1,9 @@
 
 package com.novoda.lib.httpservice.configuration;
 
-import com.novoda.lib.httpservice.R;
-import com.novoda.lib.httpservice.utils.BundleUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -14,9 +15,8 @@ import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Xml;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.novoda.lib.httpservice.R;
+import com.novoda.lib.httpservice.utils.BundleUtils;
 
 public class HttpServiceComponent implements Parcelable {
 
