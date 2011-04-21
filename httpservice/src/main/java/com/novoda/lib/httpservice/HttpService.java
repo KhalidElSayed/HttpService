@@ -4,6 +4,16 @@ package com.novoda.lib.httpservice;
 import static com.novoda.lib.httpservice.utils.Log.v;
 import static com.novoda.lib.httpservice.utils.Log.verboseLoggingEnabled;
 
+import java.util.concurrent.Callable;
+
+import android.app.Service;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
+import android.os.Bundle;
+import android.os.IBinder;
+
 import com.novoda.lib.httpservice.actor.Actor;
 import com.novoda.lib.httpservice.actor.ActorFactory;
 import com.novoda.lib.httpservice.actor.ActorNotFoundException;
@@ -21,18 +31,6 @@ import com.novoda.lib.httpservice.provider.http.HttpProvider;
 import com.novoda.lib.httpservice.storage.InMemoryStorage;
 import com.novoda.lib.httpservice.storage.Storage;
 import com.novoda.lib.httpservice.utils.Log;
-
-import org.apache.http.protocol.HttpProcessor;
-
-import android.app.Service;
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ServiceInfo;
-import android.os.Bundle;
-import android.os.IBinder;
-
-import java.util.concurrent.Callable;
 
 /**
  * @author luigi@novoda.com
