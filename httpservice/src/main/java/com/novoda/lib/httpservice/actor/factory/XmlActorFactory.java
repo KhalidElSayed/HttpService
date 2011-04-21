@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.XmlResourceParser;
-import android.net.Uri;
 
 import java.io.IOException;
 import java.util.HashMap;
