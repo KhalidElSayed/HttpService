@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>HttpService_meetup_src</name>
+			<type>2</type>
+			<locationURI>_android_HttpService_meetup_a4d360b4/src</locationURI>
+		</link>
+		<link>
 			<name>HttpService_src</name>
 			<type>2</type>
 			<locationURI>_android_HttpService_c9bd4ed/src</locationURI>

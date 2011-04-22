@@ -22,7 +22,7 @@ import android.net.Uri;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(HttpServiceTestRunner.class)
 public class HttpServiceTest {
 	
 	private static final String URL = "http://www.google.com";

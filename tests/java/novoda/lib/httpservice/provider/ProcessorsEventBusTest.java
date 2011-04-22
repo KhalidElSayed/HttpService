@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
+import novoda.lib.httpservice.HttpServiceTestRunner;
 import novoda.lib.httpservice.processor.Processor;
 
 import org.apache.http.HttpException;
@@ -22,7 +23,7 @@ import android.net.Uri;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(HttpServiceTestRunner.class)
 public class ProcessorsEventBusTest {
 
 	private EventBus eventBus;
