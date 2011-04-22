@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import novoda.lib.httpservice.HttpService;
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.SimpleRequestHandler;
 import novoda.lib.httpservice.handler.RequestHandler;
 import novoda.lib.httpservice.processor.Processor;
@@ -103,6 +104,15 @@ public class SimpleHttpService extends HttpService {
 			d("Processing response 2...");	
 		}
 	};
+	
+	static Settings settings = new Settings();
+	static {
+		settings.setConnectionNumber(20);
+	}
+	
+	public SimpleHttpService() {
+		super(settings);
+	}
 	
 	@Override
 	public void onCreate() {

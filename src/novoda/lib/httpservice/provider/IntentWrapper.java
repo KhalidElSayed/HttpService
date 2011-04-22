@@ -15,6 +15,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 
 /**
@@ -50,11 +51,15 @@ public class IntentWrapper {
 		String multipart_uri = "novoda.lib.httpservice.extra.MULTIPART_URI";
 		String multipart_extra_param = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_PARAM";
 		String multipart_extra_value = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_VALUE";
+		String multipart_extra_body = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BODY";
+		String multipart_extra_bundle = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BUNDLE";
+		String multipart_extra_bundle_for_login = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_LOGIN_BUNDLE";
 	}
 
 	public static interface Method {
 		int GET = 0;
 		int POST = 1;	
+		int DELETE = 2;
 	} 
 	
 	private Intent intent;
@@ -118,6 +123,13 @@ public class IntentWrapper {
 
 	public boolean isPost() {
 		if(Method.POST == getMethod()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isDelete() {
+		if(Method.DELETE == getMethod()) {
 			return true;
 		}
 		return false;
@@ -233,6 +245,18 @@ public class IntentWrapper {
 
 	public String getMultipartExtraValue() {
 		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_value);
+	}
+	
+	public String getBodyEntity() {
+		return intent.getStringExtra(IntentWrapper.Extra.multipart_extra_body);
+	}
+
+	public Bundle getBundledExtras() {
+		return intent.getBundleExtra(IntentWrapper.Extra.multipart_extra_bundle);
+	}
+
+	public Bundle getLoginExtras() {
+		return intent.getBundleExtra(IntentWrapper.Extra.multipart_extra_bundle_for_login);
 	}
 
 }

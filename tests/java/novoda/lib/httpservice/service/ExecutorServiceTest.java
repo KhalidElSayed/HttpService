@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 
+import novoda.lib.httpservice.Settings;
 import novoda.lib.httpservice.provider.EventBus;
 import novoda.lib.httpservice.provider.IntentRegistry;
 import novoda.lib.httpservice.provider.IntentWrapper;
@@ -43,7 +44,7 @@ public class ExecutorServiceTest {
 	
     @Test
     public void shouldBeAbleToInitializeTheService() throws InterruptedException, ExecutionException {
-    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager) {
+    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager, new Settings()) {
 			@Override
 			public Callable<Response> getCallable(IntentWrapper request) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
@@ -54,7 +55,7 @@ public class ExecutorServiceTest {
     
     @Test
     public void shouldPassTheStringToOnHandleResult() throws InterruptedException, ExecutionException {
-    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager) {
+    	service = new ExecutorService(mRequestRegistry, mEventBus, mExecutorManager, new Settings()) {
 			@Override
 			public Callable<Response> getCallable(IntentWrapper request) {
 				// here there should be the logic to use the httpclient and grab the content from the intent
