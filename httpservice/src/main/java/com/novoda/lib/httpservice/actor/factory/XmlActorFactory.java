@@ -1,12 +1,10 @@
 
 package com.novoda.lib.httpservice.actor.factory;
 
-import com.novoda.lib.httpservice.actor.Actor;
-import com.novoda.lib.httpservice.actor.ActorFactory;
-import com.novoda.lib.httpservice.actor.ActorNotFoundException;
-import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
-import com.novoda.lib.httpservice.storage.Storage;
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -15,12 +13,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.XmlResourceParser;
-import android.net.Uri;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import com.novoda.lib.httpservice.actor.Actor;
+import com.novoda.lib.httpservice.actor.ActorFactory;
+import com.novoda.lib.httpservice.actor.ActorNotFoundException;
+import com.novoda.lib.httpservice.controller.ContextHttpWrapper;
+import com.novoda.lib.httpservice.storage.Storage;
+import com.novoda.lib.httpservice.utils.Log;
 
 public class XmlActorFactory implements ActorFactory {
 
@@ -39,8 +38,10 @@ public class XmlActorFactory implements ActorFactory {
     public Actor getActor(Intent intent, Storage storage) throws ActorNotFoundException {
         for (Entry<IntentFilter, Class<? extends Actor>> entry : registry.entrySet()) {
 
-            Log.i(intent + " " + intent.getData().getAuthority() + " "
-                    + entry.getKey().authoritiesIterator().next().match(intent.getData()));
+        	if(Log.infoLoggingEnabled()){
+        		Log.i(intent + " " + intent.getData().getAuthority() + " "
+        				+ entry.getKey().authoritiesIterator().next().match(intent.getData()));
+        	}
 
             if (entry.getKey().match(intent.getAction(), intent.getType(), intent.getScheme(),
                     intent.getData(), intent.getCategories(), Log.TAG) > 0) {
