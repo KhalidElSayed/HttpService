@@ -18,3 +18,8 @@
 .checkstyle
 */**/.checkstyle
 httpservice/tmp
+.apk
+.ap_
+bin
+res
+
