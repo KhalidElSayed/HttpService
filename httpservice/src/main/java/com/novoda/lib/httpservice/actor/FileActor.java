@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.protocol.HttpContext;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import java.io.File;
@@ -32,10 +33,20 @@ public class FileActor extends Actor implements ResumableActor {
     public void onResponseReceived(HttpResponse httpResponse) {
         try {
             httpResponse.getEntity().writeTo(new FileOutputStream(getFile()));
+            Intent intent = new Intent();
+            intent.setAction("com.novoda.lib.httpservice.action.DOWNLOAD_COMPLETE");
+            intent.putExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA, getFile().getAbsolutePath());
+            getHttpContext().sendBroadcast(intent);
         } catch (FileNotFoundException e) {
+            Intent intent = getIntent();
             e.printStackTrace();
+            intent.setAction("com.novoda.lib.httpservice.action.DOWNLOAD_FAILED");
+            getHttpContext().sendBroadcast(intent);
         } catch (IOException e) {
+            Intent intent = getIntent();
             e.printStackTrace();
+            intent.setAction("com.novoda.lib.httpservice.action.DOWNLOAD_FAILED");
+            getHttpContext().sendBroadcast(intent);
         }
         super.onResponseReceived(httpResponse);
     }
