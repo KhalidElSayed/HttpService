@@ -15,7 +15,7 @@ public interface Settings {
 	int CONNECTION_PER_ROUTE = 5;
 	int MAX_TOTAL_CONNECTION = 5;
 
-	int BLOCKING_QUEUE = 100;
+	int BLOCKING_QUEUE = 10000;
 	
 	int THREAD_PRIORITY = Thread.NORM_PRIORITY-1;
 
