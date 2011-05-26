@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 
 public class FileActor extends Actor implements ResumableActor {
@@ -25,6 +26,8 @@ public class FileActor extends Actor implements ResumableActor {
     public static final String DOWNLOAD_DIRECTORY_PATH_EXTRA = "downloadDirectoryPath";
 
     public static final String FILE_NAME_EXTRA = "fileName";
+
+    public static final String WRITE_TO = "writeToUri";
 
     private RandomAccessFile file;
 
@@ -39,9 +42,12 @@ public class FileActor extends Actor implements ResumableActor {
             Log.i("Downloading " + getIntent().getDataString() + " to "
                     + getIntent().getStringExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA));
         }
+
         try {
-            httpResponse.getEntity().writeTo(new FileOutputStream(getFile()));
+
+            httpResponse.getEntity().writeTo(getOutputStream());
             broadcastFinishedDownload();
+
         } catch (FileNotFoundException e) {
             Intent intent = getIntent();
             e.printStackTrace();
@@ -56,26 +62,40 @@ public class FileActor extends Actor implements ResumableActor {
         super.onResponseReceived(httpResponse);
     }
 
+    private OutputStream getOutputStream() throws FileNotFoundException {
+        if (getIntent().hasExtra(WRITE_TO)) {
+            Uri writeTo = getIntent().getParcelableExtra(WRITE_TO);
+            return getHttpContext().getContentResolver().openOutputStream(writeTo);
+        }
+        return new FileOutputStream(getFile());
+    }
+
     private void broadcastFinishedDownload() {
         Intent intent = getIntent();
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_FILE)
-                .appendEncodedPath(getFile().getAbsolutePath()).build();
-
+        Uri uri = null;
+        if (getIntent().hasExtra(WRITE_TO)) {
+            uri = getIntent().getParcelableExtra(WRITE_TO);
+        } else {
+            uri = new Uri.Builder().scheme(ContentResolver.SCHEME_FILE)
+                    .appendEncodedPath(getFile().getAbsolutePath()).build();
+            intent.putExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA, getFile().getAbsolutePath());
+        }
         intent.setAction(DOWNLOAD_COMPLETE);
         intent.setData(uri);
         intent.setComponent(null);
-        
-        intent.putExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA, getFile().getAbsolutePath());
+        if (Log.infoLoggingEnabled()) {
+            Log.i("Broadcasting " + intent);
+        }
         getHttpContext().sendBroadcast(intent);
     }
 
     @Override
     public void onCreate(Bundle bundle) {
-        try {
-            file = new RandomAccessFile(getFile(), "rw");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // // file = new RandomAccessFile(getFile(), "rw");
+        // } catch (FileNotFoundException e) {
+        // e.printStackTrace();
+        // }
         super.onCreate(bundle);
     }
 
