@@ -24,11 +24,14 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 
@@ -54,11 +57,15 @@ public class HttpProvider implements Provider {
 		}
 		this.eventBus = eventBus;
 		this.client = client;
+	
+
 	}
 
 	@Override
 	public Response execute(IntentWrapper request) {
 		Response response = new Response();
+		final HttpParams params = new BasicHttpParams();
+		HttpClientParams.setRedirecting(params, true);
 		HttpUriRequest method = null;
 		try {
 			if(verboseLoggingEnabled()) {
@@ -74,6 +81,7 @@ public class HttpProvider implements Provider {
 			} else {
 				logAndThrow("Method " + request.getMethod() + " is not implemented yet");
 			}
+			method.setParams(params);
 			HttpContext context = new BasicHttpContext();
 			eventBus.fireOnPreProcess(request, method, context);
 			final HttpResponse httpResponse = client.execute(method, context);
