@@ -8,13 +8,13 @@ public class Settings {
 	private static final int CONNECTION_TIMEOUT = 20*SECOND;
 	private static final int CON_MANAGER_TIMEOUT = 20*SECOND;
     
-	private static int CORE_POOL_SIZE = 5;	
-	private static int MAXIMUM_POOL_SIZE = 5;
+	private static int CORE_POOL_SIZE = 10;	
+	private static int MAXIMUM_POOL_SIZE = 10;
 	private static final int KEEP_ALIVE = 0;
-	private static int CONNECTION_PER_ROUTE = 5;
-	private static int MAX_TOTAL_CONNECTION = 5;
+	private static int CONNECTION_PER_ROUTE = 10;
+	private static int MAX_TOTAL_CONNECTION = 10;
 
-	private static final int BLOCKING_QUEUE = 100;
+	private static int BLOCKING_QUEUE = 300;
 	
 	public int socketTimeout = SOCKET_TIMEOUT;
 	public int connectionTimeout = CONNECTION_TIMEOUT;
