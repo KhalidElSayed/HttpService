@@ -22,7 +22,7 @@ import com.novoda.lib.httpservice.utils.Log;
 public class FileActor extends Actor implements ResumableActor {
 
     public static final String DOWNLOAD_COMPLETE = "com.novoda.lib.httpservice.action.DOWNLOAD_COMPLETE";
-    
+
     public static final String DOWNLOAD_FAILED = "com.novoda.lib.httpservice.action.DOWNLOAD_FAILED";
 
     public static final String DOWNLOAD_DIRECTORY_PATH_EXTRA = "downloadDirectoryPath";
@@ -30,6 +30,10 @@ public class FileActor extends Actor implements ResumableActor {
     public static final String FILE_NAME_EXTRA = "fileName";
 
     public static final String WRITE_TO = "writeToUri";
+
+    public static final String EXCEPTION_MESSAGE_EXTRA = "exception";
+
+    public static final String ERROR_TYPE_EXTRA = "errorType";
 
     private RandomAccessFile file;
 
@@ -48,22 +52,23 @@ public class FileActor extends Actor implements ResumableActor {
             httpResponse.getEntity().writeTo(getOutputStream());
             broadcastFinishedDownload();
         } catch (FileNotFoundException e) {
-        	broadcastDownloadFailed(e);
+            broadcastDownloadFailed(e);
         } catch (IOException e) {
-        	broadcastDownloadFailed(e);
+            broadcastDownloadFailed(e);
         }
         super.onResponseReceived(httpResponse);
     }
-    
-    private void broadcastDownloadFailed(Exception e){
-    	Intent intent = getIntent();
-    	intent.setAction(DOWNLOAD_FAILED);
-    	intent.setComponent(null);
-    	broadcast(intent);
-    	if(Log.errorLoggingEnabled()){
-    		Log.e("Download failed for " + intent.getDataString(), e);
-    		e.printStackTrace();
-    	}
+
+    private void broadcastDownloadFailed(Exception e) {
+        Intent intent = getIntent();
+        intent.setAction(DOWNLOAD_FAILED);
+        intent.putExtra(EXCEPTION_MESSAGE_EXTRA, e.getMessage());
+        intent.setComponent(null);
+        broadcast(intent);
+        if (Log.errorLoggingEnabled()) {
+            Log.e("Download failed for " + intent.getDataString(), e);
+            e.printStackTrace();
+        }
     }
 
     private void broadcast(Intent intent) {
@@ -71,9 +76,9 @@ public class FileActor extends Actor implements ResumableActor {
             Log.i("Broadcasting " + intent);
         }
         getHttpContext().sendBroadcast(intent);
-	}
+    }
 
-	private OutputStream getOutputStream() throws FileNotFoundException {
+    private OutputStream getOutputStream() throws FileNotFoundException {
         if (getIntent().hasExtra(WRITE_TO)) {
             Uri writeTo = getIntent().getParcelableExtra(WRITE_TO);
             return getHttpContext().getContentResolver().openOutputStream(writeTo);
