@@ -1,12 +1,7 @@
 
 package com.novoda.lib.httpservice.actor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import com.novoda.lib.httpservice.utils.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -16,8 +11,17 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 public class FileActor extends Actor implements ResumableActor {
 
@@ -35,7 +39,27 @@ public class FileActor extends Actor implements ResumableActor {
 
     public static final String ERROR_TYPE_EXTRA = "errorType";
 
+    public static final String CANCELLABLE_EXTRA = "cancellable";
+
     private RandomAccessFile file;
+
+//    private Handler handler = new Handler() {
+//        @Override
+//        public void handleMessage(Message msg) {
+//            Log.i(" ===================== ee =========================== ");
+//            Thread.currentThread().interrupt();
+//            try {
+//                this.finalize();
+//            } catch (Throwable e) {
+//                // TODO Auto-generated catch block
+//                e.printStackTrace();
+//            }
+//            FileActor.this.sendEmptyMessage(ON_DESTROY);
+//            super.handleMessage(msg);
+//        }
+//    };
+
+//    private Messenger cancel = new Messenger(handler);
 
     @Override
     public void onPreprocess(HttpUriRequest method, HttpContext context) {
@@ -49,6 +73,9 @@ public class FileActor extends Actor implements ResumableActor {
                     + getIntent().getStringExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA));
         }
         try {
+//            if (getIntent().hasExtra(CANCELLABLE_EXTRA)) {
+//                registerForCancel();
+//            }
             httpResponse.getEntity().writeTo(getOutputStream());
             broadcastFinishedDownload();
         } catch (FileNotFoundException e) {
@@ -58,6 +85,17 @@ public class FileActor extends Actor implements ResumableActor {
         }
         super.onResponseReceived(httpResponse);
     }
+
+//    private void registerForCancel() {
+//        Messenger receiver = getIntent().getParcelableExtra(CANCELLABLE_EXTRA);
+//        Message msg = Message.obtain();
+//        msg.replyTo = cancel;
+//        try {
+//            receiver.send(msg);
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void broadcastDownloadFailed(Exception e) {
         Intent intent = getIntent();
