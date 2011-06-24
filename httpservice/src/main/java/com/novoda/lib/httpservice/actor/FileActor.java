@@ -41,25 +41,29 @@ public class FileActor extends Actor implements ResumableActor {
 
     public static final String CANCELLABLE_EXTRA = "cancellable";
 
+    public static final String EXCEPTION_TYPE_EXTRA = "exceptionType";
+
     private RandomAccessFile file;
 
-//    private Handler handler = new Handler() {
-//        @Override
-//        public void handleMessage(Message msg) {
-//            Log.i(" ===================== ee =========================== ");
-//            Thread.currentThread().interrupt();
-//            try {
-//                this.finalize();
-//            } catch (Throwable e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//            FileActor.this.sendEmptyMessage(ON_DESTROY);
-//            super.handleMessage(msg);
-//        }
-//    };
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                Log.i("Cancelling download for " + getIntent());
+                if (response != null) {
+                    response.getEntity().consumeContent();
+                }
+                this.finalize();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            super.handleMessage(msg);
+        }
+    };
 
-//    private Messenger cancel = new Messenger(handler);
+    private Messenger cancel = new Messenger(handler);
+
+    private HttpResponse response;
 
     @Override
     public void onPreprocess(HttpUriRequest method, HttpContext context) {
@@ -73,34 +77,43 @@ public class FileActor extends Actor implements ResumableActor {
                     + getIntent().getStringExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA));
         }
         try {
-//            if (getIntent().hasExtra(CANCELLABLE_EXTRA)) {
-//                registerForCancel();
-//            }
+            if (getIntent().hasExtra(CANCELLABLE_EXTRA)) {
+                registerForCancel();
+                this.response = httpResponse;
+            }
             httpResponse.getEntity().writeTo(getOutputStream());
             broadcastFinishedDownload();
         } catch (FileNotFoundException e) {
-            broadcastDownloadFailed(e);
+            broadcastDownloadFailed(e, -1);
         } catch (IOException e) {
-            broadcastDownloadFailed(e);
+            // closed stream usually because of a cancel request
+            if (e.getMessage().contains("closed")) {
+                broadcastDownloadFailed(e, 2);
+            } else {
+                broadcastDownloadFailed(e, 1);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.e("Got a cancel?" + e);
         }
         super.onResponseReceived(httpResponse);
     }
 
-//    private void registerForCancel() {
-//        Messenger receiver = getIntent().getParcelableExtra(CANCELLABLE_EXTRA);
-//        Message msg = Message.obtain();
-//        msg.replyTo = cancel;
-//        try {
-//            receiver.send(msg);
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void registerForCancel() {
+        Messenger receiver = getIntent().getParcelableExtra(CANCELLABLE_EXTRA);
+        Message msg = Message.obtain();
+        msg.replyTo = cancel;
+        try {
+            receiver.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
 
-    private void broadcastDownloadFailed(Exception e) {
+    private void broadcastDownloadFailed(Exception e, int type) {
         Intent intent = getIntent();
         intent.setAction(DOWNLOAD_FAILED);
         intent.putExtra(EXCEPTION_MESSAGE_EXTRA, e.getMessage());
+        intent.putExtra(EXCEPTION_TYPE_EXTRA, type);
         intent.setComponent(null);
         broadcast(intent);
         if (Log.errorLoggingEnabled()) {
