@@ -1,12 +1,7 @@
 
 package com.novoda.lib.httpservice.actor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.RandomAccessFile;
+import com.novoda.lib.httpservice.utils.Log;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -16,13 +11,22 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
 
 public class FileActor extends Actor implements ResumableActor {
 
     public static final String DOWNLOAD_COMPLETE = "com.novoda.lib.httpservice.action.DOWNLOAD_COMPLETE";
-    
+
     public static final String DOWNLOAD_FAILED = "com.novoda.lib.httpservice.action.DOWNLOAD_FAILED";
 
     public static final String DOWNLOAD_DIRECTORY_PATH_EXTRA = "downloadDirectoryPath";
@@ -31,7 +35,35 @@ public class FileActor extends Actor implements ResumableActor {
 
     public static final String WRITE_TO = "writeToUri";
 
+    public static final String EXCEPTION_MESSAGE_EXTRA = "exception";
+
+    public static final String ERROR_TYPE_EXTRA = "errorType";
+
+    public static final String CANCELLABLE_EXTRA = "cancellable";
+
+    public static final String EXCEPTION_TYPE_EXTRA = "exceptionType";
+
     private RandomAccessFile file;
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            try {
+                Log.i("Cancelling download for " + getIntent());
+                if (response != null) {
+                    response.getEntity().consumeContent();
+                }
+                this.finalize();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+            super.handleMessage(msg);
+        }
+    };
+
+    private Messenger cancel = new Messenger(handler);
+
+    private HttpResponse response;
 
     @Override
     public void onPreprocess(HttpUriRequest method, HttpContext context) {
@@ -45,25 +77,49 @@ public class FileActor extends Actor implements ResumableActor {
                     + getIntent().getStringExtra(DOWNLOAD_DIRECTORY_PATH_EXTRA));
         }
         try {
+            if (getIntent().hasExtra(CANCELLABLE_EXTRA)) {
+                registerForCancel();
+                this.response = httpResponse;
+            }
             httpResponse.getEntity().writeTo(getOutputStream());
             broadcastFinishedDownload();
         } catch (FileNotFoundException e) {
-        	broadcastDownloadFailed(e);
+            broadcastDownloadFailed(e, -1);
         } catch (IOException e) {
-        	broadcastDownloadFailed(e);
+            // closed stream usually because of a cancel request
+            if (e.getMessage().contains("closed")) {
+                broadcastDownloadFailed(e, 2);
+            } else {
+                broadcastDownloadFailed(e, 1);
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            Log.e("Got a cancel?" + e);
         }
         super.onResponseReceived(httpResponse);
     }
-    
-    private void broadcastDownloadFailed(Exception e){
-    	Intent intent = getIntent();
-    	intent.setAction(DOWNLOAD_FAILED);
-    	intent.setComponent(null);
-    	broadcast(intent);
-    	if(Log.errorLoggingEnabled()){
-    		Log.e("Download failed for " + intent.getDataString(), e);
-    		e.printStackTrace();
-    	}
+
+    private void registerForCancel() {
+        Messenger receiver = getIntent().getParcelableExtra(CANCELLABLE_EXTRA);
+        Message msg = Message.obtain();
+        msg.replyTo = cancel;
+        try {
+            receiver.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void broadcastDownloadFailed(Exception e, int type) {
+        Intent intent = getIntent();
+        intent.setAction(DOWNLOAD_FAILED);
+        intent.putExtra(EXCEPTION_MESSAGE_EXTRA, e.getMessage());
+        intent.putExtra(EXCEPTION_TYPE_EXTRA, type);
+        intent.setComponent(null);
+        broadcast(intent);
+        if (Log.errorLoggingEnabled()) {
+            Log.e("Download failed for " + intent.getDataString(), e);
+            e.printStackTrace();
+        }
     }
 
     private void broadcast(Intent intent) {
@@ -71,9 +127,9 @@ public class FileActor extends Actor implements ResumableActor {
             Log.i("Broadcasting " + intent);
         }
         getHttpContext().sendBroadcast(intent);
-	}
+    }
 
-	private OutputStream getOutputStream() throws FileNotFoundException {
+    private OutputStream getOutputStream() throws FileNotFoundException {
         if (getIntent().hasExtra(WRITE_TO)) {
             Uri writeTo = getIntent().getParcelableExtra(WRITE_TO);
             return getHttpContext().getContentResolver().openOutputStream(writeTo);

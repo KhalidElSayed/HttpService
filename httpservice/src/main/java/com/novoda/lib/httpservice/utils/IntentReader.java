@@ -9,6 +9,7 @@ import org.apache.http.client.utils.URLEncodedUtils;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.novoda.lib.httpservice.exception.RequestException;
 
@@ -99,6 +100,9 @@ public class IntentReader {
 	
 	public static final URI asURI(Uri uri, String query) {
         try {
+        	if(TextUtils.isEmpty(query)) {
+        		query = null;
+        	}
             return URIUtils.createURI(uri.getScheme(), uri.getHost(), uri.getPort(),
                     uri.getEncodedPath(), query, uri.getFragment());
         } catch (URISyntaxException e) {
@@ -110,7 +114,7 @@ public class IntentReader {
         return asURI(uri, EMPTY);
     }
 	
-	public URI asURI() {		
+	public URI asURI() {	
 		return asURI(getUri(), getParams());
 	}
 	
