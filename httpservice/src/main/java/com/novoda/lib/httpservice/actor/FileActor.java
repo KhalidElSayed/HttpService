@@ -87,7 +87,7 @@ public class FileActor extends Actor implements ResumableActor {
             broadcastDownloadFailed(e, -1);
         } catch (IOException e) {
             // closed stream usually because of a cancel request
-            if (e != null && e.getMessage().contains("closed")) {
+            if (e.getMessage() != null && e.getMessage().contains("closed")) {
                 broadcastDownloadFailed(e, 2);
             } else {
                 broadcastDownloadFailed(e, 1);
