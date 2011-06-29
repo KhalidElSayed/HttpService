@@ -109,16 +109,16 @@ public class FileActor extends Actor implements ResumableActor {
         }
     }
 
-    private void broadcastDownloadFailed(Exception e, int type) {
+    private void broadcastDownloadFailed(Throwable t, int type) {
         Intent intent = getIntent();
         intent.setAction(DOWNLOAD_FAILED);
-        intent.putExtra(EXCEPTION_MESSAGE_EXTRA, e.getMessage());
+        intent.putExtra(EXCEPTION_MESSAGE_EXTRA, t.getMessage());
         intent.putExtra(EXCEPTION_TYPE_EXTRA, type);
         intent.setComponent(null);
         broadcast(intent);
         if (Log.errorLoggingEnabled()) {
-            Log.e("Download failed for " + intent.getDataString(), e);
-            e.printStackTrace();
+            Log.e("Download failed for " + intent.getDataString(), t);
+            t.printStackTrace();
         }
     }
 
@@ -192,5 +192,11 @@ public class FileActor extends Actor implements ResumableActor {
         File fileFile = new File(file);
         fileFile.mkdirs();
         return new File(fileFile, getIntent().getData().getLastPathSegment());
+    }
+
+    @Override
+    public void onThrowable(Throwable throwable) {
+        broadcastDownloadFailed(throwable, 1);
+        super.onThrowable(throwable);
     }
 }
