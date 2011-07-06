@@ -7,11 +7,9 @@ import static com.novoda.lib.httpservice.utils.Log.w;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.novoda.lib.httpservice.Settings;
+
 public abstract class LifecycleManager {
-	
-	private static final long SERVICE_LIFECYCLE = 1000 * 30;
-	
-	private static final long KEEP_ALIFE_TIME = 1000 * 60 * 5;
 	
 	private long lastCall;
 	
@@ -33,7 +31,7 @@ public abstract class LifecycleManager {
 					if (verboseLoggingEnabled()) {
 						v("Lifecycle manager: working? " + working + " last execution was? " + delta);
 					}
-					if (working || delta < KEEP_ALIFE_TIME) {
+					if (working || delta < Settings.KEEP_ALIFE_TIME) {
 						if (verboseLoggingEnabled()) {
 							v("Lifecycle manager: keeping alive the service");
 						}      
@@ -46,7 +44,7 @@ public abstract class LifecycleManager {
 					}
 				}
 			};
-			timer.schedule(monitorThread, 0, SERVICE_LIFECYCLE);
+			timer.schedule(monitorThread, 0, Settings.SERVICE_LIFECYCLE);
 		} catch(Throwable t) {
 			w("Lifecycle manager: Scheduling timer already scheduled", t);
 		}

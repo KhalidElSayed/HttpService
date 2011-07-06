@@ -9,11 +9,13 @@ import org.apache.http.protocol.HttpContext;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.PatternMatcher;
 import android.os.RemoteException;
 
 import java.io.File;
@@ -28,6 +30,12 @@ public class FileActor extends Actor implements ResumableActor {
     public static final String DOWNLOAD_COMPLETE = "com.novoda.lib.httpservice.action.DOWNLOAD_COMPLETE";
 
     public static final String DOWNLOAD_FAILED = "com.novoda.lib.httpservice.action.DOWNLOAD_FAILED";
+    
+    public static IntentFilter DOWNLOAD_FAILED_FILTER = new IntentFilter(); static {
+    	DOWNLOAD_FAILED_FILTER.addAction(FileActor.DOWNLOAD_FAILED);
+	    DOWNLOAD_FAILED_FILTER.addDataScheme("http");
+	    DOWNLOAD_FAILED_FILTER.addDataPath("*", PatternMatcher.PATTERN_SIMPLE_GLOB);
+    }
 
     public static final String DOWNLOAD_DIRECTORY_PATH_EXTRA = "downloadDirectoryPath";
 
@@ -117,8 +125,7 @@ public class FileActor extends Actor implements ResumableActor {
         intent.setComponent(null);
         broadcast(intent);
         if (Log.errorLoggingEnabled()) {
-            Log.e("Download failed for " + intent.getDataString(), t);
-            t.printStackTrace();
+            Log.e("Download failed for " + intent.getDataString()  + " " + t.getMessage());
         }
     }
 

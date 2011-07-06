@@ -60,4 +60,10 @@ public class LocalProvider implements Provider {
 		
 	}
 
+	@Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

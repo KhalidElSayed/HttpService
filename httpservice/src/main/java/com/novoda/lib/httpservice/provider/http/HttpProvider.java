@@ -6,13 +6,8 @@ import static com.novoda.lib.httpservice.utils.Log.Provider.errorLoggingEnabled;
 import static com.novoda.lib.httpservice.utils.Log.Provider.v;
 import static com.novoda.lib.httpservice.utils.Log.Provider.verboseLoggingEnabled;
 
-import com.novoda.lib.httpservice.actor.Actor;
-import com.novoda.lib.httpservice.exception.ProviderException;
-import com.novoda.lib.httpservice.provider.Provider;
-import com.novoda.lib.httpservice.utils.IntentReader;
-import com.novoda.lib.httpservice.utils.Log;
+import java.io.UnsupportedEncodingException;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpDelete;
@@ -24,7 +19,11 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpProcessor;
 
-import java.io.UnsupportedEncodingException;
+import com.novoda.lib.httpservice.actor.Actor;
+import com.novoda.lib.httpservice.exception.ProviderException;
+import com.novoda.lib.httpservice.provider.Provider;
+import com.novoda.lib.httpservice.utils.IntentReader;
+import com.novoda.lib.httpservice.utils.Log;
 
 public class HttpProvider implements Provider {
 
@@ -85,7 +84,7 @@ public class HttpProvider implements Provider {
         } catch (Throwable t) {
             actor.onThrowable(t);
             if (errorLoggingEnabled()) {
-                e("Problems executing the request for : " + reader.getUri() + " ", t);
+                e("Problems executing the request for : " + reader.getUri() + " " + t.getMessage());
             }
         }
         actor.onPause();
@@ -144,73 +143,6 @@ public class HttpProvider implements Provider {
         return method;
     }
 
-    // private void checkMultipartParams(HttpPost post, IntentWrapper intent) {
-    // String fileParamName = intent.getMultipartFileParamName();
-    // FileBody fileBody = getFileBodyFromFile(intent.getMultipartFile(),
-    // fileParamName);
-    //
-    // String uriParamName = intent.getMultipartUriParamName();
-    // FileBody uriBody = getFileBodyFromUri(intent.getMultipartUri(),
-    // uriParamName);
-    //
-    // String extraPram = intent.getMultipartExtraParam();
-    // StringBody stringBody = getStringBody(extraPram,
-    // intent.getMultipartExtraValue());
-    //
-    // if(stringBody != null || fileBody != null || uriBody != null) {
-    // MultipartEntity entity = new
-    // MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
-    // if(stringBody != null) {
-    // entity.addPart(extraPram, stringBody);
-    // }
-    // if(uriBody != null) {
-    // entity.addPart(uriParamName, uriBody);
-    // }
-    // if(fileBody != null) {
-    // entity.addPart(fileParamName, fileBody);
-    // }
-    // post.setEntity(entity);
-    // }
-    // }
-    //
-    // private FileBody getFileBodyFromUri(String uri, String paramName) {
-    // if(TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {
-    // return null;
-    // }
-    // File f = null;
-    // try {
-    // f = new File(new URI(uri));
-    // } catch (URISyntaxException e) {
-    // if(verboseLoggingEnabled()) {
-    // v("file not found " + uri);
-    // }
-    // }
-    // return new FileBody(f, ENCODING);
-    // }
-    //
-    // private FileBody getFileBodyFromFile(String file, String paramName) {
-    // if(TextUtils.isEmpty(file) || TextUtils.isEmpty(paramName)) {
-    // return null;
-    // }
-    // return new FileBody(new File(file), ENCODING);
-    // }
-    //
-    // private StringBody getStringBody(String param, String value) {
-    // if(TextUtils.isEmpty(param)) {
-    // return null;
-    // }
-    // if(value == null) {
-    // value = "";
-    // }
-    // StringBody body = null;
-    // try {
-    // body = new StringBody(value);
-    // } catch(Throwable t) {
-    // v(t.getMessage());
-    // }
-    // return body;
-    // }
-
     private void logAndThrow(String msg) {
         if (errorLoggingEnabled()) {
             e(msg);
@@ -227,4 +159,16 @@ public class HttpProvider implements Provider {
     public HttpProcessor getHttpProcessor() {
         return httpProcessor;
     }
+
+	@Override
+	public void destroy() {
+		if(client != null) {
+			try {
+				client.close();
+				client = null;
+			} catch (Throwable t) {
+				Log.e("Problem closing down the http client", t);
+			}
+		}
+	}
 }

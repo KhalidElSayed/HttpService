@@ -2,7 +2,6 @@ package com.novoda.lib.httpservice.provider;
 
 import com.novoda.lib.httpservice.actor.Actor;
 
-import org.apache.http.protocol.HttpProcessor;
 
 /**
  * Provider define the interface for every kind of
@@ -15,4 +14,5 @@ import org.apache.http.protocol.HttpProcessor;
 public interface Provider {
 	void execute(Actor actor);
 	void onLowMemory();
+	void destroy();
 }

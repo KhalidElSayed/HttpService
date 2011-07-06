@@ -45,33 +45,33 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     
     private boolean receiverNotReady = true;
     
-    private Service service;
+    //private Service service;
 
     private ReentrantLock pauseLock = new ReentrantLock();
 
     private Condition unpaused = pauseLock.newCondition();
 
-    private ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver() {
-		@Override
-		protected void onConnectionLost() {
-			if (verboseLoggingEnabled()) {
-                v("ThreadPool : Connection lost");
-            }
-			pause();
-		}
-		
-		@Override
-		protected void onConnectionResume() {
-			if (verboseLoggingEnabled()) {
-                v("ThreadPool : Connection resumed");
-            }
-			resume();
-		}
-    };
+//    private ConnectivityReceiver connectivityReceiver = new ConnectivityReceiver() {
+//		@Override
+//		protected void onConnectionLost() {
+//			if (verboseLoggingEnabled()) {
+//                v("ThreadPool : Connection lost");
+//            }
+//			pause();
+//		}
+//		
+//		@Override
+//		protected void onConnectionResume() {
+//			if (verboseLoggingEnabled()) {
+//                v("ThreadPool : Connection resumed");
+//            }
+//			resume();
+//		}
+//    };
 
     public ConnectedThreadPoolExecutor(Service service) {
         super(Settings.CORE_POOL_SIZE, Settings.MAXIMUM_POOL_SIZE, Settings.KEEP_ALIVE, TimeUnit.SECONDS, BLOCKING_QUEUE, THREAD_FACTORY);
-        this.service = service;
+        //this.service = service;
     }
 
     public void start() {
@@ -82,8 +82,8 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     	if (verboseLoggingEnabled()) {
 			v("ThreadPool : Registering receivers");
 		}
-    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.CONNECTIVITY_FILTER);
-    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.SETTING_CHANGED_FILTER);
+//    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.CONNECTIVITY_FILTER);
+//    	service.registerReceiver(connectivityReceiver, ConnectivityReceiver.SETTING_CHANGED_FILTER);
     	receiverNotReady = false;
     }
     
@@ -104,7 +104,7 @@ public class ConnectedThreadPoolExecutor extends ThreadPoolExecutor {
     	if (verboseLoggingEnabled()) {
 			v("ThreadPool : unregistering receivers");
 		}
-    	service.unregisterReceiver(connectivityReceiver);
+    	//service.unregisterReceiver(connectivityReceiver);
     	receiverNotReady = true;
     }
 
