@@ -155,7 +155,9 @@ public class HttpService extends Service {
         if (executor != null) {
             executor.shutdown();
         }
-        provider.destroy();
+        if(provider != null) {
+        	provider.destroy();
+        }
         super.onDestroy();
     }
 
