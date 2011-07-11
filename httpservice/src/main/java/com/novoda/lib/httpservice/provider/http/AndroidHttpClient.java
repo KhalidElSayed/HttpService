@@ -117,8 +117,8 @@ public final class AndroidHttpClient implements HttpClient {
         HttpConnectionParams.setStaleCheckingEnabled(params, false);
 
         // Default connection and socket timeout of 20 seconds. Tweak to taste.
-        HttpConnectionParams.setConnectionTimeout(params, Settings.SOCKET_TIMEOUT);
-        HttpConnectionParams.setSoTimeout(params, Settings.CONNECTION_TIMEOUT);
+        HttpConnectionParams.setConnectionTimeout(params, Settings.CONNECTION_TIMEOUT);
+        HttpConnectionParams.setSoTimeout(params, Settings.SOCKET_TIMEOUT);
         HttpConnectionParams.setSocketBufferSize(params, 8192);
 
         ConnPerRoute connPerRoute = new ConnPerRouteBean(Settings.CONNECTION_PER_ROUTE);
