@@ -43,11 +43,9 @@ public class FileReader {
 			long count = 0;
 			int n = 0;
 			while (-1 != (n = is.read(buffer))) {
-				Log.v("n is : " + n);
 				os.write(buffer, 0, n);
 				count += n;
 				if(count >= threshold) {
-					Log.v("count is : " + count);
 					is.close();
 					os.flush();
 					os.close();
@@ -57,10 +55,14 @@ public class FileReader {
 			os.close();
 			is.close();
 		} catch (FileNotFoundException e) {
-			Log.e("problem reading content", e);
+			if(Log.errorLoggingEnabled()) {
+				Log.e("problem reading content", e);
+			}
 			throw new RuntimeException(e);
 		} catch (IOException e) {
-			Log.e("problem reading content", e);
+			if(Log.errorLoggingEnabled()) {
+				Log.e("problem reading content", e);
+			}
 			throw new RuntimeException(e);
 		}
 	}

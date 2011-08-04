@@ -81,8 +81,11 @@ public class ProgressableReceiver extends ResultReceiver implements Parcelable {
                     buf.append(" against a total of: ");
                     buf.append(total);
                     break;
-                default:
-                    Log.e("Unknown resultCode: " + resultCode);
+                default: { 
+                	if(Log.errorLoggingEnabled()) {                	
+                		Log.e("Unknown resultCode: " + resultCode);
+                	}
+                }
             }
             Log.v(buf.toString());
         }

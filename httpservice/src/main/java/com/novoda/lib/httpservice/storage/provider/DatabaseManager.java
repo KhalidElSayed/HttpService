@@ -61,20 +61,17 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    	v("Upgrade of the database");
         drop(db);
         onCreate(db);
     }
 
     private void create(SQLiteDatabase db) {
-    	v("Creating the database");
     	List<String> stms = new ArrayList<String>();
     	stms.add(IntentModel.CREATE_STM);
         exec(db, stms);
     }
 
     private void drop(SQLiteDatabase db) {
-        v("Dropping the database");
         List<String> stms = new ArrayList<String>();
         stms.add(IntentModel.DROP_STM);
         exec(db, stms);
@@ -82,7 +79,6 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     private static final void exec(SQLiteDatabase db, List<String> staments) {
         for (String stm : staments) {
-            v(stm);
             try {
                 db.execSQL(stm);
             } catch (RuntimeException re) {

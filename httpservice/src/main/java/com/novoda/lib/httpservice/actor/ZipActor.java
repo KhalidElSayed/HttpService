@@ -35,7 +35,6 @@ public class ZipActor extends LoggingActor {
 
     @Override
     public void onCreate(Bundle bundle) {
-        Log.v("onCreate : ");
         super.onCreate(bundle);
     }
 
@@ -49,9 +48,13 @@ public class ZipActor extends LoggingActor {
                     }, null);
             if (c.moveToNext()) {
                 currentLenght = c.getLong(c.getColumnIndex(IntentModel.Column.filelength));
-                Log.v("current lenght is : " + currentLenght);
+                if(Log.verboseLoggingEnabled()) {
+                	Log.v("current lenght is : " + currentLenght);
+                }
             } else {
-                Log.v("no data in the database ");
+            	if(Log.verboseLoggingEnabled()) {
+            		Log.v("no data in the database ");
+            	}
             }
         } finally {
             if (c != null) {
@@ -60,7 +63,6 @@ public class ZipActor extends LoggingActor {
         }
         String range = "bytes=" + currentLenght + "-"
                 + (currentLenght + fileReader.getThreshold() + 1);
-        Log.v("Setting range : " + range);
         method.addHeader("Range", range);
         super.onPreprocess(method, context);
     }
@@ -99,12 +101,18 @@ public class ZipActor extends LoggingActor {
         String filepath = null;
         Context context = getHttpContext();
         try {
-            Log.v("checking for intent : " + intent.filterHashCode());
+        	if(Log.verboseLoggingEnabled()) {
+        		Log.v("checking for intent : " + intent.filterHashCode());
+        	}
             ContentValues cv = storage.getIntent(context, intent);
-            Log.v("intent has : " + cv);
+            if(Log.verboseLoggingEnabled()) {
+            	Log.v("intent has : " + cv);
+            }
 
             filepath = getFilepath(context, cv, intent);
-            Log.v("filePath : " + filepath);
+            if(Log.verboseLoggingEnabled()) {
+            	Log.v("filePath : " + filepath);
+            }
 
             if (!fileReader.exists(filepath)) {
                 storage.queued(context, intent);
@@ -113,7 +121,9 @@ public class ZipActor extends LoggingActor {
             readResponseFrom(fileReader, res, filepath);
         } catch (FileNotFinished fnf) {
             String filename = fnf.getFilename();
-            Log.v("Part of file : " + filename + " length : " + fnf.getFileLength());
+            if(Log.verboseLoggingEnabled()) {
+            	Log.v("Part of file : " + filename + " length : " + fnf.getFileLength());
+            }
             storage.updateDownload(context, intent, filename, fnf.getFileLength());
             context.startService(intent);
         }

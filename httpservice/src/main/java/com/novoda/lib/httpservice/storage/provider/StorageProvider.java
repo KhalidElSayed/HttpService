@@ -40,7 +40,9 @@ public class StorageProvider extends ContentProvider {
 				break;
 			}
 			default: {
-				e("Problem with uri : " + uri);
+				if(Log.errorLoggingEnabled()) {
+					e("Problem with uri : " + uri);
+				}
 				throw new RuntimeException("Problem with uri : " + uri);
 			}
 		}
@@ -49,7 +51,6 @@ public class StorageProvider extends ContentProvider {
 
 	@Override
 	public boolean onCreate() {
-		v("Creating Provider...");
 		return false;
 	}
 
@@ -79,7 +80,9 @@ public class StorageProvider extends ContentProvider {
 				break;
 			}
 			default: {
-				e("Problem with insert, not Implemented for : " + uri);
+				if(Log.errorLoggingEnabled()) {
+					e("Problem with insert, not Implemented for : " + uri);
+				}
 				throw new RuntimeException(
 						"Problem with query, not Implemented for : " + uri);
 			}
@@ -103,7 +106,9 @@ public class StorageProvider extends ContentProvider {
 				break;
 			}
 			default: {
-				e("Problem with query, not Implemented for : " + uri);
+				if(Log.errorLoggingEnabled()) {
+					e("Problem with query, not Implemented for : " + uri);
+				}
 				throw new RuntimeException(
 						"Problem with query, not Implemented for : " + uri);
 			}
@@ -119,13 +124,14 @@ public class StorageProvider extends ContentProvider {
 			case StorageUriMatcher.INTENT_INCOMING_COLLECTION: {
 				rowUpdated = getDataBase().update(IntentModel.NAME,
 						values, selection, selectionArgs);
-				Log.v("XXXX : setting values for intent : " + selectionArgs[0] + " : " + values);
 				getContext().getContentResolver().notifyChange(Uri.withAppendedPath(uri, 
 						selectionArgs[0] + "/" + values.get(IntentModel.Column.status)), null);
 				break;
 			}
 			default: {
-				e("Problem with query, not Implemented for : " + uri);
+				if(Log.errorLoggingEnabled()) {
+					e("Problem with query, not Implemented for : " + uri);
+				}
 				throw new RuntimeException(
 						"Problem with query, not Implemented for : " + uri);
 			}
