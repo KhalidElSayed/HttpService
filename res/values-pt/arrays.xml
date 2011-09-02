@@ -1,9 +1,0 @@
-<resources>
-	<string-array name="sync_interval_values">
-        <item>Nunca</item>
-        <item>A cada 15 minutos</item>
-        <item>A cada 30 minutos</item>
-        <item>A cada hora</item>
-        <item>A cada 3 horas</item>
-	</string-array>
-</resources>

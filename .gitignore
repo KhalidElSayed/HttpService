@@ -1,12 +1,3 @@
-
-target/
-lib_managed/
-src_managed/
-project/boot/
-bin/
-gen/
-*.class
-*.apk
-*.settings
-tmp/
-.redcar/
+ettings
+**/target
+.project
