@@ -49,6 +49,7 @@ public class IntentWrapper {
 		String multipart_extra_body = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BODY";
 		String multipart_extra_bundle = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_BUNDLE";
 		String multipart_extra_bundle_for_login = "novoda.lib.httpservice.extra.MULTIPART_EXTRA_LOGIN_BUNDLE";
+        String content_type = "novoda.lib.httpservice.extra.CONTENT_TYPE";
 	}
 
 	public static interface Method {
@@ -252,6 +253,10 @@ public class IntentWrapper {
 
 	public Bundle getLoginExtras() {
 		return intent.getBundleExtra(IntentWrapper.Extra.multipart_extra_bundle_for_login);
+	}
+	
+	public String getContentType() {
+	    return intent.getStringExtra(IntentWrapper.Extra.content_type);
 	}
 
 }
