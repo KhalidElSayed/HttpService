@@ -108,7 +108,7 @@ public class HttpProvider implements Provider {
 
     private void setContentType(HttpUriRequest method, IntentWrapper request) {
         String contentType = request.getContentType();
-        if (TextUtils.isEmpty(contentType)) {
+        if (contentType == null || contentType.isEmpty()) {
             return;
         }
         method.addHeader(CONTENT_TYPE, contentType);
