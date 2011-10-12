@@ -62,11 +62,11 @@ public class EventBus implements HasHandlers, HasProcessors {
     }
 
     public void fireOnThrowable(IntentWrapper intentWrapper, Throwable t) {
-        fireOnThrowable(intentWrapper);
+        fireOnThrowableOnReceiver(intentWrapper, t);
         List<IntentWrapper> intents = intentRegistry.getSimilarIntents(intentWrapper);
         if (intents != null && !intents.isEmpty()) {
             for (IntentWrapper similarIntent : intents) {
-                fireOnThrowable(similarIntent);
+                fireOnThrowableOnReceiver(similarIntent, t);
             }
         }
         intentRegistry.onConsumed(intentWrapper);
@@ -77,7 +77,7 @@ public class EventBus implements HasHandlers, HasProcessors {
         }
     }
 
-    private void fireOnThrowable(IntentWrapper intentWrapper) {
+    private void fireOnThrowableOnReceiver(IntentWrapper intentWrapper, Throwable t) {
         if (intentWrapper == null) {
             return;
         }
@@ -100,9 +100,9 @@ public class EventBus implements HasHandlers, HasProcessors {
                     Bundle b = new Bundle();
                     b.putString(IntentWrapper.SIMPLE_BUNDLE_RESULT,
                             getContentAsString(response.getHttpResponse()));
-                    receiver.send(SUCCESS, b);
+                    receiver.send(response.getStatusCode(), b);
                 } catch (Throwable t) {
-                    receiver.send(ERROR, null);
+                    receiver.send(response.getStatusCode(), null);
                 }
             }
         }

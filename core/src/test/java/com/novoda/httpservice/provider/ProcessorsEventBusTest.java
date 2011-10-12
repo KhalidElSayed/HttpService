@@ -8,19 +8,16 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import com.novoda.httpservice.HttpServiceTestRunner;
-import com.novoda.httpservice.processor.Processor;
-
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import android.net.Uri;
+
+import com.novoda.httpservice.processor.Processor;
 
 public class ProcessorsEventBusTest {
 
