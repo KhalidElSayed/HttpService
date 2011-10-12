@@ -16,3 +16,4 @@ classpath
 .checkstyle
 */**/.checkstyle
 core/tmp/
+target/

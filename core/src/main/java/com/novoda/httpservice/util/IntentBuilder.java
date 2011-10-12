@@ -139,4 +139,9 @@ public class IntentBuilder {
 		return this;
 	}
 	
+	public IntentBuilder withContentType(String contentType) {
+	    intent.putExtra(IntentWrapper.Extra.content_type, contentType);
+	    return this;
+	}
+	
 }
