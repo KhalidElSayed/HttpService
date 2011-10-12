@@ -5,16 +5,24 @@ public class Log {
 	//Default
 	private static final String TAG = "httpservice";
 	
+	private static boolean isLoggable(String tag, int  level) {
+	    try {
+	        return android.util.Log.isLoggable(tag, level);
+	    } catch (UnsatisfiedLinkError e) {
+	        return false;
+	    }
+	}
+	
 	public static final boolean verboseLoggingEnabled() {
-		return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+		return isLoggable(TAG, android.util.Log.VERBOSE);
 	}
 	
 	public static final boolean infoLoggingEnabled() {
-		return android.util.Log.isLoggable(TAG, android.util.Log.INFO);
+		return isLoggable(TAG, android.util.Log.INFO);
 	}
 	
 	public static final boolean errorLoggingEnabled() {
-		return android.util.Log.isLoggable(TAG, android.util.Log.ERROR);
+		return isLoggable(TAG, android.util.Log.ERROR);
 	}
 	
 	public static final void e(String msg) {
@@ -42,15 +50,15 @@ public class Log {
 		private static final String TAG = "httpservice-provider";
 		
 		public static final boolean verboseLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+			return isLoggable(TAG, android.util.Log.VERBOSE);
 		}
 		
 		public static final boolean errorLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.ERROR);
+			return isLoggable(TAG, android.util.Log.ERROR);
 		}
 		
 		public static final boolean warnLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.WARN);
+			return isLoggable(TAG, android.util.Log.WARN);
 		}
 		
 		public static final void v(String msg) {
@@ -75,15 +83,15 @@ public class Log {
 		private static final String TAG = "httpservice-processor";
 		
 		public static final boolean verboseLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+			return isLoggable(TAG, android.util.Log.VERBOSE);
 		}
 		
 		public static final boolean infoLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.INFO);
+			return isLoggable(TAG, android.util.Log.INFO);
 		}
 		
 		public static final boolean errorLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.ERROR);
+			return isLoggable(TAG, android.util.Log.ERROR);
 		}
 		
 		public static final void e(String msg) {
@@ -112,19 +120,19 @@ public class Log {
 		private static final String TAG = "httpservice-bus";
 				
 		public static final boolean verboseLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+			return isLoggable(TAG, android.util.Log.VERBOSE);
 		}
 		
 		public static final boolean infoLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.INFO);
+			return isLoggable(TAG, android.util.Log.INFO);
 		}
 		
 		public static final boolean errorLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.ERROR);
+			return isLoggable(TAG, android.util.Log.ERROR);
 		}
 		
 		public static final boolean warnLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.WARN);
+			return isLoggable(TAG, android.util.Log.WARN);
 		}
 		
 		public static final void e(String msg) {
@@ -153,7 +161,7 @@ public class Log {
 		private static final String TAG = "httpservice-registry";
 				
 		public static final boolean verboseLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+			return isLoggable(TAG, android.util.Log.VERBOSE);
 		}
 		
 		public static final void v(String msg) {
@@ -166,7 +174,7 @@ public class Log {
 		private static final String TAG = "httpservice-con";
 				
 		public static final boolean verboseLoggingEnabled() {
-			return android.util.Log.isLoggable(TAG, android.util.Log.VERBOSE);
+			return isLoggable(TAG, android.util.Log.VERBOSE);
 		}
 		
 		public static final void v(String msg) {

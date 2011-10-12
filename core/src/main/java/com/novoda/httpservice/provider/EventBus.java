@@ -1,21 +1,8 @@
 package com.novoda.httpservice.provider;
 
-import static com.novoda.httpservice.util.Log.Bus.v;
-import static com.novoda.httpservice.util.Log.Bus.verboseLoggingEnabled;
-import static com.novoda.httpservice.util.Log.Bus.w;
-import static com.novoda.httpservice.util.Log.Bus.warnLoggingEnabled;
-
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.ListIterator;
-
-import com.novoda.httpservice.exception.ProviderException;
-import com.novoda.httpservice.exception.RequestException;
-import com.novoda.httpservice.handler.HasHandlers;
-import com.novoda.httpservice.handler.RequestHandler;
-import com.novoda.httpservice.processor.HasProcessors;
-import com.novoda.httpservice.processor.Processor;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpRequest;
@@ -25,6 +12,13 @@ import org.apache.http.util.EntityUtils;
 
 import android.os.Bundle;
 import android.os.ResultReceiver;
+
+import com.novoda.httpservice.exception.ProviderException;
+import com.novoda.httpservice.exception.RequestException;
+import com.novoda.httpservice.handler.HasHandlers;
+import com.novoda.httpservice.handler.RequestHandler;
+import com.novoda.httpservice.processor.HasProcessors;
+import com.novoda.httpservice.processor.Processor;
 
 public class EventBus implements HasHandlers, HasProcessors {
 
@@ -68,17 +62,11 @@ public class EventBus implements HasHandlers, HasProcessors {
     }
 
     public void fireOnThrowable(IntentWrapper intentWrapper, Throwable t) {
-        if (verboseLoggingEnabled()) {
-            v("Firing onThrowable for : " + intentWrapper.getUid());
-        }
         fireOnThrowable(intentWrapper);
         List<IntentWrapper> intents = intentRegistry.getSimilarIntents(intentWrapper);
         if (intents != null && !intents.isEmpty()) {
             for (IntentWrapper similarIntent : intents) {
-                if (verboseLoggingEnabled()) {
-                    v("Firing onThrowable for : " + similarIntent.getUid());
-                }
-                fireOnThrowable(intentWrapper);
+                fireOnThrowable(similarIntent);
             }
         }
         intentRegistry.onConsumed(intentWrapper);
@@ -90,25 +78,21 @@ public class EventBus implements HasHandlers, HasProcessors {
     }
 
     private void fireOnThrowable(IntentWrapper intentWrapper) {
-        if (intentWrapper != null) {
-            ResultReceiver receiver = intentWrapper.getResultReceiver();
-            if (receiver != null) {
-                receiver.send(ERROR, null);
-            }
+        if (intentWrapper == null) {
+            return;
         }
-        if (intentWrapper != null) {
-            ResultReceiver receiver = intentWrapper.getEndResultReceiver();
-            if (receiver != null) {
-                receiver.send(ERROR, null);
-            }
+        ResultReceiver receiver = intentWrapper.getResultReceiver();
+        if (receiver != null) {
+            receiver.send(ERROR, null);
+        }
+        receiver = intentWrapper.getEndResultReceiver();
+        if (receiver != null) {
+            receiver.send(ERROR, null);
         }
     }
 
     public void fireOnContentReceived(Response response) {
         IntentWrapper intentWrapper = response.getIntentWrapper();
-        if (verboseLoggingEnabled()) {
-            v("Firing onContentReceived " + intentWrapper.getUid());
-        }
         if (intentWrapper != null) {
             ResultReceiver receiver = intentWrapper.getResultReceiver();
             if (receiver != null) {
@@ -131,24 +115,14 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     public void fireOnContentConsumed(IntentWrapper intentWrapper) {
         if (intentWrapper != null) {
-            if (verboseLoggingEnabled()) {
-                v("Firing onContentConsumed " + +intentWrapper.getUid());
-            }
             List<IntentWrapper> intents = new ArrayList<IntentWrapper>(
                     intentRegistry.getSimilarIntents(intentWrapper));
             if (intents != null && !intents.isEmpty()) {
                 for (IntentWrapper similarIntent : intents) {
-                    if (verboseLoggingEnabled()) {
-                        v("Firing onContentConsumed " + similarIntent.getUid());
-                    }
                     sendResultConsumedReceiver(similarIntent);
                 }
             }
             sendResultConsumedReceiver(intentWrapper);
-        } else {
-            if (verboseLoggingEnabled()) {
-                v("Firing onContentConsumed but intent is null?");
-            }
         }
         for (RequestHandler handler : handlers) {
             if (handler.match(intentWrapper)) {
@@ -171,9 +145,6 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     public void fireOnPreProcess(IntentWrapper intentWrapper, HttpRequest httpRequest,
             HttpContext context) {
-        if (verboseLoggingEnabled()) {
-            v("Firing onPreprocess");
-        }
         for (Processor processor : processors) {
             if (processor.match(intentWrapper)) {
                 try {
@@ -187,9 +158,6 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     public void fireOnPostProcess(IntentWrapper intentWrapper, HttpResponse response,
             HttpContext context) {
-        if (verboseLoggingEnabled()) {
-            v("Firing onPostProcess");
-        }
         for (ListIterator<Processor> iterator = processors.listIterator(processors.size()); iterator
                 .hasPrevious();) {
             final Processor processor = iterator.previous();
@@ -221,9 +189,6 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     private static final <T> void remove(List<T> ts, T t) {
         if (t == null) {
-            if (warnLoggingEnabled()) {
-                w("Trying to remove null object, can't remove it!");
-            }
             return;
         }
         if (ts.contains(t)) {
@@ -233,15 +198,9 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     private static final <T> void add(List<T> ts, T t) {
         if (t == null) {
-            if (warnLoggingEnabled()) {
-                w("The object is null, there is no point in adding it to the event bus!");
-            }
             return;
         }
         if (ts.contains(t)) {
-            if (warnLoggingEnabled()) {
-                w("The object is already registered!");
-            }
             return;
         }
         ts.add(t);

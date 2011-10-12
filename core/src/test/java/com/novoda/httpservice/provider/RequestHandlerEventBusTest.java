@@ -7,8 +7,6 @@ import org.junit.runner.RunWith;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-@Ignore
-@RunWith(RobolectricTestRunner.class)
 public class RequestHandlerEventBusTest extends EventBusTest<RequestHandler>{
 
 	public RequestHandlerEventBusTest() {

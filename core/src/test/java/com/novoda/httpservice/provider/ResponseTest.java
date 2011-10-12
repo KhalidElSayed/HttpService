@@ -8,20 +8,13 @@ import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.novoda.httpservice.provider.Response;
-import com.novoda.httpservice.test.IOUtils;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.util.EntityUtils;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
+import com.novoda.httpservice.test.IOUtils;
 
-@Ignore
-@RunWith(RobolectricTestRunner.class)
 public class ResponseTest {
 	
 	@Test

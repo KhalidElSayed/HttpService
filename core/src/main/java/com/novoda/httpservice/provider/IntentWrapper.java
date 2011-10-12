@@ -1,14 +1,8 @@
 package com.novoda.httpservice.provider;
 
-import static com.novoda.httpservice.util.Log.v;
-import static com.novoda.httpservice.util.Log.verboseLoggingEnabled;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-
-import com.novoda.httpservice.exception.RequestException;
-import com.novoda.httpservice.util.ParcelableBasicNameValuePair;
 
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -17,6 +11,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+
+import com.novoda.httpservice.exception.RequestException;
+import com.novoda.httpservice.util.ParcelableBasicNameValuePair;
 
 public class IntentWrapper {
 	
@@ -90,17 +87,10 @@ public class IntentWrapper {
 	private ResultReceiver getResultReceiver(String type) {
 		Object receiverObj = intent.getParcelableExtra(type);
 		if (receiverObj == null) {
-			if (verboseLoggingEnabled()) {
-				v("Request receiver " + type + " is null, skipping it");
-			}
 			return null;
 		} 
 		if(receiverObj instanceof ResultReceiver) {
-			ResultReceiver resultReceiver = (ResultReceiver)receiverObj;
-			if (verboseLoggingEnabled()) {
-				v("Building request for intent with receiver : " + type);
-			}
-			return resultReceiver;
+			return (ResultReceiver)receiverObj;
 		} else {
 			throw new RequestException("Problem generating reading the result receiver");
 		}

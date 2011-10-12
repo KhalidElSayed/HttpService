@@ -5,6 +5,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import android.net.Uri;
+
 import com.novoda.httpservice.Settings;
 import com.novoda.httpservice.exception.ProviderException;
 import com.novoda.httpservice.handler.GlobalHandler;
@@ -14,14 +22,6 @@ import com.novoda.httpservice.provider.IntentWrapper;
 import com.novoda.httpservice.provider.Response;
 import com.novoda.httpservice.provider.http.HttpProvider;
 import com.novoda.httpservice.util.IntentBuilder;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import android.net.Uri;
-
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 @Ignore

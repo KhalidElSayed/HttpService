@@ -22,8 +22,6 @@ import org.junit.runner.RunWith;
 
 import android.net.Uri;
 
-@Ignore
-@RunWith(HttpServiceTestRunner.class)
 public class ProcessorsEventBusTest {
 
 	private EventBus eventBus;

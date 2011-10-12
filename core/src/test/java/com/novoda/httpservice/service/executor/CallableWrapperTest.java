@@ -2,21 +2,17 @@ package com.novoda.httpservice.service.executor;
 
 import static org.mockito.Mockito.mock;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+
+import android.content.Intent;
+
 import com.novoda.httpservice.exception.HandlerException;
 import com.novoda.httpservice.provider.EventBus;
 import com.novoda.httpservice.provider.IntentWrapper;
 import com.novoda.httpservice.provider.local.LocalProvider;
-import com.novoda.httpservice.util.IntentBuilder;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
-@Ignore
-@RunWith(RobolectricTestRunner.class)
 public class CallableWrapperTest {
 	
 	private EventBus mEventBus;
@@ -33,7 +29,8 @@ public class CallableWrapperTest {
 	
 	@Test(expected = HandlerException.class)
 	public void shouldThrowExceptionIfLocalProviderIsNull() throws Exception {
-		new CallableWrapper(null, new IntentWrapper(new IntentBuilder("test","http://www.google.com").build())).call();
+	    Intent i = Mockito.mock(Intent.class);
+		new CallableWrapper(null, new IntentWrapper(i)).call();
 	}
 	
 }

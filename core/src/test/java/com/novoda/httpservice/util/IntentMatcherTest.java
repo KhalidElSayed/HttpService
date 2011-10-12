@@ -4,24 +4,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import com.novoda.httpservice.provider.IntentWrapper;
-import com.novoda.httpservice.util.IntentBuilder;
-import com.novoda.httpservice.util.IntentMatcher;
 
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import android.content.Intent;
 
-@Ignore
-@RunWith(CustomRobolectricTestRunner.class)
+import com.novoda.httpservice.provider.IntentWrapper;
+
 public class IntentMatcherTest {
 	
 	@Test
 	public void shouldMatchByUidReturnTrueIfAreTheSameIntent() {
-		Intent intent = new IntentBuilder("test", "http://www.google.com").build();
-		
+	    Intent intent = mock(Intent.class);
+	    when(intent.getLongExtra(IntentWrapper.Extra.uid, 0L)).thenReturn(12L);
+
 		assertTrue(IntentMatcher.matchByUid(intent, intent));
 	}
 	

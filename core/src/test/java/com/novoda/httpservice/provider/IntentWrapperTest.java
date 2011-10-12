@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 import com.novoda.httpservice.exception.RequestException;
 import com.novoda.httpservice.provider.IntentWrapper;
+import com.novoda.httpservice.provider.IntentWrapper.Extra;
+import com.novoda.httpservice.provider.IntentWrapper.Method;
 import com.novoda.httpservice.util.IntentBuilder;
 
 import org.junit.Before;
@@ -28,8 +30,6 @@ import android.os.ResultReceiver;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-@Ignore
-@RunWith(RobolectricTestRunner.class)
 public class IntentWrapperTest {
 
 	private static final String ACTION = "ACTION";
@@ -47,8 +47,8 @@ public class IntentWrapperTest {
 	
 	@Test
 	public void shouldIsGetRespondTrueIfSettedAccondingly() {
-		Intent intent = new IntentBuilder(ACTION, "http://www.google.com").build();
-		
+		Intent intent = mock(Intent.class);
+		when(intent.getIntExtra(Extra.method, Method.GET)).thenReturn(Method.GET);
 		IntentWrapper r = new IntentWrapper(intent);
 
 		assertTrue(r.isGet());
@@ -57,8 +57,8 @@ public class IntentWrapperTest {
 	
 	@Test
 	public void shouldIsPostRespondTrueIfSettedAccondingly() {
-		Intent intent = new IntentBuilder("", "").asPost().build();
-		
+	    Intent intent = mock(Intent.class);
+        when(intent.getIntExtra(Extra.method, Method.GET)).thenReturn(Method.POST);
 		IntentWrapper r = new IntentWrapper(intent);
 
 		assertTrue(r.isPost());

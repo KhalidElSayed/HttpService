@@ -1,18 +1,9 @@
 package com.novoda.httpservice.provider;
 
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Matchers.any;
-
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import com.novoda.httpservice.HttpServiceTestRunner;
-
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
-import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,8 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-@Ignore
-@RunWith(HttpServiceTestRunner.class)
+import org.junit.Before;
+import org.junit.Test;
+
+import android.content.Intent;
+
 public class EventBusTestConcurrency {
 
     private IntentRegistry intentRegistry;
@@ -34,17 +28,15 @@ public class EventBusTestConcurrency {
 
     @Before
     public void setupIntentRegistry() {
-
         List<IntentWrapper> l = new ArrayList<IntentWrapper>();
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
-        l.add(new IntentWrapper(new Intent()));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
+        l.add(new IntentWrapper(mock(Intent.class)));
         registry.put("something", l);
-
         intentRegistry = mock(IntentRegistry.class);
         intentWrapper = mock(IntentWrapper.class);
         when(intentRegistry.getSimilarIntents(any(IntentWrapper.class))).thenReturn(registry.get("something"));
