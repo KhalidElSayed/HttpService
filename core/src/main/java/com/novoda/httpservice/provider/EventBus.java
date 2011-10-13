@@ -95,21 +95,25 @@ public class EventBus implements HasHandlers, HasProcessors {
         IntentWrapper intentWrapper = response.getIntentWrapper();
         if (intentWrapper != null) {
             ResultReceiver receiver = intentWrapper.getResultReceiver();
-            if (receiver != null) {
-                try {
-                    Bundle b = new Bundle();
-                    b.putString(IntentWrapper.SIMPLE_BUNDLE_RESULT,
-                            getContentAsString(response.getHttpResponse()));
-                    receiver.send(response.getStatusCode(), b);
-                } catch (Throwable t) {
-                    receiver.send(response.getStatusCode(), null);
-                }
-            }
+            sendToReceiver(response, receiver);
         }
         for (RequestHandler handler : handlers) {
             if (handler.match(intentWrapper)) {
                 handler.onContentReceived(intentWrapper, response);
             }
+        }
+    }
+
+    private void sendToReceiver(Response response, ResultReceiver receiver) {
+        if (receiver == null) {
+            return;
+        }
+        try {
+            String content = getContentAsString(response.getHttpResponse());
+            Bundle bundle = createBundle(content);
+            receiver.send(response.getStatusCode(), bundle);
+        } catch (Throwable t) {
+            receiver.send(response.getStatusCode(), null);
         }
     }
 
@@ -131,18 +135,6 @@ public class EventBus implements HasHandlers, HasProcessors {
         }
     }
 
-    private void sendResultConsumedReceiver(IntentWrapper intentWrapper) {
-        ResultReceiver receiver = intentWrapper.getEndResultReceiver();
-        if (receiver != null) {
-            try {
-                receiver.send(SUCCESS, null);
-            } catch (Throwable t) {
-                receiver.send(ERROR, null);
-            }
-        }
-        intentRegistry.onConsumed(intentWrapper);
-    }
-
     public void fireOnPreProcess(IntentWrapper intentWrapper, HttpRequest httpRequest,
             HttpContext context) {
         for (Processor processor : processors) {
@@ -158,8 +150,8 @@ public class EventBus implements HasHandlers, HasProcessors {
 
     public void fireOnPostProcess(IntentWrapper intentWrapper, HttpResponse response,
             HttpContext context) {
-        for (ListIterator<Processor> iterator = processors.listIterator(processors.size()); iterator
-                .hasPrevious();) {
+        ListIterator<Processor> iterator = processors.listIterator(processors.size());
+        for (;iterator.hasPrevious();) {
             final Processor processor = iterator.previous();
             if (processor.match(intentWrapper)) {
                 try {
@@ -169,6 +161,12 @@ public class EventBus implements HasHandlers, HasProcessors {
                 }
             }
         }
+    }
+    
+    protected Bundle createBundle(String content) {
+        Bundle b = new Bundle();
+        b.putString(IntentWrapper.SIMPLE_BUNDLE_RESULT, content);
+        return b;
     }
 
     private String getContentAsString(HttpResponse httpResponse) {
@@ -204,6 +202,18 @@ public class EventBus implements HasHandlers, HasProcessors {
             return;
         }
         ts.add(t);
+    }
+    
+    private void sendResultConsumedReceiver(IntentWrapper intentWrapper) {
+        ResultReceiver receiver = intentWrapper.getEndResultReceiver();
+        if (receiver != null) {
+            try {
+                receiver.send(SUCCESS, null);
+            } catch (Throwable t) {
+                receiver.send(ERROR, null);
+            }
+        }
+        intentRegistry.onConsumed(intentWrapper);
     }
 
 }

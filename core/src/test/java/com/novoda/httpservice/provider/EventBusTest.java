@@ -189,4 +189,21 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	    verify(rr, times(1)).send(401, null);
 	}
 	
+	@Test
+    public void shouldReturnErrorCodeInCaseContentIsNull_issue204() {
+        Response response = mock(Response.class);
+        when(response.getStatusCode()).thenReturn(204);
+        when(response.getHttpResponse()).thenReturn(null);
+        
+        IntentWrapper iw = mock(IntentWrapper.class);
+        ResultReceiver rr = mock(ResultReceiver.class);
+        
+        when(iw.getResultReceiver()).thenReturn(rr);
+        when(response.getIntentWrapper()).thenReturn(iw);
+
+        eventBus.fireOnContentReceived(response);
+        
+        verify(rr, times(1)).send(204, null);
+    }
+	
 }
