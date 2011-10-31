@@ -7,17 +7,13 @@ import static org.mockito.Mockito.when;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
 @Ignore
-@RunWith(RobolectricTestRunner.class)
 public class ConnectivityReceiverTest {
 	
 	private Context mContext;

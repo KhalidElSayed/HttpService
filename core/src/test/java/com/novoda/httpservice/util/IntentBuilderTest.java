@@ -8,20 +8,16 @@ import static org.mockito.Mockito.mock;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.novoda.httpservice.provider.IntentWrapper;
-import com.novoda.httpservice.util.IntentBuilder;
-import com.novoda.httpservice.util.ParcelableBasicNameValuePair;
-
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import android.content.Intent;
 import android.net.Uri;
 import android.os.ResultReceiver;
 
+import com.novoda.httpservice.provider.IntentWrapper;
+
 @Ignore
-@RunWith(CustomRobolectricTestRunner.class)
 public class IntentBuilderTest {
 	
 	private static final String URL = "http://www.google.com";

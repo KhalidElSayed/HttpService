@@ -4,16 +4,23 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import com.novoda.httpservice.exception.ProviderException;
-import com.novoda.httpservice.handler.RequestHandler;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.legacy.PowerMockRunner;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.ResultReceiver;
 
-public abstract class EventBusTest<T extends RequestHandler> {
+import com.novoda.httpservice.exception.ProviderException;
+import com.novoda.httpservice.handler.RequestHandler;
+
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({Bundle.class})
+public class EventBusTest {
 
 	private EventBus eventBus;
 	
@@ -23,13 +30,7 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	private Uri uri;
 	
-	private Class<T> clazz;
-	
 	private IntentRegistry mRequestRegistry;
-	
-	public EventBusTest(Class<T> clazz) {
-		this.clazz = clazz;
-	}
 	
 	@Before
 	public void setUp() {
@@ -56,7 +57,7 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldFireOnContentReceivedOnGlobalHandler() {
-		T h = mock(clazz);
+	    RequestHandler h = mock(RequestHandler.class);
 		
 		eventBus.add(h);
 
@@ -65,10 +66,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldFireOnContentReceivedOnMultipleGlobalHandler() {
-		T h1 = mock(clazz);
+	    RequestHandler h1 = mock(RequestHandler.class);
 		when(h1.match(intentWrapper)).thenReturn(true);
 		
-		T h2 = mock(clazz);
+		RequestHandler h2 = mock(RequestHandler.class);
 		when(h2.match(intentWrapper)).thenReturn(true);
 
 		eventBus.add(h1);
@@ -82,10 +83,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldNotFireOnContentReceivedIfHasBeenRemoved() {
-		T h1 = mock(clazz);
+	    RequestHandler h1 = mock(RequestHandler.class);
 		when(h1.match(intentWrapper)).thenReturn(true);
 		
-		T h2 = mock(clazz);
+		RequestHandler h2 = mock(RequestHandler.class);
 		when(h2.match(intentWrapper)).thenReturn(true);
 
 		eventBus.add(h1);
@@ -101,10 +102,10 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldGlobalRemovedWorkInEvenOnSecondCall() {
-		T h1 = mock(clazz);
+	    RequestHandler h1 = mock(RequestHandler.class);
 		when(h1.match(intentWrapper)).thenReturn(true);
 		
-		T h2 = mock(clazz);
+		RequestHandler h2 = mock(RequestHandler.class);
 		when(h2.match(intentWrapper)).thenReturn(true);
 		
 		eventBus.add(h1);
@@ -121,13 +122,13 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldGlobalRemovedNotFailEvenIfHandlerIsNotSet() {
-		T h = mock(clazz);
+	    RequestHandler h = mock(RequestHandler.class);
 		eventBus.remove(h);
 	}
 	
 	@Test
 	public void shouldGlobalFireOnThrowable() {
-		T h = mock(clazz);
+	    RequestHandler h = mock(RequestHandler.class);
 		when(h.match(intentWrapper)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
@@ -141,9 +142,9 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldFireOnThrowableForMultipleHandler() {
-		T h1 = mock(clazz);
+	    RequestHandler h1 = mock(RequestHandler.class);
 		when(h1.match(intentWrapper)).thenReturn(true);
-		T h2 = mock(clazz);
+		RequestHandler h2 = mock(RequestHandler.class);
 		when(h2.match(intentWrapper)).thenReturn(true);
 		
 		Throwable t = mock(Throwable.class);
@@ -159,7 +160,7 @@ public abstract class EventBusTest<T extends RequestHandler> {
 	
 	@Test
 	public void shouldFireOnContentConsumed() {
-		T h = mock(clazz);
+	    RequestHandler h = mock(RequestHandler.class);
 		when(h.match(intentWrapper)).thenReturn(true);
 		
 		eventBus.add(h);
