@@ -9,7 +9,7 @@
   <groupId>com.novoda.httpservice</groupId>
   <artifactId>httpservice-parent</artifactId>
   <name>httpservice-parent</name>
-  <version>1.2.2</version>
+  <version>1.2.3-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
