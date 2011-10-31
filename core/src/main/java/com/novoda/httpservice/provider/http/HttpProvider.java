@@ -78,6 +78,7 @@ public class HttpProvider implements Provider {
                 method = new HttpDelete(request.asURI());
             } else if (request.isPost()) {
                 method = new HttpPost(request.asURI());
+                android.util.Log.v("XXX", "setting the content type");
                 setContentType(method, request);
                 checkMultipartParams((HttpPost) method, request);
             } else {
@@ -98,6 +99,7 @@ public class HttpProvider implements Provider {
             }
             return response;
         } catch (Throwable t) {
+            t.printStackTrace();
             eventBus.fireOnThrowable(request, t);
             if (errorLoggingEnabled()) {
                 e("Problems executing the request for : " + request.getUri() + " " + t.getMessage());
@@ -108,9 +110,10 @@ public class HttpProvider implements Provider {
 
     private void setContentType(HttpUriRequest method, IntentWrapper request) {
         String contentType = request.getContentType();
-        if (contentType == null || contentType.isEmpty()) {
+        if (contentType == null || contentType.toString().length() <= 0) {
             return;
         }
+        android.util.Log.v("XXX", "setting the content type" + contentType);
         method.addHeader(CONTENT_TYPE, contentType);
     }
 
