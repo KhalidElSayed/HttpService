@@ -4,7 +4,7 @@
   <parent>
     <groupId>com.novoda</groupId>
     <artifactId>android</artifactId>
-    <version>0.1.5</version>
+    <version>2.0.1</version>
   </parent>
   <groupId>com.novoda.httpservice</groupId>
   <artifactId>httpservice-parent</artifactId>
@@ -17,10 +17,6 @@
   </properties>
 
   <repositories>
-    <repository>
-      <id>public-mvn-repo-snapshots</id>
-      <url>https://github.com/novoda/public-mvn-repo/raw/master/snapshots</url>
-    </repository>
     <repository>
       <id>public-mvn-repo-releases</id>
       <url>https://github.com/novoda/public-mvn-repo/raw/master/releases</url>
@@ -48,25 +44,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-scm-plugin</artifactId>
-        <configuration>
-          <scmVersionType>branch</scmVersionType>
-          <scmVersion>${scm.branch}</scmVersion>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-release-plugin</artifactId>
-        <configuration>
-          <autoVersionSubmodules>true</autoVersionSubmodules>
-          <useReleaseProfile>false</useReleaseProfile>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
   <modules>
     <module>core</module>
