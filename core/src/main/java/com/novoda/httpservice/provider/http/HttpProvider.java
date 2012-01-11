@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 
 import com.novoda.httpservice.Settings;
 import com.novoda.httpservice.exception.ProviderException;
@@ -33,6 +34,7 @@ import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
 import android.text.TextUtils;
@@ -132,7 +134,7 @@ public class HttpProvider implements Provider {
                 Log.e("Problem setting entity in the body", e);
             }
         } else if (stringBody != null || fileBody != null || uriBody != null) {
-            MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
+            MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE, null, Charset.forName(HTTP.UTF_8));
             if (stringBody != null) {
                 entity.addPart(extraPram, stringBody);
             }
