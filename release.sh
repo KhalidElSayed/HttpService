@@ -41,6 +41,5 @@ end() {
 
 intro
 releasePrepareAndPerform
-break 1
 end
 
