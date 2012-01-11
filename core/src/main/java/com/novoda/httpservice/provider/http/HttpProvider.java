@@ -129,7 +129,7 @@ public class HttpProvider implements Provider {
         String bodyEntity = intent.getBodyEntity();
         if (bodyEntity != null) {
             try {
-                post.setEntity(new StringEntity(bodyEntity));
+                post.setEntity(new StringEntity(bodyEntity, HTTP.UTF_8));
             } catch (UnsupportedEncodingException e) {
                 Log.e("Problem setting entity in the body", e);
             }
