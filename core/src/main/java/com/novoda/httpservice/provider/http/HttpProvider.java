@@ -24,6 +24,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.params.HttpClientParams;
 import org.apache.http.entity.StringEntity;
@@ -83,6 +84,11 @@ public class HttpProvider implements Provider {
                 android.util.Log.v("XXX", "setting the content type");
                 setContentType(method, request);
                 checkMultipartParams((HttpPost) method, request);
+            } else if (request.isPut()) {
+                method = new HttpPut(request.asURI());
+                android.util.Log.v("XXX", "setting the content type");
+                setContentType(method, request);
+                checkMultipartParams((HttpPut) method, request);
             } else {
                 logAndThrow("Method " + request.getMethod() + " is not implemented yet");
             }
@@ -119,7 +125,7 @@ public class HttpProvider implements Provider {
         method.addHeader(CONTENT_TYPE, contentType);
     }
 
-    private void checkMultipartParams(HttpPost post, IntentWrapper intent) {
+    private void checkMultipartParams(Object item, IntentWrapper intent) {
         String fileParamName = intent.getMultipartFileParamName();
         FileBody fileBody = getFileBodyFromFile(intent.getMultipartFile(), fileParamName);
         String uriParamName = intent.getMultipartUriParamName();
@@ -129,7 +135,11 @@ public class HttpProvider implements Provider {
         String bodyEntity = intent.getBodyEntity();
         if (bodyEntity != null) {
             try {
-                post.setEntity(new StringEntity(bodyEntity, HTTP.UTF_8));
+                if (item instanceof HttpPost){
+                    ((HttpPost)item).setEntity(new StringEntity(bodyEntity, HTTP.UTF_8));
+                } else if (item instanceof HttpPut) {
+                    ((HttpPut)item).setEntity(new StringEntity(bodyEntity, HTTP.UTF_8));
+                }
             } catch (UnsupportedEncodingException e) {
                 Log.e("Problem setting entity in the body", e);
             }
@@ -144,9 +154,14 @@ public class HttpProvider implements Provider {
             if (fileBody != null) {
                 entity.addPart(fileParamName, fileBody);
             }
-            post.setEntity(entity);
+            if (item instanceof HttpPost){
+                ((HttpPost)item).setEntity(entity);
+            } else if (item instanceof HttpPut) {
+                ((HttpPut)item).setEntity(entity);
+            }
         }
     }
+   
 
     private FileBody getFileBodyFromUri(String uri, String paramName) {
         if (TextUtils.isEmpty(paramName) || TextUtils.isEmpty(uri)) {

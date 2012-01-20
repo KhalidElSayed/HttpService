@@ -38,6 +38,10 @@ public class IntentBuilder {
         return method(IntentWrapper.Method.POST);
     }
     
+    public IntentBuilder asPut() {
+        return method(IntentWrapper.Method.PUT);
+    }
+    
     public IntentBuilder asDelete() {
         return method(IntentWrapper.Method.DELETE);
     }

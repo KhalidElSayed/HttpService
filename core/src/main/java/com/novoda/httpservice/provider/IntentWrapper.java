@@ -53,6 +53,7 @@ public class IntentWrapper {
 		int GET = 0;
 		int POST = 1;	
 		int DELETE = 2;
+        int PUT = 3;
 	} 
 	
 	private Intent intent;
@@ -113,6 +114,13 @@ public class IntentWrapper {
 		}
 		return false;
 	}
+	
+	public boolean isPut() {
+        if(Method.PUT == getMethod()) {
+            return true;
+        }
+        return false;
+    }
 	
 	public boolean isDelete() {
 		if(Method.DELETE == getMethod()) {
