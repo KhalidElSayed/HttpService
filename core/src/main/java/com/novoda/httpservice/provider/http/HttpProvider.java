@@ -81,12 +81,10 @@ public class HttpProvider implements Provider {
                 method = new HttpDelete(request.asURI());
             } else if (request.isPost()) {
                 method = new HttpPost(request.asURI());
-                android.util.Log.v("XXX", "setting the content type");
                 setContentType(method, request);
                 checkMultipartParams((HttpPost) method, request);
             } else if (request.isPut()) {
                 method = new HttpPut(request.asURI());
-                android.util.Log.v("XXX", "setting the content type");
                 setContentType(method, request);
                 checkMultipartParams((HttpPut) method, request);
             } else {
