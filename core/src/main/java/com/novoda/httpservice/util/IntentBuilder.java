@@ -117,7 +117,8 @@ public class IntentBuilder {
 	
 	public IntentBuilder withMultipartExtra(String extraParam, String extraValue) {
 		if(extraParam != null && extraValue != null) {
-			intent.putExtra(IntentWrapper.Extra.multipart_extra_value, extraValue);
+			intent.putExtra(IntentWrapper.Extra.multipart_extra_param, extraParam);
+                        intent.putExtra(IntentWrapper.Extra.multipart_extra_value, extraValue);
 		}
 		return this;
 	}
